@@ -1,0 +1,6 @@
+@Shifa.API_HostAddress = http://localhost:5038
+
+GET {{Shifa.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
