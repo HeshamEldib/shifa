@@ -30,6 +30,7 @@ namespace Shifa.Infrastructure.Data
         public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<UserNotificationStatus> UserNotificationStatuses { get; set; }
+        public DbSet<DoctorService> DoctorServices { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -61,8 +62,6 @@ namespace Shifa.Infrastructure.Data
                 .HasForeignKey<TelemedicineSession>(t => t.AppointmentID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // [مهم] تم حذف HasData من هنا لأننا نستخدم DbInitializer 
-            // لتجنب مشكلة تغيير الـ GUIDs العشوائية في كل مرة.
 
             // 5. ضبط الأموال
             foreach (var property in modelBuilder.Model.GetEntityTypes()
@@ -96,6 +95,17 @@ namespace Shifa.Infrastructure.Data
                  .WithMany()
                  .HasForeignKey(m => m.PatientID)
                  .OnDelete(DeleteBehavior.Restrict);
+
+
+            // 7. إعدادات جدول DoctorService
+            // منع تكرار الثنائية (نفس الطبيب + نفس الخدمة)
+            modelBuilder.Entity<DoctorService>()
+                .HasIndex(ds => new { ds.DoctorID, ds.ServiceID })
+                .IsUnique();
+
+            modelBuilder.Entity<DoctorService>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18,2)");
         }
     }
 }

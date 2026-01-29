@@ -30,6 +30,23 @@ namespace Shifa.Infrastructure.Data
 
             await context.Roles.AddRangeAsync(roles);
             await context.SaveChangesAsync();
+
+
+            if (!await context.ClinicSettings.AnyAsync())
+            {
+                context.ClinicSettings.AddRange(
+                    new ClinicSetting { SettingKey = "BlockPrayerTimes", SettingValue = "true" },
+
+                    // القيم العامة
+                    new ClinicSetting { SettingKey = "Default_MinutesBefore", SettingValue = "15" },
+                    new ClinicSetting { SettingKey = "Default_MinutesAfter", SettingValue = "20" },
+
+                    // قيم خاصة ليوم الجمعة (مثال)
+                    new ClinicSetting { SettingKey = "Duration_Before_Jumuah", SettingValue = "30" },
+                    new ClinicSetting { SettingKey = "Duration_After_Jumuah", SettingValue = "45" }
+                );
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

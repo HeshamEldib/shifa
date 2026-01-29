@@ -1,3 +1,5 @@
+using Microsoft.OpenApi.Models;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -18,6 +20,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<Shifa.API.Services.SettingsService>();
+// إضافة HttpClient لتمكين الاتصال بالـ API الخارجي
+builder.Services.AddHttpClient<Shifa.API.Services.PrayerTimeService>();
+
 // ب. إعداد سياسة CORS (مهم جداً للربط مع React)
 // يسمح هذا الإعداد للفرونت إند بالاتصال بالـ API بدون مشاكل أمنية أثناء التطوير
 builder.Services.AddCors(options =>
@@ -32,7 +38,33 @@ builder.Services.AddCors(options =>
 // ج. إضافة خدمات الـ Controllers و Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "أدخل كلمة 'Bearer' ثم مسافة ثم التوكن الخاص بك.\r\n\r\nمثال:\r\nBearer eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 // إعدادات الـ JWT
 builder.Services.AddAuthentication(options =>

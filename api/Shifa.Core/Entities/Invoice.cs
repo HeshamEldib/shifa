@@ -14,6 +14,12 @@ namespace Shifa.Core.Entities
         [ForeignKey("AppointmentID")]
         public Appointment Appointment { get; set; } = null!;
 
+        public Guid PatientID { get; set; }
+
+        public bool IsPaid { get; set; } = false;
+
+        public string PaymentMethod { get; set; } = "Cash";
+
         public DateTime IssueDate { get; set; } = DateTime.UtcNow;
 
         [Column(TypeName = "decimal(10,2)")]

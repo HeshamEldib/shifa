@@ -18,5 +18,7 @@ namespace Shifa.Core.Entities
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal BasePrice { get; set; }
+
+        public ICollection<DoctorService> DoctorServices { get; set; } = new List<DoctorService>();
     }
 }

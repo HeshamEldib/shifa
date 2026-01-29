@@ -31,6 +31,12 @@ namespace Shifa.Core.Entities
         [MaxLength(255)]
         public string? Reason { get; set; }
 
+        [MaxLength(50)]
+        public string Status { get; set; } = "Pending"; // Pending, Confirmed, Completed, Cancelled
+
+        [MaxLength(500)]
+        public string? Notes { get; set; }
+
         // العلاقة مع جلسة الفيديو (1:0..1)
         public TelemedicineSession? TelemedicineSession { get; set; }
 
