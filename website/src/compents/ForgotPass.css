@@ -1,0 +1,165 @@
+
+/* ===== No Escape Recovery Space ===== */
+
+.ne-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+  padding:24px;
+}
+
+.ne-bg{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(59,130,246,0.38), transparent 55%),
+    radial-gradient(circle at 85% 90%, rgba(34,197,94,0.26), transparent 55%),
+    radial-gradient(circle at 50% 50%, rgba(2,6,23,0.65), rgba(2,6,23,1));
+  z-index:-1;
+}
+
+/* escape appears late + tiny */
+.ne-escape{
+  position:absolute;
+  top:18px;
+  left:18px;
+  border:none;
+  background:transparent;
+  color: rgba(226,232,240,0.55);
+  font-size:0.86rem;
+  cursor:pointer;
+  padding:0;
+  transition: color 140ms ease;
+}
+.ne-escape:hover{ color: rgba(226,232,240,0.85); }
+
+.ne-center{
+  width:min(560px, 92vw);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Single element “stage” */
+.ne-card{
+  width:100%;
+  border-radius:24px;
+  padding:22px 22px 18px;
+  background: rgba(15,23,42,0.72);
+  border: 1px solid rgba(148,163,184,0.35);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 26px 70px rgba(0,0,0,0.75);
+}
+
+.ne-title{
+  font-size:1.7rem;
+  font-weight:900;
+  color:#e5e7eb;
+  letter-spacing:-0.2px;
+}
+.ne-sub{
+  margin-top:6px;
+  color:#cbd5e1;
+  font-size:1rem;
+  line-height:1.5;
+}
+.ne-role{
+  margin-top:8px;
+  color: rgba(148,163,184,0.9);
+  font-size:0.9rem;
+}
+
+.ne-input{
+  margin-top:16px;
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(148,163,184,0.55);
+  background: rgba(2,6,23,0.55);
+  color:#e5e7eb;
+  font-size:1rem;
+  outline:none;
+  transition: box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
+  box-shadow: 0 0 0 0 rgba(56,189,248,0);
+}
+
+.ne-input:focus{
+  border-color: rgba(56,189,248,0.9);
+  background: rgba(2,6,23,0.7);
+  box-shadow:
+    0 0 0 3px rgba(56,189,248,0.22),
+    0 0 28px rgba(56,189,248,0.20);
+}
+
+/* keep everything biased toward input: dim the rest subtly */
+.ne-card .ne-sub,
+.ne-card .ne-role,
+.ne-card .ne-mini{
+  opacity:0.88;
+}
+
+.ne-mini{
+  margin-top:10px;
+  color:#94a3b8;
+  font-size:0.82rem;
+}
+
+/* Focus mode screens */
+.ne-focus{
+  text-align:center;
+  width:100%;
+  padding:26px 18px;
+}
+
+.ne-title2{
+  font-size:1.8rem;
+  font-weight:900;
+  color:#e5e7eb;
+  margin-top:12px;
+}
+.ne-sub2{
+  margin-top:6px;
+  color:#cbd5e1;
+  font-size:1rem;
+}
+.ne-sub3{
+  margin-top:10px;
+  color: rgba(148,163,184,0.85);
+  font-size:0.88rem;
+}
+
+/* breathing dot */
+.ne-breath{
+  width:14px;
+  height:14px;
+  margin:0 auto;
+  border-radius:999px;
+  background: linear-gradient(90deg,#2563eb,#22c55e);
+  box-shadow: 0 0 24px rgba(56,189,248,0.35);
+  animation: neBreath 1.3s ease-in-out infinite;
+}
+@keyframes neBreath{
+  0%{ transform: scale(0.9); opacity:0.6; }
+  50%{ transform: scale(1.25); opacity:1; }
+  100%{ transform: scale(0.9); opacity:0.6; }
+}
+.ne-whisper{
+  margin-top:14px;
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background: rgba(2,6,23,0.55);
+  border: 1px solid rgba(148,163,184,0.28);
+  color: rgba(226,232,240,0.75);
+  font-size:0.82rem;
+  letter-spacing:0.1px;
+  animation: neWhisperIn 220ms ease-out;
+}
+
+@keyframes neWhisperIn{
+  from { transform: translateY(4px); opacity:0; }
+  to   { transform: translateY(0); opacity:1; }
+}

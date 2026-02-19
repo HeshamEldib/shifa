@@ -1,0 +1,147 @@
+
+/* ============ Contact Page (improved) ============ */
+
+.contact-wrapper {
+  min-height: 100vh;
+  padding-top: 160px;
+  padding-bottom: 40px;
+  padding-inline: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.contact-card {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background: rgba(17, 25, 40, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.contact-heading {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.contact-lead {
+  color: #94a3b8;
+  margin-bottom: 16px;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.contact-highlights {
+  margin-top: 4px;
+  margin-bottom: 18px;
+  padding-left: 18px;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+.contact-highlights li {
+  margin-bottom: 4px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.contact-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-group label {
+  display: block;
+  color: #cbd5e1;
+  font-size: 0.86rem;
+}
+
+.contact-input,
+.contact-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.6);
+  color: #fff;
+  outline: none;
+  font-size: 0.9rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder {
+  color: #64748b;
+}
+
+.contact-input:focus,
+.contact-textarea:focus {
+  border-color: #22d3ee;
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.4);
+}
+
+.contact-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+}
+
+.contact-status {
+  margin-top: 10px;
+  font-size: 0.8rem;
+}
+
+.contact-status.success {
+  color: #4ade80;
+}
+
+.contact-status.error {
+  color: #f97373;
+}
+
+.contact-footer {
+  margin-top: 28px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* موبايل */
+@media (max-width: 768px) {
+  .contact-wrapper {
+    padding-top: 140px;
+    padding-inline: 16px;
+  }
+
+  .contact-card {
+    padding: 24px 18px 20px;
+  }
+
+  .contact-row-two {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,26 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Shifa.API.Dtos.Auth
+{
+    public class RegisterPatientDto
+    {
+        [Required(ErrorMessage = "الاسم الأول مطلوب")]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "اسم العائلة مطلوب")]
+        public string LastName { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress(ErrorMessage = "صيغة البريد الإلكتروني غير صحيحة")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [MinLength(6, ErrorMessage = "كلمة المرور يجب أن تكون 6 أحرف على الأقل")]
+        public string Password { get; set; } = string.Empty;
+
+        [Required]
+        [Phone]
+        public string PhoneNumber { get; set; } = string.Empty;
+
+    }
+}

@@ -1,0 +1,401 @@
+
+
+/* ==============================
+   Patient Medication Hub (pp-*)
+   ============================== */
+
+/* غلّفي الـ div الرئيسي بإضافة className="pp-shell" في JSX
+   بدلاً من style inline لو حابة، أو سيبيه بالـ style الحالية والـ CSS ده هيكمّل الشكل العام */
+
+.pp-shell {
+  min-height: 100vh;
+  padding: 18px 20px 26px;
+  background: radial-gradient(circle at 0 0, #020617 0, #020617 40%, #000000 100%);
+  color: #e5e7eb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+}
+
+/* Header bar */
+
+.pp-back {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 13px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 140ms ease, transform 140ms ease, border-color 140ms ease;
+}
+
+.pp-back:hover {
+  background: #0b1120;
+  transform: translateY(-1px);
+  border-color: #38bdf8;
+}
+
+.pp-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pp-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.pp-sub {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Main grid */
+
+.pp-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr);
+  gap: 16px;
+}
+
+/* Left: timeline/list */
+
+.pp-left {
+  border-radius: 18px;
+  border: 1px solid rgba(30, 64, 175, 0.8);
+  background: radial-gradient(circle at 0 0, #020617, #020617 60%, #020617);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
+  padding: 12px 12px 10px;
+}
+
+.pp-left-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.pp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.pp-item {
+  width: 100%;
+  text-align: left;
+  border-radius: 12px;
+  border: 1px solid rgba(51, 65, 85, 0.9);
+  background: rgba(15, 23, 42, 0.96);
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.pp-item:hover {
+  background: #020617;
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.9);
+}
+
+.pp-item.is-active {
+  border-color: #22c55e;
+  background: radial-gradient(circle at 0 0, #022c22, #020617 60%);
+}
+
+.pp-item-id {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pp-item-meta {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.pp-empty {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Right: Hub container */
+
+.pp-right {
+  border-radius: 18px;
+  border: 1px solid rgba(30, 64, 175, 0.8);
+  background: radial-gradient(circle at 0 0, #020617, #020617 60%, #020617);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.95);
+  padding: 14px 14px 12px;
+}
+
+/* Header + actions */
+
+.pp-right-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pp-right-label {
+  font-size: 11px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.pp-right-id {
+  font-weight: 800;
+}
+
+.pp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pp-chip-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.96);
+  font-size: 11px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: #e5e7eb;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.pp-chip-btn:hover {
+  background: #020617;
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+/* QR + Refill row */
+
+.pp-row-2 {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.pp-card {
+  border-radius: 14px;
+  border: 1px solid rgba(51, 65, 85, 0.9);
+  background: rgba(15, 23, 42, 0.96);
+  padding: 10px 12px;
+}
+
+.pp-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.pp-qr-box {
+  border: 1px dashed #475569;
+  border-radius: 12px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.pp-qr-meta {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Medicines + AI */
+
+.pp-row-3 {
+  margin-top: 12px;
+}
+
+.pp-card-strong-title {
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.pp-med-item {
+  padding: 8px 0;
+  border-top: 1px solid #111827;
+}
+
+.pp-med-item:first-of-type {
+  border-top: none;
+}
+
+.pp-med-head {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pp-med-dose {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.pp-med-note {
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.pp-med-ai {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 3px;
+}
+
+/* Adherence */
+
+.pp-row-4 {
+  margin-top: 12px;
+}
+
+.pp-adherence-text {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 8px;
+}
+
+.pp-adherence-bar-wrap {
+  height: 10px;
+  background: #020617;
+  border: 1px solid #1f2937;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.pp-adherence-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #22d3ee, #3b82f6);
+}
+
+.pp-adherence-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pp-adherence-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(15, 23, 42, 0.96);
+  color: #e5e7eb;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.pp-adherence-btn:hover {
+  background: #020617;
+  border-color: #22c55e;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .pp-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pp-row-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .pp-shell {
+    padding: 14px 12px 22px;
+  }
+}
+
+.pp-download-info {
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(37,99,235,0.5);
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+.pp-panels {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pp-panelCard {
+  background: rgba(15,23,42,0.96);
+  border-radius: 12px;
+  border: 1px solid rgba(37,99,235,0.6);
+  padding: 12px 14px;
+  max-width: 560px;
+}
+
+.pp-panelCard h4 {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.pp-panelCard p {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.pp-panel-grid {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.pp-field label {
+  display: block;
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.pp-field input,
+.pp-field select,
+.pp-field textarea {
+  width: 100%;
+  font-size: 13px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(148,163,184,0.5);
+  background: rgba(15,23,42,0.9);
+  color: #e5e7eb;
+}
+
+.pp-panel-actions {
+  margin-top: 4px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
