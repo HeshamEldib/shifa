@@ -1,0 +1,304 @@
+
+
+/* ============ Silent Diagnosis Screen ============ */
+
+.sds-shell{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding:16px 20px 22px;
+  background:radial-gradient(circle at 0 0,#020617,#020617 40%,#000 100%);
+  color:#e5e7eb;
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+
+.sds-section{
+  border-radius:18px;
+  background:rgba(2,6,23,0.86);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(30,64,175,0.8);
+  box-shadow:0 18px 40px rgba(15,23,42,0.95);
+  padding:12px 14px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.sds-section-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.sds-section-title{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.sds-section-sub{
+  font-size:11px;
+  color:#9ca3af;
+}
+
+.sds-pill{
+  display:inline-flex;
+  align-items:center;
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+.sds-pill-live{ background:rgba(56,189,248,0.15); color:#38bdf8; }
+.sds-pill-core{ background:rgba(234,179,8,0.15); color:#facc15; }
+.sds-pill-decision{ background:rgba(34,197,94,0.15); color:#4ade80; }
+
+.sds-live-body{
+  display:flex;
+  flex-direction:row;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.sds-video-box{
+  flex:1;
+  min-width:280px;
+  border-radius:16px;
+  border:1px solid rgba(30,64,175,0.8);
+  background:radial-gradient(circle at top,#0b1120,#020617 60%);
+  padding:10px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  position:relative;
+  overflow:hidden;
+}
+
+.sds-video-box.is-pulsing::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,rgba(56,189,248,0.12),transparent 40%,rgba(34,197,94,0.08));
+  mix-blend-mode:screen;
+  opacity:0.5;
+  pointer-events:none;
+}
+
+.sds-video-label{ font-size:11px; color:#9ca3af; }
+
+.sds-video-placeholder{
+  border-radius:14px;
+  background:#020617;
+  border:1px solid rgba(15,23,42,0.9);
+  height:170px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+}
+
+.sds-video-person{
+  width:70px;
+  height:100px;
+  border-radius:12px;
+  background:radial-gradient(circle at 30% 0,#1f2937,#020617);
+  box-shadow:0 12px 26px rgba(15,23,42,0.9);
+}
+.sds-video-patient{ border:1px solid rgba(34,197,94,0.6); }
+.sds-video-doctor{ border:1px solid rgba(56,189,248,0.6); }
+
+.sds-video-status{ font-size:11px; color:#9ca3af; }
+
+.sds-live-controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.sds-pulse-toggle,
+.sds-cant-speak{
+  border-radius:999px;
+  border:1px solid rgba(30,64,175,0.8);
+  background:#020617;
+  color:#e5e7eb;
+  font-size:11px;
+  padding:6px 10px;
+  cursor:pointer;
+  transition:background 140ms ease,border-color 140ms ease,transform 140ms ease;
+}
+.sds-pulse-toggle.is-on{ border-color:#38bdf8; }
+.sds-pulse-toggle.is-off{ border-color:#6b7280; }
+.sds-cant-speak.is-active{ border-color:#f97316; background:rgba(30,64,175,0.7); }
+.sds-pulse-toggle:hover,
+.sds-cant-speak:hover{ background:#0b1120; transform:translateY(-1px); }
+
+.sds-gesture-inline{
+  margin-top:8px;
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,0.6);
+  background:#020617;
+  padding:8px 9px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.sds-gesture-title{ font-size:12px; font-weight:600; }
+
+.sds-gesture-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.sds-gesture-btn{
+  flex:0 0 auto;
+  border-radius:999px;
+  border:1px solid rgba(30,64,175,0.8);
+  background:#020617;
+  color:#e5e7eb;
+  font-size:11px;
+  padding:5px 9px;
+  cursor:pointer;
+  transition:background 140ms ease,border-color 140ms ease,transform 140ms ease;
+}
+.sds-gesture-btn:hover{
+  background:#0b1120;
+  border-color:#38bdf8;
+  transform:translateY(-1px);
+}
+
+.sds-gesture-note{ font-size:11px; color:#9ca3af; }
+
+.sds-observation-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
+  gap:10px;
+}
+
+.sds-observation-row{
+  border-radius:14px;
+  border:1px solid rgba(30,64,175,0.8);
+  background:#020617;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.sds-observation-inline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:4px 0;
+  border-bottom:1px dashed rgba(31,41,55,0.9);
+}
+.sds-observation-inline:last-child{ border-bottom:none; }
+
+.sds-observation-inline-label{ font-size:13px; font-weight:500; }
+
+.sds-observation-inline-actions{ display:flex; gap:6px; }
+
+.sds-ob-chip{
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,0.7);
+  background:#020617;
+  color:#e5e7eb;
+  font-size:11px;
+  padding:5px 10px;
+  cursor:pointer;
+  transition:background 140ms ease,border-color 140ms ease,transform 140ms ease;
+}
+.sds-ob-chip.is-yes{ border-color:rgba(34,197,94,0.7); }
+.sds-ob-chip.is-no{ border-color:rgba(248,113,113,0.7); }
+.sds-ob-chip.is-selected.is-yes{ background:#064e3b; }
+.sds-ob-chip.is-selected.is-no{ background:#7f1d1d; }
+.sds-ob-chip:hover{ transform:translateY(-1px); }
+
+.sds-log-panel{
+  border-radius:14px;
+  border:1px solid rgba(30,64,175,0.8);
+  background:#020617;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.sds-log-title{ font-size:12px; font-weight:600; }
+
+.sds-log-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  font-size:11px;
+  color:#cbd5e1;
+}
+.sds-log-empty{ color:#6b7280; }
+.sds-log-time{ color:#9ca3af; margin-right:6px; }
+
+.sds-decision-row{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.sds-decision-card{
+  border-radius:14px;
+  border:1px solid rgba(30,64,175,0.8);
+  background:#020617;
+  padding:10px;
+  text-align:left;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  transition:transform 140ms ease,box-shadow 140ms ease,border-color 140ms ease,background 140ms ease;
+}
+.sds-decision-card.is-selected{
+  transform:translateY(-1px);
+  box-shadow:0 14px 30px rgba(15,23,42,0.9);
+}
+
+.sds-decision-safe{ border-color:rgba(34,197,94,0.7); }
+.sds-decision-exam{ border-color:rgba(234,179,8,0.8); }
+.sds-decision-emergency{ border-color:rgba(248,113,113,0.9); }
+
+.sds-decision-label{ font-size:14px; font-weight:600; }
+.sds-decision-hint{ font-size:11px; color:#9ca3af; }
+
+.sds-summary-box{
+  border-radius:12px;
+  border:1px dashed rgba(148,163,184,0.8);
+  padding:8px 10px;
+  background:#020617;
+}
+.sds-summary-title{ font-size:12px; font-weight:600; margin-bottom:4px; }
+.sds-summary-text{ font-size:11px; color:#cbd5e1; }
+
+.sds-countdown{ font-size:11px; color:#9ca3af; }
+
+@media (max-width:1024px){
+  .sds-observation-layout{ grid-template-columns:1fr; }
+  .sds-decision-row{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width:640px){
+  .sds-shell{ padding:10px 10px 16px; }
+  .sds-decision-row{ grid-template-columns:1fr; }
+}
+
+
+
+
+
