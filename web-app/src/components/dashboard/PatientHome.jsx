@@ -1,5 +1,6 @@
 // src/components/PatientHome.jsx
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./Patient.css";
 
 function useScrollDirection() {
@@ -81,14 +82,25 @@ function TopNav({
   onOpenSettings,
   onOpenScreenCall,
 }) {
-  const moreItems = ["Prescriptions", "Screen call", "Settings"];
+  const { t } = useTranslation();
 
-  const onMoreClick = (t) => {
-    if (t === "Prescriptions") return onOpenPrescriptions;
-    if (t === "Settings") return onOpenSettings;
-    if (t === "Screen call") return onOpenScreenCall;
-    return undefined;
-  };
+  const items = [
+    {
+      key: "prescriptions",
+      label: t("patient.nav_prescriptions"),
+      handler: onOpenPrescriptions,
+    },
+    {
+      key: "screen",
+      label: t("patient.nav_screen_call"),
+      handler: onOpenScreenCall,
+    },
+    {
+      key: "settings",
+      label: t("patient.nav_settings"),
+      handler: onOpenSettings,
+    },
+  ];
 
   return (
     <nav className="pj-nav-header">
@@ -100,7 +112,7 @@ function TopNav({
             className={`pj-navBtn ${active === "Home" ? "active" : ""}`}
             type="button"
           >
-            Home
+            {t("patient.nav_home")}
           </button>
 
           <button
@@ -108,24 +120,22 @@ function TopNav({
             type="button"
             onClick={onOpenAppointments}
           >
-            My appointments
+            {t("patient.nav_appointments")}
           </button>
-
-          {/* مفيش زر Messages هنا */}
 
           <div className="pj-more">
             <button className="pj-navBtn pj-moreBtn" type="button">
-              More ▾
+              {t("patient.nav_more")} ▾
             </button>
             <div className="pj-moreMenu">
-              {moreItems.map((t) => (
+              {items.map((item) => (
                 <button
-                  key={t}
+                  key={item.key}
                   className="pj-moreItem"
                   type="button"
-                  onClick={onMoreClick(t)}
+                  onClick={item.handler}
                 >
-                  {t}
+                  {item.label}
                 </button>
               ))}
             </div>
@@ -136,7 +146,7 @@ function TopNav({
             className="pj-navBtn pj-navLogout"
             onClick={onLogout}
           >
-            Logout
+            {t("patient.nav_logout")}
           </button>
         </div>
       </div>
@@ -153,8 +163,14 @@ export default function PatientHome({
   onOpenSettings,
   onOpenScreenCall,
 }) {
+  const { t } = useTranslation();
   const scrollDir = useScrollDirection();
   const [theme, setTheme] = useState(getDayTheme());
+
+  // تثبيت أن الدور الحالي = مريض
+  useEffect(() => {
+    localStorage.setItem("role", "Patient");
+  }, []);
 
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -162,62 +178,59 @@ export default function PatientHome({
 
   const patient = {
     name: "Sara",
-    status: "Stable",
-    alert: "No urgent alerts",
-    encouragement: "You’re on track. Keep going.",
+    status: t("patient.status_stable"),
+    alert: t("patient.alert_none"),
+    encouragement: t("patient.encouragement"),
   };
 
   const todayEvents = [
     {
-      type: "Appointment",
+      type: t("patient.event_appointment_type"),
       time: "8:30 PM",
-      title: "Dr. Ahmed Hassan (Internal Medicine)",
-      tip: "Shifaa Clinic · 2nd floor",
+      title: t("patient.event_appointment_title"),
+      tip: t("patient.event_appointment_tip"),
     },
     {
-      type: "Medication",
+      type: t("patient.event_medication_type"),
       time: "7:00 PM",
-      title: "Metformin 500mg",
-      tip: "With food",
+      title: t("patient.event_medication_title"),
+      tip: t("patient.event_medication_tip"),
     },
     {
-      type: "Message",
-      time: "2 days ago",
-      title: "Clinic assistant",
-      tip: "Results look good.",
+      type: t("patient.event_message_type"),
+      time: t("patient.event_message_time"),
+      title: t("patient.event_message_title"),
+      tip: t("patient.event_message_tip"),
     },
   ];
 
   const journey = [
     {
       id: "past",
-      stage: "Past",
-      title: "Lab check completed",
-      meta: "1 month ago",
-      details:
-        "Labs were completed successfully. Keep tracking symptoms and follow the care plan.",
+      stage: t("patient.journey_stage_past"),
+      title: t("patient.journey_past_title"),
+      meta: t("patient.journey_past_meta"),
+      details: t("patient.journey_past_details"),
     },
     {
       id: "current",
-      stage: "Current",
-      title: "This week focus",
-      meta: "Hydration · 20 min walk · Adherence",
-      details:
-        "Focus on daily habits. If you miss a dose, check your plan or ask the assistant.",
+      stage: t("patient.journey_stage_current"),
+      title: t("patient.journey_current_title"),
+      meta: t("patient.journey_current_meta"),
+      details: t("patient.journey_current_details"),
     },
     {
       id: "next",
-      stage: "Next",
-      title: "Upcoming appointment",
-      meta: "Saturday · 8:30 PM",
-      details:
-        "Bring your latest questions. Try to arrive 10 minutes early.",
+      stage: t("patient.journey_stage_next"),
+      title: t("patient.journey_next_title"),
+      meta: t("patient.journey_next_meta"),
+      details: t("patient.journey_next_details"),
     },
   ];
 
   useEffect(() => {
-    const t = setInterval(() => setTheme(getDayTheme()), 60_000);
-    return () => clearInterval(t);
+    const tmr = setInterval(() => setTheme(getDayTheme()), 60_000);
+    return () => clearInterval(tmr);
   }, []);
 
   const openDetails = (step) => {
@@ -246,9 +259,9 @@ export default function PatientHome({
       <nav className={`pj-nav ${scrollDir === "down" ? "hide" : ""}`}>
         <div className="pj-navInnerSub">
           <div className="pj-navTabs" aria-label="Section navigation">
-            <a href="#today">Today</a>
-            <a href="#journey">Journey</a>
-            <a href="#messages">Messages</a>
+            <a href="#today">{t("patient.tab_today")}</a>
+            <a href="#journey">{t("patient.tab_journey")}</a>
+            <a href="#messages">{t("patient.tab_messages")}</a>
           </div>
         </div>
       </nav>
@@ -257,24 +270,28 @@ export default function PatientHome({
         <div className="pj-heroInner">
           <div className="pj-heroTop">
             <div>
-              <div className="pj-h1">Welcome back, {patient.name}</div>
+              <div className="pj-h1">
+                {t("patient.hero_welcome", { name: patient.name })}
+              </div>
               <div className="pj-sub">
-                Today: {patient.status} · {patient.alert}
+                {t("patient.hero_today", {
+                  status: patient.status,
+                  alert: patient.alert,
+                })}
               </div>
               <div className="pj-encourage">{patient.encouragement}</div>
             </div>
 
-            {/* أيقونتين بس ومرتبطين بالصفحات */}
             <div className="pj-heroIcons" aria-label="Status shortcuts">
               <button
                 type="button"
                 className="pj-icon pj-blue"
                 onClick={onOpenAppointments}
               >
-                <span className="pj-glyph" aria-hidden="true">
-                  🗓
+                <span className="pj-glyph" aria-hidden="true">🗓</span>
+                <span className="sr-only">
+                  {t("patient.nav_appointments")}
                 </span>
-                <span className="sr-only">Appointments</span>
               </button>
 
               <button
@@ -282,16 +299,18 @@ export default function PatientHome({
                 className="pj-icon pj-aqua"
                 onClick={onOpenPrescriptions}
               >
-                <span className="pj-glyph" aria-hidden="true">
-                  💊
+                <span className="pj-glyph" aria-hidden="true">💊</span>
+                <span className="sr-only">
+                  {t("patient.nav_prescriptions")}
                 </span>
-                <span className="sr-only">Prescriptions</span>
               </button>
             </div>
           </div>
 
           <div className="pj-timeline" id="today">
-            <div className="pj-timelineTitle">Today timeline</div>
+            <div className="pj-timelineTitle">
+              {t("patient.today_timeline")}
+            </div>
 
             <div className="pj-timelineRows">
               {todayEvents.map((e, idx) => (
@@ -308,14 +327,17 @@ export default function PatientHome({
             </div>
 
             <div className="pj-heroActions">
-              <button className="pj-btn" onClick={() => setAssistantOpen(true)}>
-                Open smart assistant
+              <button
+                className="pj-btn"
+                onClick={() => setAssistantOpen(true)}
+              >
+                {t("patient.btn_open_assistant")}
               </button>
               <button
                 className="pj-btn ghost"
                 onClick={() => window.location.assign("#journey")}
               >
-                Continue your journey
+                {t("patient.btn_continue_journey")}
               </button>
             </div>
           </div>
@@ -324,14 +346,16 @@ export default function PatientHome({
 
       <main className="pj-main">
         <section className="pj-section" id="journey">
-          <div className="pj-sectionTitle">Your journey</div>
+          <div className="pj-sectionTitle">{t("patient.journey_title")}</div>
 
           <div className="pj-rail">
             <div className="pj-railLine" aria-hidden="true" />
             {journey.map((s) => (
               <button
                 key={s.id}
-                className={`pj-step ${s.id === "current" ? "is-current" : ""}`}
+                className={`pj-step ${
+                  s.id === "current" ? "is-current" : ""
+                }`}
                 onClick={() => openDetails(s)}
                 type="button"
               >
@@ -342,7 +366,7 @@ export default function PatientHome({
                   <div className="pj-stepMeta">{s.meta}</div>
                 </div>
                 <div className="pj-stepHint" aria-hidden="true">
-                  View
+                  {t("patient.journey_view")}
                 </div>
               </button>
             ))}
@@ -350,74 +374,99 @@ export default function PatientHome({
         </section>
 
         <section className="pj-section" id="messages">
-          <div className="pj-sectionTitle">Messages</div>
+          <div className="pj-sectionTitle">
+            {t("patient.messages_title")}
+          </div>
           <div className="pj-textBlock">
-            <div className="pj-msgTitle">Clinic assistant</div>
-            <div className="pj-msgBody">
-              Your last results look good.
-              <span className="pj-msgBodySub"> Keep following the plan.</span>
+            <div className="pj-msgTitle">
+              {t("patient.messages_clinic_assistant")}
             </div>
-            <div className="pj-msgMeta">2 days ago</div>
+            <div className="pj-msgBody">
+              {t("patient.messages_body")}
+              <span className="pj-msgBodySub">
+                {" "}
+                {t("patient.messages_body_sub")}
+              </span>
+            </div>
+            <div className="pj-msgMeta">
+              {t("patient.messages_meta")}
+            </div>
           </div>
         </section>
 
         <footer className="pj-footer">
           <div>© {new Date().getFullYear()} Shifaa</div>
-          <div className="pj-footerHint">Last update: {lastUpdate}</div>
+          <div className="pj-footerHint">
+            {t("patient.footer_last_update", { value: lastUpdate })}
+          </div>
         </footer>
       </main>
 
       <button
         className="pj-fab"
         onClick={() => setAssistantOpen(true)}
-        aria-label="Open smart assistant"
+        aria-label={t("patient.btn_open_assistant")}
       >
         💬
       </button>
 
       <RightPanel
         open={assistantOpen}
-        title="Smart assistant"
+        title={t("patient.assistant_title")}
         onClose={() => setAssistantOpen(false)}
       >
         <div className="pj-panelCard">
-          <div className="pj-panelLabel">Suggested actions</div>
+          <div className="pj-panelLabel">
+            {t("patient.assistant_suggested")}
+          </div>
           <button className="pj-panelBtn" type="button">
-            Schedule a follow-up
+            {t("patient.assistant_schedule_followup")}
           </button>
           <button className="pj-panelBtn" type="button">
-            Set medication reminder
+            {t("patient.assistant_set_reminder")}
           </button>
           <button className="pj-panelBtn" type="button">
-            Ask about my results
+            {t("patient.assistant_ask_results")}
           </button>
         </div>
 
         <div className="pj-panelCard">
-          <div className="pj-panelLabel">Quick message</div>
+          <div className="pj-panelLabel">
+            {t("patient.assistant_quick_message")}
+          </div>
           <textarea
             className="pj-textarea"
-            placeholder="Type your question..."
+            placeholder={t("patient.assistant_quick_placeholder")}
             rows={4}
           />
           <button className="pj-btn" type="button">
-            Send
+            {t("patient.assistant_send")}
           </button>
         </div>
       </RightPanel>
 
       <Modal
         open={detailOpen}
-        title={activeStep ? `${activeStep.stage}: ${activeStep.title}` : "Details"}
+        title={
+          activeStep
+            ? t("patient.modal_title", {
+                stage: activeStep.stage,
+                title: activeStep.title,
+              })
+            : t("patient.modal_fallback")
+        }
         onClose={() => setDetailOpen(false)}
       >
         <div className="pj-modalText">{activeStep?.details}</div>
         <div className="pj-modalActions">
           <button className="pj-btn" onClick={() => setDetailOpen(false)}>
-            Done
+            {t("patient.modal_done")}
           </button>
-          <button className="pj-btn ghost" onClick={() => setAssistantOpen(true)}>
-            Ask assistant
+          <button
+            className="pj-btn ghost"
+            onClick={() => setAssistantOpen(true)}
+          >
+            {t("patient.modal_ask_assistant")}
           </button>
         </div>
       </Modal>
