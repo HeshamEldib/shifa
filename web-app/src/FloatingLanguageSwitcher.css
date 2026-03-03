@@ -1,0 +1,99 @@
+.fab-lang-container {
+  position: fixed;
+  bottom: 80px;
+  right: 80px;
+  z-index: 9999;
+}
+
+.fab-center {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+
+/* زر 🌐 */
+.fab-lang-button {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #22d3ee, #7c3aed);
+  color: #ffffff;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* حاوية الأعلام */
+.fab-radial {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 56px;
+  height: 56px;
+  pointer-events: none;
+}
+
+.fab-radial-open {
+  pointer-events: auto;
+}
+
+/* عناصر الأعلام */
+.fab-radial-item {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 0;
+  background: #020617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(0, 0) scale(0.5);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* index 0 → فوق */
+.fab-radial-open .fab-radial-item[data-index="0"] {
+  opacity: 1;
+  transform: translate(5px, -70px) scale(1);
+}
+
+/* index 1 → يمين */
+.fab-radial-open .fab-radial-item[data-index="1"] {
+  opacity: 1;
+  transform: translate(75px, -15px) scale(1);
+}
+
+/* index 2 → تحت يمين */
+.fab-radial-open .fab-radial-item[data-index="2"] {
+  opacity: 1;
+  transform: translate(45px, 65px) scale(1);
+}
+
+/* index 3 → تحت يسار */
+.fab-radial-open .fab-radial-item[data-index="3"] {
+  opacity: 1;
+  transform: translate(-35px, 70px) scale(1);
+}
+
+/* index 4 → يسار */
+.fab-radial-open .fab-radial-item[data-index="4"] {
+  opacity: 1;
+  transform: translate(-70px, -5px) scale(1);
+}
+
+.fab-radial-flag {
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  display: block;
+}

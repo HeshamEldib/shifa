@@ -1,8 +1,11 @@
 // src/components/AboutSection.jsx
 import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./About.css";
 
 function AboutSection({ onBackClick }) {
+  const { t } = useTranslation();
+
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === "undefined" || !window.matchMedia) return false;
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -13,74 +16,72 @@ function AboutSection({ onBackClick }) {
       patient: [
         {
           time: "8:30 AM",
-          title: "Gentle reminder",
-          text: "Ahmed wakes up to a clean reminder for his follow‑up visit. Time, place, and notes are already organized—no searching, no stress.",
+          title: t("about.patient_1_title"),
+          text: t("about.patient_1_text"),
         },
         {
           time: "10:15 AM",
-          title: "Ready before the visit",
-          text: "On the way, he reviews the last summary and saved questions. Everything appears in one calm flow so he arrives prepared.",
+          title: t("about.patient_2_title"),
+          text: t("about.patient_2_text"),
         },
         {
           time: "11:00 AM",
-          title: "No repeating the whole story",
-          text: "At the clinic, his updated info is already available. The visit starts from context, not from zero.",
+          title: t("about.patient_3_title"),
+          text: t("about.patient_3_text"),
         },
         {
           time: "11:20 AM",
-          title: "Clear next steps",
-          text: "After the visit, Ahmed sees a simple plan: what to do next, what changed, and when to return—written clearly.",
+          title: t("about.patient_4_title"),
+          text: t("about.patient_4_text"),
         },
         {
           time: "5:30 PM",
-          title: "Follow‑up that feels human",
-          text: "A gentle check‑in and actionable reminders arrive later. The day feels connected, not fragmented.",
+          title: t("about.patient_5_title"),
+          text: t("about.patient_5_text"),
         },
       ],
       doctor: [
         {
           time: "9:00 AM",
-          title: "Day overview",
-          text: "The doctor opens Shifaa and sees a focused schedule and patient context—who needs what, without noise.",
+          title: t("about.doctor_1_title"),
+          text: t("about.doctor_1_text"),
         },
         {
           time: "10:50 AM",
-          title: "Fast context loading",
-          text: "Before Ahmed arrives, the doctor reviews history, notes, and relevant updates—so the conversation is more meaningful.",
+          title: t("about.doctor_2_title"),
+          text: t("about.doctor_2_text"),
         },
         {
           time: "11:15 AM",
-          title: "Document while you think",
-          text: "During the visit, the doctor captures notes and decisions in a structured way—no messy paperwork later.",
+          title: t("about.doctor_3_title"),
+          text: t("about.doctor_3_text"),
         },
         {
           time: "11:25 AM",
-          title: "Plan and follow-up",
-          text: "Next steps are recorded as a clear plan the patient can actually follow, with fewer misunderstandings.",
+          title: t("about.doctor_4_title"),
+          text: t("about.doctor_4_text"),
         },
         {
           time: "6:00 PM",
-          title: "Close the loop",
-          text: "Follow‑ups and quick clarifications happen in one place, reducing repeated calls and missing details.",
+          title: t("about.doctor_5_title"),
+          text: t("about.doctor_5_text"),
         },
       ],
     }),
-    []
+    [t]
   );
 
-  const [role, setRole] = useState("patient"); // "patient" | "doctor"
+  const [role, setRole] = useState("patient");
   const steps = journeys[role];
   const [active, setActive] = useState(0);
 
   const [isPlaying, setIsPlaying] = useState(!prefersReducedMotion);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Reset step when switching role
   useEffect(() => {
     setActive(0);
   }, [role]);
 
-  // Autoplay
   useEffect(() => {
     if (prefersReducedMotion) return;
     if (!isPlaying) return;
@@ -100,130 +101,112 @@ function AboutSection({ onBackClick }) {
 
   return (
     <main className="about-page">
-      {/* شريط علوي بسيط */}
       <header className="about-header">
         <button className="about-back" onClick={onBackClick}>
-          ← Back
+          ← {t("about.back")}
         </button>
-        <span className="about-header-title">About Shifaa</span>
+        <span className="about-header-title">
+          {t("about.header_title")}
+        </span>
       </header>
 
-      {/* المحتوى في عمود واحد */}
       <section className="about-content">
-        {/* 1) مقدمة */}
         <section className="about-block">
-          <p className="about-eyebrow">Our Story</p>
+          <p className="about-eyebrow">{t("about.our_story")}</p>
           <h1 className="about-main-title">
-            Building a calmer, smarter way to experience healthcare.
+            {t("about.main_title")}
           </h1>
-          <p className="about-text">
-            Shifaa is a digital layer that connects patients, doctors, and
-            clinics in one organized space. We focus on simple flows, clear
-            communication, and tools that feel natural in everyday care.
-          </p>
+          <p className="about-text">{t("about.main_text")}</p>
         </section>
 
-        {/* 2) Why Shifaa */}
         <section className="about-block">
-          <h2 className="about-section-heading">Why Shifaa?</h2>
+          <h2 className="about-section-heading">
+            {t("about.why_title")}
+          </h2>
           <div className="about-three-points">
             <div className="about-point">
               <span className="about-point-dot" />
               <div>
-                <h3>Clear communication</h3>
-                <p>
-                  One channel for updates, questions, and follow‑ups between
-                  patients and doctors.
-                </p>
+                <h3>{t("about.why_point1_title")}</h3>
+                <p>{t("about.why_point1_text")}</p>
               </div>
             </div>
             <div className="about-point">
               <span className="about-point-dot" />
               <div>
-                <h3>Organized journeys</h3>
-                <p>
-                  Appointments, files, and notes stay in sync so no one loses
-                  context along the way.
-                </p>
+                <h3>{t("about.why_point2_title")}</h3>
+                <p>{t("about.why_point2_text")}</p>
               </div>
             </div>
             <div className="about-point">
               <span className="about-point-dot" />
               <div>
-                <h3>Room for AI</h3>
-                <p>
-                  Space for safe AI assistance to support decisions, not replace
-                  people.
-                </p>
+                <h3>{t("about.why_point3_title")}</h3>
+                <p>{t("about.why_point3_text")}</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 3) Timeline عمودي */}
         <section className="about-block">
-          <h2 className="about-section-heading">Journey timeline</h2>
+          <h2 className="about-section-heading">
+            {t("about.timeline_title")}
+          </h2>
           <div className="about-timeline-vertical">
             <div className="about-timeline-line-vertical" />
 
             <div className="about-timeline-item">
               <span className="about-timeline-dot-vertical" />
               <div className="about-timeline-body">
-                <span className="about-timeline-date">Oct 2025</span>
-                <h3>Idea and research</h3>
-                <p>
-                  Early sketches and interviews with doctors and patients to map
-                  the real pain points in daily care.
-                </p>
+                <span className="about-timeline-date">
+                  {t("about.timeline_1_date")}
+                </span>
+                <h3>{t("about.timeline_1_title")}</h3>
+                <p>{t("about.timeline_1_text")}</p>
               </div>
             </div>
 
             <div className="about-timeline-item">
               <span className="about-timeline-dot-vertical" />
               <div className="about-timeline-body">
-                <span className="about-timeline-date">Jan 2026</span>
-                <h3>Product foundations</h3>
-                <p>
-                  Designing the core experience: roles, flows, and how each
-                  visit feels inside Shifaa.
-                </p>
+                <span className="about-timeline-date">
+                  {t("about.timeline_2_date")}
+                </span>
+                <h3>{t("about.timeline_2_title")}</h3>
+                <p>{t("about.timeline_2_text")}</p>
               </div>
             </div>
 
             <div className="about-timeline-item">
               <span className="about-timeline-dot-vertical" />
               <div className="about-timeline-body">
-                <span className="about-timeline-date">Oct 2026</span>
-                <h3>First live rollout</h3>
-                <p>
-                  Bringing Shifaa into clinics, measuring what works, and
-                  evolving the product with real data.
-                </p>
+                <span className="about-timeline-date">
+                  {t("about.timeline_3_date")}
+                </span>
+                <h3>{t("about.timeline_3_title")}</h3>
+                <p>{t("about.timeline_3_text")}</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 4) Mission & Vision */}
         <section className="about-block about-block-surface">
-          <h2 className="about-section-heading">Mission &amp; vision</h2>
+          <h2 className="about-section-heading">
+            {t("about.mission_title")}
+          </h2>
           <p className="about-text">
-            <strong>Mission:</strong> to make every medical interaction a bit
-            clearer, calmer, and more connected for both patients and
-            professionals.
+            <strong>{t("about.mission_label")}</strong>
+            {t("about.mission_text")}
           </p>
           <p className="about-text">
-            <strong>Vision:</strong> a health system where digital tools and AI
-            quietly support care in the background, so people can focus on being
-            human with each other.
+            <strong>{t("about.vision_label")}</strong>
+            {t("about.vision_text")}
           </p>
           <p className="about-quote-line">
-            “Imagine a visit where your history, questions, and next steps are
-            already in sync when you walk in.”
+            {t("about.quote")}
           </p>
         </section>
 
-        {/* 5) A day with Shifaa – Dynamic stepper */}
         <section
           className="about-block about-journey"
           onMouseEnter={() => setIsHovering(true)}
@@ -231,26 +214,36 @@ function AboutSection({ onBackClick }) {
         >
           <div className="about-journey-top">
             <div>
-              <h2 className="about-section-heading">A day with Shifaa</h2>
+              <h2 className="about-section-heading">
+                {t("about.day_title")}
+              </h2>
               <p className="about-text about-journey-sub">
-                Tap a moment to jump, or press Play to watch the story unfold.
+                {t("about.day_sub")}
               </p>
             </div>
 
-            <div className="about-journey-controls" role="group" aria-label="Journey controls">
+            <div
+              className="about-journey-controls"
+              role="group"
+              aria-label={t("about.day_controls_label")}
+            >
               <button
                 type="button"
-                className={`about-pill ${role === "patient" ? "is-active" : ""}`}
+                className={`about-pill ${
+                  role === "patient" ? "is-active" : ""
+                }`}
                 onClick={() => setRole("patient")}
               >
-                Patient view
+                {t("about.day_patient_view")}
               </button>
               <button
                 type="button"
-                className={`about-pill ${role === "doctor" ? "is-active" : ""}`}
+                className={`about-pill ${
+                  role === "doctor" ? "is-active" : ""
+                }`}
                 onClick={() => setRole("doctor")}
               >
-                Doctor view
+                {t("about.day_doctor_view")}
               </button>
 
               <span className="about-divider" />
@@ -261,20 +254,33 @@ function AboutSection({ onBackClick }) {
                 onClick={() => setIsPlaying((v) => !v)}
                 disabled={prefersReducedMotion}
                 aria-disabled={prefersReducedMotion}
-                title={prefersReducedMotion ? "Reduced motion enabled" : "Play / Pause"}
+                title={
+                  prefersReducedMotion
+                    ? t("about.motion_off_title")
+                    : t("about.motion_on_title")
+                }
               >
-                {prefersReducedMotion ? "Motion off" : isPlaying ? "Pause" : "Play"}
+                {prefersReducedMotion
+                  ? t("about.motion_off")
+                  : isPlaying
+                  ? t("about.motion_pause")
+                  : t("about.motion_play")}
               </button>
             </div>
           </div>
 
-          {/* Stepper */}
-          <div className="about-stepper" role="tablist" aria-label="Day steps">
+          <div
+            className="about-stepper"
+            role="tablist"
+            aria-label={t("about.day_steps_label")}
+          >
             {steps.map((s, idx) => (
               <button
                 key={`${role}-${s.time}-${idx}`}
                 type="button"
-                className={`about-step ${idx === active ? "is-active" : ""}`}
+                className={`about-step ${
+                  idx === active ? "is-active" : ""
+                }`}
                 onClick={() => setActive(idx)}
                 role="tab"
                 aria-selected={idx === active}
@@ -285,18 +291,32 @@ function AboutSection({ onBackClick }) {
             ))}
           </div>
 
-          {/* Card */}
-          <div className="about-journey-card" role="region" aria-live="polite">
+          <div
+            className="about-journey-card"
+            role="region"
+            aria-live="polite"
+          >
             <div className="about-journey-card-head">
               <span className="about-journey-kicker">
-                {role === "patient" ? "Patient moment" : "Doctor moment"} • Step{" "}
-                {active + 1}/{steps.length}
+                {role === "patient"
+                  ? t("about.day_patient_moment")
+                  : t("about.day_doctor_moment")}
+                {" • "}
+                {t("about.day_step_counter", {
+                  current: active + 1,
+                  total: steps.length,
+                })}
               </span>
-              <h3 className="about-journey-title">{steps[active].title}</h3>
+              <h3 className="about-journey-title">
+                {steps[active].title}
+              </h3>
             </div>
             <p className="about-text">{steps[active].text}</p>
 
-            <div className="about-progress" aria-label="Story progress">
+            <div
+              className="about-progress"
+              aria-label={t("about.day_progress_label")}
+            >
               <div
                 className="about-progress-fill"
                 style={{ width: `${progressPct}%` }}
@@ -305,38 +325,53 @@ function AboutSection({ onBackClick }) {
           </div>
         </section>
 
-        {/* 6) Team */}
         <section className="about-block">
-          <h2 className="about-section-heading">The team behind Shifaa</h2>
+          <h2 className="about-section-heading">
+            {t("about.team_title")}
+          </h2>
           <ul className="about-team-list">
             <li className="about-team-item">
               <span className="about-avatar" />
               <div>
-                <span className="about-team-name">Youssef</span>
-                <span className="about-team-role">Data Analyst</span>
-              </div>
-            </li>
-            <li className="about-team-item">
-              <span className="about-avatar" />
-              <div>
-                <span className="about-team-name">Hesham &amp; Mohamed</span>
-                <span className="about-team-role">Backend Developers</span>
-              </div>
-            </li>
-            <li className="about-team-item">
-              <span className="about-avatar" />
-              <div>
-                <span className="about-team-name">Samaa</span>
-                <span className="about-team-role">Frontend Developer</span>
-              </div>
-            </li>
-            
-            <li className="about-team-item">
-              <span className="about-avatar" />
-              <div>
-                <span className="about-team-name">Faculty of Science</span>
+                <span className="about-team-name">
+                  {t("about.team_youssef_name")}
+                </span>
                 <span className="about-team-role">
-                  Fayoum University – Mathematics &amp; Computer Science
+                  {t("about.team_youssef_role")}
+                </span>
+              </div>
+            </li>
+            <li className="about-team-item">
+              <span className="about-avatar" />
+              <div>
+                <span className="about-team-name">
+                  {t("about.team_hesham_mohamed_name")}
+                </span>
+                <span className="about-team-role">
+                  {t("about.team_hesham_mohamed_role")}
+                </span>
+              </div>
+            </li>
+            <li className="about-team-item">
+              <span className="about-avatar" />
+              <div>
+                <span className="about-team-name">
+                  {t("about.team_samaa_name")}
+                </span>
+                <span className="about-team-role">
+                  {t("about.team_samaa_role")}
+                </span>
+              </div>
+            </li>
+
+            <li className="about-team-item">
+              <span className="about-avatar" />
+              <div>
+                <span className="about-team-name">
+                  {t("about.team_faculty_name")}
+                </span>
+                <span className="about-team-role">
+                  {t("about.team_faculty_role")}
                 </span>
               </div>
             </li>

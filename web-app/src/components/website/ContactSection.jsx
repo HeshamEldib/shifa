@@ -2,6 +2,7 @@
 import React from "react";
 import heroImg from "../../assets/hero-illustration.png";
 import "./Contact.css";
+import { useTranslation } from "react-i18next";
 
 function ContactSection({
   isLoaded,
@@ -10,23 +11,24 @@ function ContactSection({
   onAboutClick,
   onSignupClick,
 }) {
+  const { t } = useTranslation();
+
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [status, setStatus] = React.useState("");
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // يمنع ريلود الصفحة
+    e.preventDefault();
 
     if (!name.trim() || !email.trim() || !message.trim()) {
-      setStatus("Please fill in all fields.");
+      setStatus(t("contact.error_fill_all"));
       return;
     }
 
-    // هنا ممكن تبعتي للباك إند بعدين
     console.log("Contact form submitted:", { name, email, message });
 
-    setStatus("Message sent successfully! We will get back to you soon.");
+    setStatus(t("contact.success_message"));
     setName("");
     setEmail("");
     setMessage("");
@@ -48,47 +50,7 @@ function ContactSection({
       {/* الهيدر */}
       <nav className={`navbar ${isLoaded ? "fade-in-down" : ""}`}>
         <div className="logo-container" onClick={onBackClick}>
-          <svg
-            width="52"
-            height="52"
-            viewBox="0 0 100 100"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="team-logo-svg"
-          >
-            <path
-              d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50"
-              stroke="url(#logo-gradient)"
-              strokeWidth="8"
-              strokeLinecap="round"
-            />
-            <path
-              d="M20 50 L35 50 L45 30 L55 70 L65 50 L80 50"
-              stroke="white"
-              strokeWidth="7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="pulse-path"
-            />
-            <text
-              x="50"
-              y="57"
-              textAnchor="middle"
-              fontSize="36"
-              fontWeight="700"
-              fill="#e5f4ff"
-              className="logo-s-letter"
-            >
-              S
-            </text>
-            <defs>
-              <linearGradient id="logo-gradient" x1="0" y1="0" x2="100" y2="100">
-                <stop offset="0%" stopColor="#22d3ee" />
-                <stop offset="100%" stopColor="#7c3aed" />
-              </linearGradient>
-            </defs>
-          </svg>
-
+          {/* نفس اللوجو */}
           <span className="logo-text-main">Shifaa</span>
         </div>
 
@@ -98,29 +60,26 @@ function ContactSection({
             className="nav-item"
             onClick={onBackClick}
           >
-            Home
+            {t("navbar.home")}
           </button>
           <button
             type="button"
             className="nav-item"
             onClick={onAboutClick}
           >
-            About
+            {t("navbar.about")}
           </button>
-          <button
-            type="button"
-            className="nav-item"
-          >
-            Contact
+          <button type="button" className="nav-item">
+            {t("navbar.contact")}
           </button>
         </div>
 
         <div className="nav-buttons desktop-only">
           <button className="btn-secondary" onClick={onLoginClick}>
-            Login
+            {t("navbar.login")}
           </button>
           <button className="btn-primary" onClick={onSignupClick}>
-            Sign Up
+            {t("navbar.signup")}
           </button>
         </div>
       </nav>
@@ -129,27 +88,27 @@ function ContactSection({
       <main className="contact-wrapper">
         <div className={`contact-card ${isLoaded ? "fade-in-up" : ""}`}>
           <h2 className="contact-heading">
-            Contact <span className="gradient-text">Us</span>
+            {t("contact.title")}{" "}
+            <span className="gradient-text">{t("contact.title_us")}</span>
           </h2>
 
           <p className="contact-lead">
-            Tell us what you need help with – appointments, accounts, or
-            technical issues – and we’ll reply by email as soon as possible.
+            {t("contact.lead")}
           </p>
 
           <ul className="contact-highlights">
-            <li>Typical response time: within 24 hours</li>
-            <li>Support hours: 9:00 AM – 10:00 PM Cairo time</li>
-            <li>For emergencies, contact local emergency services directly.</li>
+            <li>{t("contact.highlight_response_time")}</li>
+            <li>{t("contact.highlight_support_hours")}</li>
+            <li>{t("contact.highlight_emergency")}</li>
           </ul>
 
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="contact-row-two">
               <div className="contact-group">
-                <label>Name</label>
+                <label>{t("contact.name")}</label>
                 <input
                   type="text"
-                  placeholder="Full name"
+                  placeholder={t("contact.name_placeholder")}
                   className="contact-input"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -157,10 +116,10 @@ function ContactSection({
               </div>
 
               <div className="contact-group">
-                <label>Email</label>
+                <label>{t("contact.email")}</label>
                 <input
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder={t("contact.email_placeholder")}
                   className="contact-input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -169,10 +128,10 @@ function ContactSection({
             </div>
 
             <div className="contact-group contact-message-group">
-              <label>Message</label>
+              <label>{t("contact.message")}</label>
               <textarea
                 rows="5"
-                placeholder="Write your question or issue in detail..."
+                placeholder={t("contact.message_placeholder")}
                 className="contact-textarea"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -181,7 +140,7 @@ function ContactSection({
 
             <div className="contact-actions">
               <button type="submit" className="btn-primary">
-                Send
+                {t("contact.send")}
               </button>
             </div>
 
@@ -193,7 +152,7 @@ function ContactSection({
           </form>
 
           <footer className="contact-footer">
-            <p>© 2026 Shifaa. All rights reserved.</p>
+            <p>{t("contact.footer_copy")}</p>
           </footer>
         </div>
       </main>

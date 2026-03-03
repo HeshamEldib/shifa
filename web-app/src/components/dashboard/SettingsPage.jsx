@@ -1,5 +1,7 @@
+// src/components/SettingsPage.jsx
 import React, { useState, useMemo } from "react";
 import "./Seeting.css";
+import { useTranslation } from "react-i18next";
 
 /* ========== UI primitives ========== */
 
@@ -24,7 +26,16 @@ function Section({ title, subtitle, children, icon }) {
   );
 }
 
-function ToggleRow({ label, description, onChange }) {
+function ToggleRow({ label, description, onChange, checked }) {
+  const [internalChecked, setInternalChecked] = useState(
+    checked ?? true
+  );
+
+  const handleChange = (e) => {
+    setInternalChecked(e.target.checked);
+    onChange?.(e);
+  };
+
   return (
     <div
       className="cc-row"
@@ -47,8 +58,8 @@ function ToggleRow({ label, description, onChange }) {
       <label className="shf-toggle">
         <input
           type="checkbox"
-          defaultChecked
-          onChange={onChange}
+          checked={internalChecked}
+          onChange={handleChange}
         />
         <span className="shf-toggle-track" />
         <span className="shf-toggle-thumb" />
@@ -92,10 +103,11 @@ function SelectRow({ label, description, options, minWidth = 140, onChange }) {
 }
 
 function DataExposureMeter({ level }) {
+  const { t } = useTranslation();
   const labels = {
-    minimal: "Minimal sharing",
-    standard: "Standard",
-    extended: "Extended medical collaboration",
+    minimal: t("settings.data_exposure_minimal"),
+    standard: t("settings.data_exposure_standard"),
+    extended: t("settings.data_exposure_extended"),
   };
 
   const percent = level === "minimal" ? 20 : level === "standard" ? 55 : 85;
@@ -106,8 +118,12 @@ function DataExposureMeter({ level }) {
         className="cc-row"
         style={{ marginBottom: 6, alignItems: "baseline" }}
       >
-        <div className="cc-muted">Your Data Exposure Level</div>
-        <div style={{ fontSize: 12, color: "#e5e7eb" }}>{labels[level]}</div>
+        <div className="cc-muted">
+          {t("settings.data_exposure_title")}
+        </div>
+        <div style={{ fontSize: 12, color: "#e5e7eb" }}>
+          {labels[level]}
+        </div>
       </div>
 
       <div
@@ -144,17 +160,18 @@ function DataExposureMeter({ level }) {
           color: "#9ca3af",
         }}
       >
-        <span>Minimal</span>
-        <span>Standard</span>
-        <span>Extended</span>
+        <span>{t("settings.data_exposure_scale_minimal")}</span>
+        <span>{t("settings.data_exposure_scale_standard")}</span>
+        <span>{t("settings.data_exposure_scale_extended")}</span>
       </div>
     </div>
   );
 }
 
-/* ========== Tabs Strip (index) ========== */
+/* ========== Tabs Strip ========== */
 
 function TabsStrip({ tabs, activeId, onChange }) {
+  const { t } = useTranslation();
   return (
     <div
       className="cc-card"
@@ -164,30 +181,32 @@ function TabsStrip({ tabs, activeId, onChange }) {
       }}
     >
       <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 6 }}>
-        Sections
+        {t("settings.sections_label")}
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {tabs.map((t) => (
+        {tabs.map((tItem) => (
           <button
-            key={t.id}
+            key={tItem.id}
             type="button"
             className="cc-btn ghost"
-            onClick={() => onChange(t.id)}
+            onClick={() => onChange(tItem.id)}
             style={{
               fontSize: 11,
               padding: "6px 10px",
               borderColor:
-                activeId === t.id
+                activeId === tItem.id
                   ? "rgba(34,211,238,0.8)"
                   : "rgba(148,163,184,0.3)",
               background:
-                activeId === t.id
+                activeId === tItem.id
                   ? "rgba(34,211,238,0.12)"
                   : "rgba(7,10,26,0.35)",
             }}
           >
-            {t.icon && <span style={{ marginRight: 6 }}>{t.icon}</span>}
-            {t.label}
+            {tItem.icon && (
+              <span style={{ marginRight: 6 }}>{tItem.icon}</span>
+            )}
+            {tItem.label}
           </button>
         ))}
       </div>
@@ -198,6 +217,7 @@ function TabsStrip({ tabs, activeId, onChange }) {
 /* ========== PATIENT SETTINGS ========== */
 
 function PatientSettings({ onDirtyChange }) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("profile");
 
   const [shareVisits, setShareVisits] = useState(true);
@@ -210,7 +230,6 @@ function PatientSettings({ onDirtyChange }) {
   const [quietTo] = useState("08:00");
   const [recoveryMode, setRecoveryMode] = useState(false);
 
-  // language & timezone state (تقدري تعدّلي الـ defaults لو حبيتي)
   const [preferredLanguage, setPreferredLanguage] = useState("en");
   const [timeZone, setTimeZone] = useState("africa/cairo");
 
@@ -227,10 +246,10 @@ function PatientSettings({ onDirtyChange }) {
   }, [shareVisits, shareLabs, shareAllergyAlerts]);
 
   const tabs = [
-    { id: "profile", label: "Profile & basics", icon: "👤" },
-    { id: "context", label: "Health context", icon: "🧬" },
-    { id: "privacy", label: "Privacy & sharing", icon: "🛡️" },
-    { id: "reminders", label: "Reminders & recovery", icon: "🔔" },
+    { id: "profile", label: t("settings.patient_tab_profile"), icon: "👤" },
+    { id: "context", label: t("settings.patient_tab_context"), icon: "🧬" },
+    { id: "privacy", label: t("settings.patient_tab_privacy"), icon: "🛡️" },
+    { id: "reminders", label: t("settings.patient_tab_reminders"), icon: "🔔" },
   ];
 
   let content = null;
@@ -238,13 +257,13 @@ function PatientSettings({ onDirtyChange }) {
   if (activeTab === "profile") {
     content = (
       <Section
-        title="Account & profile"
-        subtitle="Basic preferences for your patient account"
+        title={t("settings.patient_profile_title")}
+        subtitle={t("settings.patient_profile_sub")}
         icon="👤"
       >
         <SelectRow
-          label="Preferred language"
-          description="Used for SMS and email notifications."
+          label={t("settings.preferred_language_label")}
+          description={t("settings.preferred_language_desc")}
           options={[
             { value: "en", label: "English" },
             { value: "ar", label: "العربية" },
@@ -255,10 +274,13 @@ function PatientSettings({ onDirtyChange }) {
           }}
         />
         <SelectRow
-          label="Time zone"
-          description="Affects appointment reminders and calendar."
+          label={t("settings.timezone_label")}
+          description={t("settings.timezone_desc")}
           options={[
-            { value: "africa/cairo", label: "Africa/Cairo (UTC+2)" },
+            {
+              value: "africa/cairo",
+              label: t("settings.timezone_cairo"),
+            },
             { value: "utc", label: "UTC" },
           ]}
           onChange={(e) => {
@@ -271,35 +293,56 @@ function PatientSettings({ onDirtyChange }) {
   } else if (activeTab === "context") {
     content = (
       <Section
-        title="Personal Health Context"
-        subtitle="Help Shifaa understand your health background intelligently"
+        title={t("settings.patient_context_title")}
+        subtitle={t("settings.patient_context_sub")}
         icon="🧬"
       >
-        <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 8 }}>
-          This information is read-only here and comes from your medical
-          record. You can control how Shifaa uses it with doctors.
+        <div
+          style={{ fontSize: 12, color: "#9ca3af", marginBottom: 8 }}
+        >
+          {t("settings.patient_context_note")}
         </div>
 
         <div style={{ display: "grid", gap: 8, fontSize: 13 }}>
           <div className="cc-row">
-            <span className="cc-muted">Chronic conditions</span>
-            <span>Diabetes · Hypertension (example)</span>
+            <span className="cc-muted">
+              {t("settings.context_chronic")}
+            </span>
+            <span>
+              {t("settings.context_chronic_example")}
+            </span>
           </div>
           <div className="cc-row">
-            <span className="cc-muted">Allergies summary</span>
-            <span>Penicillin · NSAIDs (example)</span>
+            <span className="cc-muted">
+              {t("settings.context_allergies")}
+            </span>
+            <span>
+              {t("settings.context_allergies_example")}
+            </span>
           </div>
           <div className="cc-row">
-            <span className="cc-muted">Pregnancy status</span>
-            <span>Not pregnant (example)</span>
+            <span className="cc-muted">
+              {t("settings.context_pregnancy")}
+            </span>
+            <span>
+              {t("settings.context_pregnancy_example")}
+            </span>
           </div>
           <div className="cc-row">
-            <span className="cc-muted">Blood type</span>
-            <span>O+ (example)</span>
+            <span className="cc-muted">
+              {t("settings.context_blood_type")}
+            </span>
+            <span>
+              {t("settings.context_blood_type_example")}
+            </span>
           </div>
           <div className="cc-row">
-            <span className="cc-muted">Emergency contact</span>
-            <span>Mother · +20 100 000 0000 (example)</span>
+            <span className="cc-muted">
+              {t("settings.context_emergency_contact")}
+            </span>
+            <span>
+              {t("settings.context_emergency_contact_example")}
+            </span>
           </div>
         </div>
 
@@ -311,8 +354,8 @@ function PatientSettings({ onDirtyChange }) {
           }}
         >
           <ToggleRow
-            label="Share allergy alerts with any new doctor automatically"
-            description="Force allergy warnings in Smart Prescription, even if the doctor forgets to check history."
+            label={t("settings.context_share_allergy_label")}
+            description={t("settings.context_share_allergy_desc")}
             onChange={markDirty}
           />
         </div>
@@ -321,127 +364,58 @@ function PatientSettings({ onDirtyChange }) {
   } else if (activeTab === "privacy") {
     content = (
       <Section
-        title="Privacy & data"
-        subtitle="Control what your doctor can see"
+        title={t("settings.patient_privacy_title")}
+        subtitle={t("settings.patient_privacy_sub")}
         icon="🛡️"
       >
-        <div
-          className="cc-row"
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "8px 0",
-            borderBottom: "1px solid rgba(30,64,175,0.35)",
+        <ToggleRow
+          label={t("settings.patient_share_visits_label")}
+          description={t("settings.patient_share_visits_desc")}
+          checked={shareVisits}
+          onChange={(e) => {
+            setShareVisits(e.target.checked);
+            markDirty();
           }}
-        >
-          <div style={{ maxWidth: "70%" }}>
-            <div className="cc-muted">
-              Share past visits with new doctors
-            </div>
-            <div
-              style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}
-            >
-              Allow new doctors to view previous encounters inside Shifaa.
-            </div>
-          </div>
-          <label className="shf-toggle">
-            <input
-              type="checkbox"
-              checked={shareVisits}
-              onChange={(e) => {
-                setShareVisits(e.target.checked);
-                markDirty();
-              }}
-            />
-            <span className="shf-toggle-track" />
-            <span className="shf-toggle-thumb" />
-          </label>
-        </div>
+        />
 
-        <div
-          className="cc-row"
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "8px 0",
-            borderBottom: "1px solid rgba(30,64,175,0.35)",
+        <ToggleRow
+          label={t("settings.patient_share_labs_label")}
+          description={t("settings.patient_share_labs_desc")}
+          checked={shareLabs}
+          onChange={(e) => {
+            setShareLabs(e.target.checked);
+            markDirty();
           }}
-        >
-          <div style={{ maxWidth: "70%" }}>
-            <div className="cc-muted">
-              Share lab results automatically
-            </div>
-            <div
-              style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}
-            >
-              Attach latest labs to future related appointments.
-            </div>
-          </div>
-          <label className="shf-toggle">
-            <input
-              type="checkbox"
-              checked={shareLabs}
-              onChange={(e) => {
-                setShareLabs(e.target.checked);
-                markDirty();
-              }}
-            />
-            <span className="shf-toggle-track" />
-            <span className="shf-toggle-thumb" />
-          </label>
-        </div>
+        />
 
-        <div
-          className="cc-row"
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "8px 0",
+        <ToggleRow
+          label={t("settings.patient_share_allergy_label")}
+          description={t("settings.patient_share_allergy_desc")}
+          checked={shareAllergyAlerts}
+          onChange={(e) => {
+            setShareAllergyAlerts(e.target.checked);
+            markDirty();
           }}
-        >
-          <div style={{ maxWidth: "70%" }}>
-            <div className="cc-muted">
-              Share allergy alerts with any doctor
-            </div>
-            <div
-              style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}
-            >
-              Force allergy warnings in Smart Prescription for all doctors.
-            </div>
-          </div>
-          <label className="shf-toggle">
-            <input
-              type="checkbox"
-              checked={shareAllergyAlerts}
-              onChange={(e) => {
-                setShareAllergyAlerts(e.target.checked);
-                markDirty();
-              }}
-            />
-            <span className="shf-toggle-track" />
-            <span className="shf-toggle-thumb" />
-          </label>
-        </div>
+        />
 
         <DataExposureMeter level={exposureLevel} />
       </Section>
     );
   } else {
-    // reminders
     content = (
       <>
         <Section
-          title="Reminders & notifications"
-          subtitle="How Shifaa keeps you updated as a patient"
+          title={t("settings.patient_reminders_title")}
+          subtitle={t("settings.patient_reminders_sub")}
           icon="🔔"
         >
           <SelectRow
-            label="Reminder timing"
-            description="How long before an appointment you prefer to be reminded."
+            label={t("settings.reminder_timing_label")}
+            description={t("settings.reminder_timing_desc")}
             options={[
-              { value: "24h", label: "24 hours before" },
-              { value: "12h", label: "12 hours before" },
-              { value: "2h", label: "2 hours before" },
+              { value: "24h", label: t("settings.reminder_24h") },
+              { value: "12h", label: t("settings.reminder_12h") },
+              { value: "2h", label: t("settings.reminder_2h") },
             ]}
             onChange={(e) => {
               setReminderTiming(e.target.value);
@@ -450,10 +424,10 @@ function PatientSettings({ onDirtyChange }) {
           />
 
           <SelectRow
-            label="Reminder channel"
-            description="Where to receive most reminders."
+            label={t("settings.reminder_channel_label")}
+            description={t("settings.reminder_channel_desc")}
             options={[
-              { value: "app", label: "In‑app only" },
+              { value: "app", label: t("settings.reminder_channel_app") },
               { value: "sms", label: "SMS" },
               { value: "whatsapp", label: "WhatsApp" },
             ]}
@@ -471,11 +445,13 @@ function PatientSettings({ onDirtyChange }) {
             }}
           >
             <div>
-              <div className="cc-muted">Quiet hours</div>
+              <div className="cc-muted">
+                {t("settings.quiet_hours_label")}
+              </div>
               <div
                 style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}
               >
-                Shifaa avoids sending non‑urgent reminders during these hours.
+                {t("settings.quiet_hours_desc")}
               </div>
             </div>
             <div
@@ -493,53 +469,31 @@ function PatientSettings({ onDirtyChange }) {
           </div>
 
           <ToggleRow
-            label="Prescription updates"
-            description="Notify when a doctor updates or renews a prescription."
+            label={t("settings.reminder_rx_updates_label")}
+            description={t("settings.reminder_rx_updates_desc")}
             onChange={markDirty}
           />
           <ToggleRow
-            label="Health tips & product updates"
-            description="Occasional product tips and educational content."
+            label={t("settings.reminder_tips_label")}
+            description={t("settings.reminder_tips_desc")}
             onChange={markDirty}
           />
         </Section>
 
         <Section
-          title="Recovery Mode"
-          subtitle="Increase support while you are actively recovering"
+          title={t("settings.recovery_title")}
+          subtitle={t("settings.recovery_sub")}
           icon="❤️"
         >
-          <div
-            className="cc-row"
-            style={{
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "8px 0",
-              borderBottom: "1px solid rgba(30,64,175,0.35)",
+          <ToggleRow
+            label={t("settings.recovery_label")}
+            description={t("settings.recovery_desc")}
+            checked={recoveryMode}
+            onChange={(e) => {
+              setRecoveryMode(e.target.checked);
+              markDirty();
             }}
-          >
-            <div style={{ maxWidth: "70%" }}>
-              <div className="cc-muted">Recovery Mode</div>
-              <div
-                style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}
-              >
-                When enabled, Shifaa increases reminders, surfaces daily tips,
-                and focuses your dashboard on current treatment.
-              </div>
-            </div>
-            <label className="shf-toggle">
-              <input
-                type="checkbox"
-                checked={recoveryMode}
-                onChange={(e) => {
-                  setRecoveryMode(e.target.checked);
-                  markDirty();
-                }}
-              />
-              <span className="shf-toggle-track" />
-              <span className="shf-toggle-thumb" />
-            </label>
-          </div>
+          />
 
           <ul
             style={{
@@ -549,9 +503,9 @@ function PatientSettings({ onDirtyChange }) {
               color: "#9ca3af",
             }}
           >
-            <li>Extra follow‑up reminders during treatment windows.</li>
-            <li>Contextual health tips based on your condition.</li>
-            <li>Dashboard highlights your active care plan.</li>
+            <li>{t("settings.recovery_benefit_followup")}</li>
+            <li>{t("settings.recovery_benefit_tips")}</li>
+            <li>{t("settings.recovery_benefit_dashboard")}</li>
           </ul>
         </Section>
       </>
@@ -566,18 +520,23 @@ function PatientSettings({ onDirtyChange }) {
   );
 }
 
-/* ========== DOCTOR SETTINGS (tabs) ========== */
+/* ========== DOCTOR SETTINGS ========== */
 
 function DoctorSettings({ onDirtyChange }) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("workflow");
 
   const markDirty = () => onDirtyChange?.(true);
 
   const tabs = [
-    { id: "workflow", label: "Workflow", icon: "🏥" },
-    { id: "notifications", label: "Notifications", icon: "🔔" },
-    { id: "safety", label: "Safety & AI", icon: "⚖️" },
-    { id: "wellbeing", label: "Wellbeing", icon: "🌿" },
+    { id: "workflow", label: t("settings.doctor_tab_workflow"), icon: "🏥" },
+    {
+      id: "notifications",
+      label: t("settings.doctor_tab_notifications"),
+      icon: "🔔",
+    },
+    { id: "safety", label: t("settings.doctor_tab_safety"), icon: "⚖️" },
+    { id: "wellbeing", label: t("settings.doctor_tab_wellbeing"), icon: "🌿" },
   ];
 
   let content = null;
@@ -586,50 +545,59 @@ function DoctorSettings({ onDirtyChange }) {
     content = (
       <>
         <Section
-          title="Clinic preferences"
-          subtitle="Defaults for your daily workflow"
+          title={t("settings.doctor_clinic_title")}
+          subtitle={t("settings.doctor_clinic_sub")}
           icon="🏥"
         >
           <SelectRow
-            label="Default consultation length"
-            description="Used for automatic scheduling blocks."
+            label={t("settings.doctor_default_length_label")}
+            description={t("settings.doctor_default_length_desc")}
             options={[
-              { value: "15", label: "15 minutes" },
-              { value: "20", label: "20 minutes" },
-              { value: "30", label: "30 minutes" },
+              { value: "15", label: t("settings.doctor_15min") },
+              { value: "20", label: t("settings.doctor_20min") },
+              { value: "30", label: t("settings.doctor_30min") },
             ]}
             onChange={markDirty}
           />
           <SelectRow
-            label="Default view on login"
-            description="Page that opens first when you sign in."
+            label={t("settings.doctor_default_view_label")}
+            description={t("settings.doctor_default_view_desc")}
             options={[
-              { value: "dashboard", label: "Doctor Dashboard" },
-              { value: "appointments", label: "Today’s schedule" },
-              { value: "patients", label: "Patient list" },
+              {
+                value: "dashboard",
+                label: t("settings.doctor_view_dashboard"),
+              },
+              {
+                value: "appointments",
+                label: t("settings.doctor_view_today"),
+              },
+              {
+                value: "patients",
+                label: t("settings.doctor_view_patients"),
+              },
             ]}
             onChange={markDirty}
           />
         </Section>
 
         <Section
-          title="Smart Workflow"
-          subtitle="Automate repetitive clinical tasks"
+          title={t("settings.doctor_workflow_title")}
+          subtitle={t("settings.doctor_workflow_sub")}
           icon="⚙️"
         >
           <ToggleRow
-            label="Auto‑generate follow‑up visit after each encounter"
-            description="Create a suggested follow‑up X days after every completed visit."
+            label={t("settings.doctor_auto_followup_label")}
+            description={t("settings.doctor_auto_followup_desc")}
             onChange={markDirty}
           />
           <ToggleRow
-            label="Attach last labs automatically in prescriptions"
-            description="Include the most recent related labs with new prescriptions."
+            label={t("settings.doctor_attach_labs_label")}
+            description={t("settings.doctor_attach_labs_desc")}
             onChange={markDirty}
           />
           <ToggleRow
-            label="Use templates for common diagnoses"
-            description="Start with pre‑filled diagnosis + plan for frequent conditions."
+            label={t("settings.doctor_templates_label")}
+            description={t("settings.doctor_templates_desc")}
             onChange={markDirty}
           />
         </Section>
@@ -638,23 +606,23 @@ function DoctorSettings({ onDirtyChange }) {
   } else if (activeTab === "notifications") {
     content = (
       <Section
-        title="Notifications"
-        subtitle="Signals that reach you as a doctor"
+        title={t("settings.doctor_notifications_title")}
+        subtitle={t("settings.doctor_notifications_sub")}
         icon="🔔"
       >
         <ToggleRow
-          label="New booking alerts"
-          description="When patients book or reschedule appointments."
+          label={t("settings.doctor_new_booking_label")}
+          description={t("settings.doctor_new_booking_desc")}
           onChange={markDirty}
         />
         <ToggleRow
-          label="Urgent queue alerts"
-          description="Highlight emergency or high‑priority cases."
+          label={t("settings.doctor_urgent_queue_label")}
+          description={t("settings.doctor_urgent_queue_desc")}
           onChange={markDirty}
         />
         <ToggleRow
-          label="Lab result notifications"
-          description="When new lab results arrive for your patients."
+          label={t("settings.doctor_lab_results_label")}
+          description={t("settings.doctor_lab_results_desc")}
           onChange={markDirty}
         />
       </Section>
@@ -663,87 +631,98 @@ function DoctorSettings({ onDirtyChange }) {
     content = (
       <>
         <Section
-          title="Risk sensitivity"
-          subtitle="How strict Shifaa should be with clinical warnings"
+          title={t("settings.doctor_risk_title")}
+          subtitle={t("settings.doctor_risk_sub")}
           icon="⚖️"
         >
           <SelectRow
-            label="Risk mode"
-            description="Controls how many checks and warnings are shown."
+            label={t("settings.doctor_risk_mode_label")}
+            description={t("settings.doctor_risk_mode_desc")}
             options={[
-              { value: "conservative", label: "Conservative (more checks)" },
-              { value: "balanced", label: "Balanced" },
-              { value: "fast", label: "Fast (fewer prompts)" },
+              {
+                value: "conservative",
+                label: t("settings.doctor_risk_conservative"),
+              },
+              { value: "balanced", label: t("settings.doctor_risk_balanced") },
+              { value: "fast", label: t("settings.doctor_risk_fast") },
             ]}
             onChange={markDirty}
           />
-          <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}>
-            Conservative mode adds more allergy, interaction and dose checks.
-            Fast mode reduces interruptions in high‑volume scenarios.
+          <div
+            style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}
+          >
+            {t("settings.doctor_risk_note")}
           </div>
         </Section>
 
         <Section
-          title="Safety & prescribing"
-          subtitle="Extra checks before issuing medication"
+          title={t("settings.doctor_safety_title")}
+          subtitle={t("settings.doctor_safety_sub")}
           icon="💊"
         >
           <ToggleRow
-            label="Allergy conflict checks"
-            description="Warn if prescribed medicine conflicts with recorded allergies."
+            label={t("settings.doctor_allergy_check_label")}
+            description={t("settings.doctor_allergy_check_desc")}
             onChange={markDirty}
           />
           <ToggleRow
-            label="High‑risk medicine confirmation"
-            description="Require an extra confirmation for critical drugs."
+            label={t("settings.doctor_high_risk_label")}
+            description={t("settings.doctor_high_risk_desc")}
             onChange={markDirty}
           />
         </Section>
 
         <Section
-          title="AI assist level"
-          subtitle="How much help you want from Smart Prescription"
+          title={t("settings.doctor_ai_title")}
+          subtitle={t("settings.doctor_ai_sub")}
           icon="🤖"
         >
           <SelectRow
-            label="Default AI assistance"
-            description="Choose how Smart Prescription participates in your work."
+            label={t("settings.doctor_ai_default_label")}
+            description={t("settings.doctor_ai_default_desc")}
             options={[
-              { value: "suggest_meds", label: "Suggest medicines only" },
-              { value: "suggest_dose", label: "Suggest medicines + dosage" },
-              { value: "full_ai", label: "Full AI support" },
-              { value: "off", label: "AI off" },
+              {
+                value: "suggest_meds",
+                label: t("settings.doctor_ai_suggest_meds"),
+              },
+              {
+                value: "suggest_dose",
+                label: t("settings.doctor_ai_suggest_dose"),
+              },
+              { value: "full_ai", label: t("settings.doctor_ai_full") },
+              { value: "off", label: t("settings.doctor_ai_off") },
             ]}
             minWidth={200}
             onChange={markDirty}
           />
-          <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}>
-            You can override this per‑patient during the prescription flow.
+          <div
+            style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}
+          >
+            {t("settings.doctor_ai_note")}
           </div>
         </Section>
       </>
     );
   } else {
-    // wellbeing
     content = (
       <Section
-        title="Doctor wellbeing"
-        subtitle="Protect your time and focus"
+        title={t("settings.doctor_wellbeing_title")}
+        subtitle={t("settings.doctor_wellbeing_sub")}
         icon="🌿"
       >
         <ToggleRow
-          label="Max patients per day alert"
-          description="Get notified when your schedule crosses a safe threshold."
+          label={t("settings.doctor_max_patients_label")}
+          description={t("settings.doctor_max_patients_desc")}
           onChange={markDirty}
         />
         <ToggleRow
-          label="Break reminders"
-          description="Gentle prompts to take a short break between long sessions."
+          label={t("settings.doctor_breaks_label")}
+          description={t("settings.doctor_breaks_desc")}
           onChange={markDirty}
         />
         <ToggleRow
-          label="Late hours warning"
-          description="Highlight days where you are consistently working late."
+          label={t("settings.doctor_late_hours_label")}
+          description={t("settings.doctor_late_hours_desc")}
           onChange={markDirty}
         />
       </Section>
@@ -758,9 +737,10 @@ function DoctorSettings({ onDirtyChange }) {
   );
 }
 
-/* ========== ADMIN SETTINGS (tabs) ========== */
+/* ========== ADMIN SETTINGS ========== */
 
 function AdminSettings({ onDirtyChange }) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("risk");
   const [currentRoleName, setCurrentRoleName] = useState("Admin");
   const [dirty, setDirty] = useState(false);
@@ -773,10 +753,18 @@ function AdminSettings({ onDirtyChange }) {
   };
 
   const tabs = [
-    { id: "risk", label: "Risk & activity", icon: "📊" },
-    { id: "roles", label: "Roles & access", icon: "🧩" },
-    { id: "compliance", label: "Compliance", icon: "⚕️" },
-    { id: "simulation", label: "Simulation", icon: "🚨" },
+    { id: "risk", label: t("settings.admin_tab_risk"), icon: "📊" },
+    { id: "roles", label: t("settings.admin_tab_roles"), icon: "🧩" },
+    {
+      id: "compliance",
+      label: t("settings.admin_tab_compliance"),
+      icon: "⚕️",
+    },
+    {
+      id: "simulation",
+      label: t("settings.admin_tab_simulation"),
+      icon: "🚨",
+    },
   ];
 
   let content = null;
@@ -785,8 +773,8 @@ function AdminSettings({ onDirtyChange }) {
     content = (
       <>
         <Section
-          title="Risk index & activity"
-          subtitle="Quick snapshot of how the system is behaving"
+          title={t("settings.admin_risk_title")}
+          subtitle={t("settings.admin_risk_sub")}
           icon="📊"
         >
           <div
@@ -798,20 +786,36 @@ function AdminSettings({ onDirtyChange }) {
             }}
           >
             <div>
-              <div className="cc-muted">System load</div>
-              <div style={{ fontWeight: 600 }}>Medium</div>
+              <div className="cc-muted">
+                {t("settings.admin_system_load_label")}
+              </div>
+              <div style={{ fontWeight: 600 }}>
+                {t("settings.admin_system_load_value")}
+              </div>
             </div>
             <div>
-              <div className="cc-muted">Alert rate</div>
-              <div style={{ fontWeight: 600 }}>18 / hour</div>
+              <div className="cc-muted">
+                {t("settings.admin_alert_rate_label")}
+              </div>
+              <div style={{ fontWeight: 600 }}>
+                {t("settings.admin_alert_rate_value")}
+              </div>
             </div>
             <div>
-              <div className="cc-muted">Failed logins</div>
-              <div style={{ fontWeight: 600 }}>5 / hour</div>
+              <div className="cc-muted">
+                {t("settings.admin_failed_logins_label")}
+              </div>
+              <div style={{ fontWeight: 600 }}>
+                {t("settings.admin_failed_logins_value")}
+              </div>
             </div>
             <div>
-              <div className="cc-muted">Avg waiting time</div>
-              <div style={{ fontWeight: 600 }}>09:30 min</div>
+              <div className="cc-muted">
+                {t("settings.admin_waiting_time_label")}
+              </div>
+              <div style={{ fontWeight: 600 }}>
+                {t("settings.admin_waiting_time_value")}
+              </div>
             </div>
           </div>
           <div
@@ -827,23 +831,23 @@ function AdminSettings({ onDirtyChange }) {
               color: "#9ca3af",
             }}
           >
-            Mini risk graph placeholder – can be wired to real metrics later.
+            {t("settings.admin_risk_graph_placeholder")}
           </div>
         </Section>
 
         <Section
-          title="Audit & security"
-          subtitle="Monitoring and safety for the command center"
+          title={t("settings.admin_audit_title")}
+          subtitle={t("settings.admin_audit_sub")}
           icon="🛡️"
         >
           <ToggleRow
-            label="Log all login attempts"
-            description="Keep audit history of successful and failed logins."
+            label={t("settings.admin_log_logins_label")}
+            description={t("settings.admin_log_logins_desc")}
             onChange={markDirty}
           />
           <ToggleRow
-            label="Notify on unusual system load"
-            description="Send alerts when risk index stays high for too long."
+            label={t("settings.admin_unusual_load_label")}
+            description={t("settings.admin_unusual_load_desc")}
             onChange={markDirty}
           />
         </Section>
@@ -853,8 +857,8 @@ function AdminSettings({ onDirtyChange }) {
     content = (
       <>
         <Section
-          title="Role blueprints"
-          subtitle="Design and reuse role templates across your organization"
+          title={t("settings.admin_roles_title")}
+          subtitle={t("settings.admin_roles_sub")}
           icon="🧩"
         >
           <div
@@ -862,8 +866,7 @@ function AdminSettings({ onDirtyChange }) {
             style={{ padding: "6px 0", marginBottom: 4, fontSize: 12 }}
           >
             <div className="cc-muted">
-              Create named role blueprints and reuse them for new clinics
-              or sites.
+              {t("settings.admin_roles_intro")}
             </div>
           </div>
 
@@ -874,8 +877,10 @@ function AdminSettings({ onDirtyChange }) {
               marginBottom: 8,
             }}
           >
-            Current role:{" "}
-            <span style={{ color: "#e5e7eb" }}>{currentRoleName}</span>
+            {t("settings.admin_current_role")}{" "}
+            <span style={{ color: "#e5e7eb" }}>
+              {currentRoleName}
+            </span>
           </div>
 
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -883,10 +888,13 @@ function AdminSettings({ onDirtyChange }) {
               className="cc-btn"
               type="button"
               onClick={() => {
-                console.log("Save current as template (demo)", currentRoleName);
+                console.log(
+                  "Save current as template (demo)",
+                  currentRoleName
+                );
               }}
             >
-              Save current as template
+              {t("settings.admin_save_template")}
             </button>
             <button
               className="cc-btn ghost"
@@ -901,7 +909,7 @@ function AdminSettings({ onDirtyChange }) {
                 markDirty();
               }}
             >
-              Clone existing role
+              {t("settings.admin_clone_role")}
             </button>
             <button
               className="cc-btn ghost"
@@ -910,29 +918,29 @@ function AdminSettings({ onDirtyChange }) {
                 console.log("Compare two roles (demo)");
               }}
             >
-              Compare two roles
+              {t("settings.admin_compare_roles")}
             </button>
           </div>
         </Section>
 
         <Section
-          title="Access & permissions"
-          subtitle="High‑level control for roles inside Shifaa"
+          title={t("settings.admin_access_title")}
+          subtitle={t("settings.admin_access_sub")}
           icon="🔐"
         >
           <ToggleRow
-            label="Allow doctors to export reports"
-            description="Enable CSV export for their own patients and schedule."
+            label={t("settings.admin_export_reports_label")}
+            description={t("settings.admin_export_reports_desc")}
             onChange={markDirty}
           />
           <ToggleRow
-            label="Allow reception to edit bookings"
-            description="Reception can move or cancel appointments for all doctors."
+            label={t("settings.admin_reception_edit_label")}
+            description={t("settings.admin_reception_edit_desc")}
             onChange={markDirty}
           />
           <ToggleRow
-            label="Require 2‑step approval for bulk actions"
-            description="Extra confirmation for actions like ‘Approve all’."
+            label={t("settings.admin_bulk_approval_label")}
+            description={t("settings.admin_bulk_approval_desc")}
             onChange={markDirty}
           />
         </Section>
@@ -941,23 +949,23 @@ function AdminSettings({ onDirtyChange }) {
   } else if (activeTab === "compliance") {
     content = (
       <Section
-        title="Medical compliance"
-        subtitle="Enforce clinical rules across the platform"
+        title={t("settings.admin_compliance_title")}
+        subtitle={t("settings.admin_compliance_sub")}
         icon="⚕️"
       >
         <ToggleRow
-          label="Enforce double signature for narcotics"
-          description="Require a second approver for controlled substances."
+          label={t("settings.admin_narcotics_label")}
+          description={t("settings.admin_narcotics_desc")}
           onChange={markDirty}
         />
         <ToggleRow
-          label="Mandatory allergy check before prescribing"
-          description="Block issuing a prescription until allergies are confirmed."
+          label={t("settings.admin_mandatory_allergy_label")}
+          description={t("settings.admin_mandatory_allergy_desc")}
           onChange={markDirty}
         />
         <ToggleRow
-          label="Force documentation before high‑risk prescriptions"
-          description="Require a brief note before finalizing certain medications."
+          label={t("settings.admin_highrisk_doc_label")}
+          description={t("settings.admin_highrisk_doc_desc")}
           onChange={markDirty}
         />
       </Section>
@@ -965,8 +973,8 @@ function AdminSettings({ onDirtyChange }) {
   } else {
     content = (
       <Section
-        title="Incident simulation"
-        subtitle="Test how Shifaa behaves under stress before it happens"
+        title={t("settings.admin_simulation_title")}
+        subtitle={t("settings.admin_simulation_sub")}
         icon="🚨"
       >
         <div
@@ -976,8 +984,7 @@ function AdminSettings({ onDirtyChange }) {
             marginBottom: 8,
           }}
         >
-          Run a safe simulation of emergency load to see how response time,
-          alerts and queues behave without affecting real data.
+          {t("settings.admin_simulation_text")}
         </div>
         <button
           className="cc-btn"
@@ -986,7 +993,7 @@ function AdminSettings({ onDirtyChange }) {
             console.log("Simulate emergency load (demo)");
           }}
         >
-          Simulate emergency load
+          {t("settings.admin_simulation_btn")}
         </button>
         <div
           style={{
@@ -995,8 +1002,7 @@ function AdminSettings({ onDirtyChange }) {
             color: "#9ca3af",
           }}
         >
-          After simulation, a short report will summarize system performance
-          and bottlenecks.
+          {t("settings.admin_simulation_after")}
         </div>
       </Section>
     );
@@ -1013,12 +1019,15 @@ function AdminSettings({ onDirtyChange }) {
 /* ========== MAIN SETTINGS PAGE ========== */
 
 export default function SettingsPage({ role = "Patient", onBack }) {
+  const { t } = useTranslation();
+
+  // مهم: role يفضل يفضل كود ثابت من الأب: "Patient" / "Doctor" / "Admin"
   const isPatient = role === "Patient";
   const isDoctor = role === "Doctor";
   const isAdmin = role === "Admin";
 
   const [hasUnsaved, setHasUnsaved] = useState(false);
-  const [resetCounter, setResetCounter] = useState(0); // عشان نعمل remount
+  const [resetCounter, setResetCounter] = useState(0);
 
   const handleDirtyChange = (dirty) => {
     if (dirty) {
@@ -1027,21 +1036,23 @@ export default function SettingsPage({ role = "Patient", onBack }) {
   };
 
   const handleReset = () => {
-    // نخلي الكومبوننتس تتـre-mount فترجع لكل default state
     setResetCounter((c) => c + 1);
-
-    setHasUnsaved((prev) => {
-      if (!prev) {
-        return true; // لو كانت Saved خليها Unsaved
-      }
-      return prev; // لو كانت Unsaved سيبها زي ما هي
-    });
+    setHasUnsaved((prev) => (prev ? prev : true));
   };
 
   const handleSave = () => {
-    // هنا لاحقاً هتحطي حفظ فعلي
     setHasUnsaved(false);
   };
+
+  // label للعرض فقط (يُترجم)
+  const roleLabel =
+    role === "Patient"
+      ? t("settings.role_patient")
+      : role === "Doctor"
+      ? t("settings.role_doctor")
+      : role === "Admin"
+      ? t("settings.role_admin")
+      : role;
 
   return (
     <div
@@ -1066,14 +1077,20 @@ export default function SettingsPage({ role = "Patient", onBack }) {
             <div className="cc-brandMark">S</div>
             <div className="cc-brandText">
               <div className="cc-brandName">Shifaa</div>
-              <div className="cc-brandSub">Settings</div>
+              <div className="cc-brandSub">
+                {t("settings.page_title")}
+              </div>
             </div>
           </div>
         </div>
 
         <div className="cc-topRight">
-          <button type="button" className="cc-btn ghost" onClick={onBack}>
-            ← Back
+          <button
+            type="button"
+            className="cc-btn ghost"
+            onClick={onBack}
+          >
+            ← {t("settings.back")}
           </button>
         </div>
       </header>
@@ -1088,9 +1105,11 @@ export default function SettingsPage({ role = "Patient", onBack }) {
         }}
       >
         <div style={{ marginBottom: 16 }}>
-          <div className="cc-cardTitle">{role} settings</div>
+          <div className="cc-cardTitle">
+            {t("settings.role_settings_title", { role: roleLabel })}
+          </div>
           <div className="cc-cardSub">
-            Fine‑tune how Shifaa behaves for this profile.
+            {t("settings.role_settings_sub")}
           </div>
         </div>
 
@@ -1115,9 +1134,9 @@ export default function SettingsPage({ role = "Patient", onBack }) {
           )}
 
           {!isPatient && !isDoctor && !isAdmin && (
-            <Section title="General settings">
+            <Section title={t("settings.general_title")}>
               <div className="cc-empty">
-                Role not recognized. Using generic defaults.
+                {t("settings.general_unknown_role")}
               </div>
             </Section>
           )}
@@ -1140,7 +1159,9 @@ export default function SettingsPage({ role = "Patient", onBack }) {
               color: hasUnsaved ? "#f97373" : "#9ca3af",
             }}
           >
-            {hasUnsaved ? "Unsaved changes" : "All changes saved"}
+            {hasUnsaved
+              ? t("settings.status_unsaved")
+              : t("settings.status_saved")}
           </span>
           <div style={{ display: "flex", gap: 8 }}>
             <button
@@ -1148,14 +1169,14 @@ export default function SettingsPage({ role = "Patient", onBack }) {
               type="button"
               onClick={handleReset}
             >
-              Reset
+              {t("settings.reset_btn")}
             </button>
             <button
               className="cc-btn"
               type="button"
               onClick={handleSave}
             >
-              Save changes
+              {t("settings.save_btn")}
             </button>
           </div>
         </div>
