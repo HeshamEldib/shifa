@@ -1,6 +1,6 @@
 /* =============== أساسيات =============== */
 :root{
-  --bg0:#020617;          /* خلفية أساسية أغمق */
+  --bg0:#020617;
   --txt:#EAF0FF;
   --muted: rgba(234,240,255,.72);
   --muted2: rgba(234,240,255,.55);
@@ -38,7 +38,7 @@ body{
   min-height:100vh;
   position:relative;
   overflow-x:hidden;
-  --gradIntensity: .78;   /* أغمق من قبل */
+  --gradIntensity: .78;
 }
 
 .pj-root::before{
@@ -52,7 +52,7 @@ body{
   animation: pjGrad 16s ease-in-out infinite;
 }
 
-/* صباح / نهار / ليل أغمق */
+/* صباح / نهار / ليل */
 .theme-morning::before{
   background-image:
     radial-gradient(circle at 0% 10%, rgba(250,204,21,0.7), transparent 58%),
@@ -76,7 +76,6 @@ body{
 }
 
 /* =============== Top Nav + More =============== */
-/* زي الأول: مش ثابت */
 .pj-nav-header{
   position: relative;
   z-index: 60;
@@ -141,7 +140,7 @@ body{
   padding-right: 20px;
 }
 
-/* منيو More (تظهر على hover أو focus-within) */
+/* منيو More */
 .pj-moreMenu{
   position: absolute;
   right: 0;
@@ -629,8 +628,38 @@ body{
 .pj-footerHint{ opacity: .9; }
 
 /* =============== موبايل =============== */
+@media (max-width: 768px){
+  .pj-navInner{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pj-navLinks{
+    width: 100%;
+    justify-content: flex-start;
+    row-gap: 6px;
+  }
+  .pj-heroInner,
+  .pj-main{
+    padding-inline: 14px;
+  }
+  .pj-heroTop{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 @media (max-width: 560px){
   .pj-h1{ font-size: 24px; }
   .pj-row{ flex-direction:column; gap:4px; }
   .pj-rowTime{ min-width: auto; }
+  .pj-navTabs{
+    gap: 6px;
+  }
+  .pj-navTabs a{
+    padding-inline: 8px;
+  }
+  .pj-fab{
+    right: 14px;
+    bottom: 14px;
+  }
 }

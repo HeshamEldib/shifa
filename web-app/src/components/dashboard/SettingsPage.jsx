@@ -1,9 +1,8 @@
-// src/components/SettingsPage.jsx
-import React, { useState, useMemo } from "react";
+// src/components/dashboard/SettingsPage.jsx
+import React, { useEffect, useState, useMemo } from "react";
 import "./Seeting.css";
 import { useTranslation } from "react-i18next";
-
-/* ========== UI primitives ========== */
+import i18n from "../../i18n";
 
 function Section({ title, subtitle, children, icon }) {
   return (
@@ -68,7 +67,7 @@ function ToggleRow({ label, description, onChange, checked }) {
   );
 }
 
-function SelectRow({ label, description, options, minWidth = 140, onChange }) {
+function SelectRow({ label, description, options, minWidth = 140, value, onChange }) {
   return (
     <div
       className="cc-row"
@@ -90,6 +89,7 @@ function SelectRow({ label, description, options, minWidth = 140, onChange }) {
       <select
         className="cc-select"
         style={{ minWidth }}
+        value={value}
         onChange={onChange}
       >
         {options.map((o) => (
@@ -109,7 +109,6 @@ function DataExposureMeter({ level }) {
     standard: t("settings.data_exposure_standard"),
     extended: t("settings.data_exposure_extended"),
   };
-
   const percent = level === "minimal" ? 20 : level === "standard" ? 55 : 85;
 
   return (
@@ -168,8 +167,6 @@ function DataExposureMeter({ level }) {
   );
 }
 
-/* ========== Tabs Strip ========== */
-
 function TabsStrip({ tabs, activeId, onChange }) {
   const { t } = useTranslation();
   return (
@@ -214,24 +211,30 @@ function TabsStrip({ tabs, activeId, onChange }) {
   );
 }
 
-/* ========== PATIENT SETTINGS ========== */
-
-function PatientSettings({ onDirtyChange }) {
+function PatientSettings({ onDirtyChange, value, onChange }) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("profile");
 
-  const [shareVisits, setShareVisits] = useState(true);
-  const [shareLabs, setShareLabs] = useState(true);
-  const [shareAllergyAlerts, setShareAllergyAlerts] = useState(true);
+  const languageOptions = [
+    { value: "ar", label: "العربية" },
+    { value: "en", label: "English" },
+    { value: "es", label: "Español" },
+    { value: "fr", label: "Français" },
+    { value: "cn", label: "中文" },
+  ];
 
-  const [reminderTiming, setReminderTiming] = useState("24h");
-  const [reminderChannel, setReminderChannel] = useState("app");
-  const [quietFrom] = useState("22:00");
-  const [quietTo] = useState("08:00");
-  const [recoveryMode, setRecoveryMode] = useState(false);
-
-  const [preferredLanguage, setPreferredLanguage] = useState("en");
-  const [timeZone, setTimeZone] = useState("africa/cairo");
+  const {
+    shareVisits = true,
+    shareLabs = true,
+    shareAllergyAlerts = true,
+    reminderTiming = "24h",
+    reminderChannel = "app",
+    quietFrom = "22:00",
+    quietTo = "08:00",
+    recoveryMode = false,
+    preferredLanguage = "en",
+    timeZone = "africa/cairo",
+  } = value || {};
 
   const markDirty = () => onDirtyChange?.(true);
 
@@ -264,27 +267,33 @@ function PatientSettings({ onDirtyChange }) {
         <SelectRow
           label={t("settings.preferred_language_label")}
           description={t("settings.preferred_language_desc")}
-          options={[
-            { value: "en", label: "English" },
-            { value: "ar", label: "العربية" },
-          ]}
+          options={languageOptions}
+          value={preferredLanguage}
           onChange={(e) => {
-            setPreferredLanguage(e.target.value);
+            const lang = e.target.value;
+            onChange?.({
+              ...value,
+              preferredLanguage: lang,
+            });
+            i18n.changeLanguage(lang);
+            localStorage.setItem("language", lang);
             markDirty();
           }}
         />
+
         <SelectRow
           label={t("settings.timezone_label")}
           description={t("settings.timezone_desc")}
           options={[
-            {
-              value: "africa/cairo",
-              label: t("settings.timezone_cairo"),
-            },
+            { value: "africa/cairo", label: t("settings.timezone_cairo") },
             { value: "utc", label: "UTC" },
           ]}
+          value={timeZone}
           onChange={(e) => {
-            setTimeZone(e.target.value);
+            onChange?.({
+              ...value,
+              timeZone: e.target.value,
+            });
             markDirty();
           }}
         />
@@ -308,41 +317,31 @@ function PatientSettings({ onDirtyChange }) {
             <span className="cc-muted">
               {t("settings.context_chronic")}
             </span>
-            <span>
-              {t("settings.context_chronic_example")}
-            </span>
+            <span>{t("settings.context_chronic_example")}</span>
           </div>
           <div className="cc-row">
             <span className="cc-muted">
               {t("settings.context_allergies")}
             </span>
-            <span>
-              {t("settings.context_allergies_example")}
-            </span>
+            <span>{t("settings.context_allergies_example")}</span>
           </div>
           <div className="cc-row">
             <span className="cc-muted">
               {t("settings.context_pregnancy")}
             </span>
-            <span>
-              {t("settings.context_pregnancy_example")}
-            </span>
+            <span>{t("settings.context_pregnancy_example")}</span>
           </div>
           <div className="cc-row">
             <span className="cc-muted">
               {t("settings.context_blood_type")}
             </span>
-            <span>
-              {t("settings.context_blood_type_example")}
-            </span>
+            <span>{t("settings.context_blood_type_example")}</span>
           </div>
           <div className="cc-row">
             <span className="cc-muted">
               {t("settings.context_emergency_contact")}
             </span>
-            <span>
-              {t("settings.context_emergency_contact_example")}
-            </span>
+            <span>{t("settings.context_emergency_contact_example")}</span>
           </div>
         </div>
 
@@ -373,7 +372,10 @@ function PatientSettings({ onDirtyChange }) {
           description={t("settings.patient_share_visits_desc")}
           checked={shareVisits}
           onChange={(e) => {
-            setShareVisits(e.target.checked);
+            onChange?.({
+              ...value,
+              shareVisits: e.target.checked,
+            });
             markDirty();
           }}
         />
@@ -383,7 +385,10 @@ function PatientSettings({ onDirtyChange }) {
           description={t("settings.patient_share_labs_desc")}
           checked={shareLabs}
           onChange={(e) => {
-            setShareLabs(e.target.checked);
+            onChange?.({
+              ...value,
+              shareLabs: e.target.checked,
+            });
             markDirty();
           }}
         />
@@ -393,7 +398,10 @@ function PatientSettings({ onDirtyChange }) {
           description={t("settings.patient_share_allergy_desc")}
           checked={shareAllergyAlerts}
           onChange={(e) => {
-            setShareAllergyAlerts(e.target.checked);
+            onChange?.({
+              ...value,
+              shareAllergyAlerts: e.target.checked,
+            });
             markDirty();
           }}
         />
@@ -417,8 +425,12 @@ function PatientSettings({ onDirtyChange }) {
               { value: "12h", label: t("settings.reminder_12h") },
               { value: "2h", label: t("settings.reminder_2h") },
             ]}
+            value={reminderTiming}
             onChange={(e) => {
-              setReminderTiming(e.target.value);
+              onChange?.({
+                ...value,
+                reminderTiming: e.target.value,
+              });
               markDirty();
             }}
           />
@@ -431,8 +443,12 @@ function PatientSettings({ onDirtyChange }) {
               { value: "sms", label: "SMS" },
               { value: "whatsapp", label: "WhatsApp" },
             ]}
+            value={reminderChannel}
             onChange={(e) => {
-              setReminderChannel(e.target.value);
+              onChange?.({
+                ...value,
+                reminderChannel: e.target.value,
+              });
               markDirty();
             }}
           />
@@ -490,7 +506,10 @@ function PatientSettings({ onDirtyChange }) {
             description={t("settings.recovery_desc")}
             checked={recoveryMode}
             onChange={(e) => {
-              setRecoveryMode(e.target.checked);
+              onChange?.({
+                ...value,
+                recoveryMode: e.target.checked,
+              });
               markDirty();
             }}
           />
@@ -520,13 +539,29 @@ function PatientSettings({ onDirtyChange }) {
   );
 }
 
-/* ========== DOCTOR SETTINGS ========== */
-
-function DoctorSettings({ onDirtyChange }) {
+function DoctorSettings({ onDirtyChange, value, onChange }) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("workflow");
 
   const markDirty = () => onDirtyChange?.(true);
+
+  const {
+    defaultLength = "15",
+    defaultView = "dashboard",
+    autoFollowup = false,
+    attachLabs = false,
+    templates = false,
+    newBooking = true,
+    urgentQueue = true,
+    labResults = true,
+    riskMode = "balanced",
+    allergyCheck = true,
+    highRisk = true,
+    aiMode = "suggest_meds",
+    maxPatients = false,
+    breaks = false,
+    lateHours = false,
+  } = value || {};
 
   const tabs = [
     { id: "workflow", label: t("settings.doctor_tab_workflow"), icon: "🏥" },
@@ -557,7 +592,11 @@ function DoctorSettings({ onDirtyChange }) {
               { value: "20", label: t("settings.doctor_20min") },
               { value: "30", label: t("settings.doctor_30min") },
             ]}
-            onChange={markDirty}
+            value={defaultLength}
+            onChange={(e) => {
+              onChange?.({ ...value, defaultLength: e.target.value });
+              markDirty();
+            }}
           />
           <SelectRow
             label={t("settings.doctor_default_view_label")}
@@ -576,7 +615,11 @@ function DoctorSettings({ onDirtyChange }) {
                 label: t("settings.doctor_view_patients"),
               },
             ]}
-            onChange={markDirty}
+            value={defaultView}
+            onChange={(e) => {
+              onChange?.({ ...value, defaultView: e.target.value });
+              markDirty();
+            }}
           />
         </Section>
 
@@ -588,17 +631,29 @@ function DoctorSettings({ onDirtyChange }) {
           <ToggleRow
             label={t("settings.doctor_auto_followup_label")}
             description={t("settings.doctor_auto_followup_desc")}
-            onChange={markDirty}
+            checked={autoFollowup}
+            onChange={(e) => {
+              onChange?.({ ...value, autoFollowup: e.target.checked });
+              markDirty();
+            }}
           />
           <ToggleRow
             label={t("settings.doctor_attach_labs_label")}
             description={t("settings.doctor_attach_labs_desc")}
-            onChange={markDirty}
+            checked={attachLabs}
+            onChange={(e) => {
+              onChange?.({ ...value, attachLabs: e.target.checked });
+              markDirty();
+            }}
           />
           <ToggleRow
             label={t("settings.doctor_templates_label")}
             description={t("settings.doctor_templates_desc")}
-            onChange={markDirty}
+            checked={templates}
+            onChange={(e) => {
+              onChange?.({ ...value, templates: e.target.checked });
+              markDirty();
+            }}
           />
         </Section>
       </>
@@ -613,17 +668,29 @@ function DoctorSettings({ onDirtyChange }) {
         <ToggleRow
           label={t("settings.doctor_new_booking_label")}
           description={t("settings.doctor_new_booking_desc")}
-          onChange={markDirty}
+          checked={newBooking}
+          onChange={(e) => {
+            onChange?.({ ...value, newBooking: e.target.checked });
+            markDirty();
+          }}
         />
         <ToggleRow
           label={t("settings.doctor_urgent_queue_label")}
           description={t("settings.doctor_urgent_queue_desc")}
-          onChange={markDirty}
+          checked={urgentQueue}
+          onChange={(e) => {
+            onChange?.({ ...value, urgentQueue: e.target.checked });
+            markDirty();
+          }}
         />
         <ToggleRow
           label={t("settings.doctor_lab_results_label")}
           description={t("settings.doctor_lab_results_desc")}
-          onChange={markDirty}
+          checked={labResults}
+          onChange={(e) => {
+            onChange?.({ ...value, labResults: e.target.checked });
+            markDirty();
+          }}
         />
       </Section>
     );
@@ -646,13 +713,12 @@ function DoctorSettings({ onDirtyChange }) {
               { value: "balanced", label: t("settings.doctor_risk_balanced") },
               { value: "fast", label: t("settings.doctor_risk_fast") },
             ]}
-            onChange={markDirty}
+            value={riskMode}
+            onChange={(e) => {
+              onChange?.({ ...value, riskMode: e.target.value });
+              markDirty();
+            }}
           />
-          <div
-            style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}
-          >
-            {t("settings.doctor_risk_note")}
-          </div>
         </Section>
 
         <Section
@@ -663,12 +729,20 @@ function DoctorSettings({ onDirtyChange }) {
           <ToggleRow
             label={t("settings.doctor_allergy_check_label")}
             description={t("settings.doctor_allergy_check_desc")}
-            onChange={markDirty}
+            checked={allergyCheck}
+            onChange={(e) => {
+              onChange?.({ ...value, allergyCheck: e.target.checked });
+              markDirty();
+            }}
           />
           <ToggleRow
             label={t("settings.doctor_high_risk_label")}
             description={t("settings.doctor_high_risk_desc")}
-            onChange={markDirty}
+            checked={highRisk}
+            onChange={(e) => {
+              onChange?.({ ...value, highRisk: e.target.checked });
+              markDirty();
+            }}
           />
         </Section>
 
@@ -693,13 +767,12 @@ function DoctorSettings({ onDirtyChange }) {
               { value: "off", label: t("settings.doctor_ai_off") },
             ]}
             minWidth={200}
-            onChange={markDirty}
+            value={aiMode}
+            onChange={(e) => {
+              onChange?.({ ...value, aiMode: e.target.value });
+              markDirty();
+            }}
           />
-          <div
-            style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}
-          >
-            {t("settings.doctor_ai_note")}
-          </div>
         </Section>
       </>
     );
@@ -713,17 +786,29 @@ function DoctorSettings({ onDirtyChange }) {
         <ToggleRow
           label={t("settings.doctor_max_patients_label")}
           description={t("settings.doctor_max_patients_desc")}
-          onChange={markDirty}
+          checked={maxPatients}
+          onChange={(e) => {
+            onChange?.({ ...value, maxPatients: e.target.checked });
+            markDirty();
+          }}
         />
         <ToggleRow
           label={t("settings.doctor_breaks_label")}
           description={t("settings.doctor_breaks_desc")}
-          onChange={markDirty}
+          checked={breaks}
+          onChange={(e) => {
+            onChange?.({ ...value, breaks: e.target.checked });
+            markDirty();
+          }}
         />
         <ToggleRow
           label={t("settings.doctor_late_hours_label")}
           description={t("settings.doctor_late_hours_desc")}
-          onChange={markDirty}
+          checked={lateHours}
+          onChange={(e) => {
+            onChange?.({ ...value, lateHours: e.target.checked });
+            markDirty();
+          }}
         />
       </Section>
     );
@@ -736,8 +821,6 @@ function DoctorSettings({ onDirtyChange }) {
     </>
   );
 }
-
-/* ========== ADMIN SETTINGS ========== */
 
 function AdminSettings({ onDirtyChange }) {
   const { t } = useTranslation();
@@ -1016,12 +1099,9 @@ function AdminSettings({ onDirtyChange }) {
   );
 }
 
-/* ========== MAIN SETTINGS PAGE ========== */
-
 export default function SettingsPage({ role = "Patient", onBack }) {
   const { t } = useTranslation();
 
-  // مهم: role يفضل يفضل كود ثابت من الأب: "Patient" / "Doctor" / "Admin"
   const isPatient = role === "Patient";
   const isDoctor = role === "Doctor";
   const isAdmin = role === "Admin";
@@ -1029,29 +1109,124 @@ export default function SettingsPage({ role = "Patient", onBack }) {
   const [hasUnsaved, setHasUnsaved] = useState(false);
   const [resetCounter, setResetCounter] = useState(0);
 
-  const handleDirtyChange = (dirty) => {
-    if (dirty) {
-      setHasUnsaved(true);
+  const defaultLanguage =
+    localStorage.getItem("language") || i18n.language || "en";
+
+  const [settings, setSettings] = useState({
+    patient: {
+      preferredLanguage: defaultLanguage,
+      timeZone: "africa/cairo",
+      shareVisits: true,
+      shareLabs: true,
+      shareAllergyAlerts: true,
+      reminderTiming: "24h",
+      reminderChannel: "app",
+      quietFrom: "22:00",
+      quietTo: "08:00",
+      recoveryMode: false,
+    },
+    doctor: {
+      defaultLength: "15",
+      defaultView: "dashboard",
+      autoFollowup: false,
+      attachLabs: false,
+      templates: false,
+      newBooking: true,
+      urgentQueue: true,
+      labResults: true,
+      riskMode: "balanced",
+      allergyCheck: true,
+      highRisk: true,
+      aiMode: "suggest_meds",
+      maxPatients: false,
+      breaks: false,
+      lateHours: false,
+    },
+    admin: {},
+  });
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    async function fetchSettings() {
+      try {
+        const res = await fetch("/api/settings", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        if (!res.ok) throw new Error("Failed to load settings");
+        const data = await res.json();
+        setSettings((prev) => ({
+          ...prev,
+          ...data,
+        }));
+      } catch (e) {
+        console.error(e);
+      }
     }
+
+    fetchSettings();
+  }, []);
+
+  const handleDirtyChange = (dirty) => {
+    if (dirty) setHasUnsaved(true);
   };
 
   const handleReset = () => {
-    setResetCounter((c) => c + 1);
-    setHasUnsaved((prev) => (prev ? prev : true));
-  };
+    const defaultLanguage =
+      localStorage.getItem("language") || i18n.language || "en";
 
-  const handleSave = () => {
+    setResetCounter((c) => c + 1);
+    setSettings((prev) => ({
+      ...prev,
+      patient: {
+        preferredLanguage: defaultLanguage,
+        timeZone: "africa/cairo",
+        shareVisits: true,
+        shareLabs: true,
+        shareAllergyAlerts: true,
+        reminderTiming: "24h",
+        reminderChannel: "app",
+        quietFrom: "22:00",
+        quietTo: "08:00",
+        recoveryMode: false,
+      },
+    }));
     setHasUnsaved(false);
   };
 
-  // label للعرض فقط (يُترجم)
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("/api/settings", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(settings),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save settings");
+      }
+
+      setHasUnsaved(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const roleLabel =
     role === "Patient"
-      ? t("settings.role_patient")
+      ? t("role_patient")
       : role === "Doctor"
-      ? t("settings.role_doctor")
+      ? t("role_doctor")
       : role === "Admin"
-      ? t("settings.role_admin")
+      ? t("role_admin")
       : role;
 
   return (
@@ -1078,7 +1253,7 @@ export default function SettingsPage({ role = "Patient", onBack }) {
             <div className="cc-brandText">
               <div className="cc-brandName">Shifaa</div>
               <div className="cc-brandSub">
-                {t("settings.page_title")}
+                {t("page_title")}
               </div>
             </div>
           </div>
@@ -1090,7 +1265,7 @@ export default function SettingsPage({ role = "Patient", onBack }) {
             className="cc-btn ghost"
             onClick={onBack}
           >
-            ← {t("settings.back")}
+            ← {t("back")}
           </button>
         </div>
       </header>
@@ -1106,10 +1281,10 @@ export default function SettingsPage({ role = "Patient", onBack }) {
       >
         <div style={{ marginBottom: 16 }}>
           <div className="cc-cardTitle">
-            {t("settings.role_settings_title", { role: roleLabel })}
+            {t("role_settings_title", { role: roleLabel })}
           </div>
           <div className="cc-cardSub">
-            {t("settings.role_settings_sub")}
+            {t("role_settings_sub")}
           </div>
         </div>
 
@@ -1117,15 +1292,25 @@ export default function SettingsPage({ role = "Patient", onBack }) {
           {isPatient && (
             <PatientSettings
               key={`patient-${resetCounter}`}
+              value={settings.patient}
+              onChange={(val) =>
+                setSettings((prev) => ({ ...prev, patient: val }))
+              }
               onDirtyChange={handleDirtyChange}
             />
           )}
+
           {isDoctor && (
             <DoctorSettings
               key={`doctor-${resetCounter}`}
+              value={settings.doctor}
+              onChange={(val) =>
+                setSettings((prev) => ({ ...prev, doctor: val }))
+              }
               onDirtyChange={handleDirtyChange}
             />
           )}
+
           {isAdmin && (
             <AdminSettings
               key={`admin-${resetCounter}`}

@@ -1,4 +1,3 @@
-// src/components/PatientHome.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./Patient.css";
@@ -32,8 +31,14 @@ function getDayTheme() {
 function RightPanel({ open, title, children, onClose }) {
   return (
     <>
-      <div className={`pj-backdrop ${open ? "is-open" : ""}`} onClick={onClose} />
-      <aside className={`pj-panel ${open ? "is-open" : ""}`} aria-hidden={!open}>
+      <div
+        className={`pj-backdrop ${open ? "is-open" : ""}`}
+        onClick={onClose}
+      />
+      <aside
+        className={`pj-panel ${open ? "is-open" : ""}`}
+        aria-hidden={!open}
+      >
         <div className="pj-panelHead">
           <div className="pj-panelTitle">{title}</div>
           <button className="pj-x" onClick={onClose} aria-label="Close panel">
@@ -72,8 +77,6 @@ function Modal({ open, title, children, onClose }) {
   );
 }
 
-/* ============== Top Nav ============== */
-
 function TopNav({
   active = "Home",
   onLogout,
@@ -81,6 +84,9 @@ function TopNav({
   onOpenPrescriptions,
   onOpenSettings,
   onOpenScreenCall,
+  toast,
+  onConfirmLogout,
+  clearToast,
 }) {
   const { t } = useTranslation();
 
@@ -141,20 +147,83 @@ function TopNav({
             </div>
           </div>
 
-          <button
-            type="button"
-            className="pj-navBtn pj-navLogout"
-            onClick={onLogout}
-          >
-            {t("patient.nav_logout")}
-          </button>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <button
+              type="button"
+              className="pj-navBtn pj-navLogout"
+              onClick={onLogout}
+            >
+              {t("patient.nav_logout")}
+            </button>
+
+            {toast && (
+              <div
+                style={{
+                  marginTop: 4,
+                  alignSelf: "flex-end",
+                  background:
+                    toast.type === "confirm" ? "#7f1d1d" : "#111827",
+                  color: "#f9fafb",
+                  padding: "6px 10px",
+                  borderRadius: 6,
+                  fontSize: 12,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
+                  border:
+                    toast.type === "confirm"
+                      ? "1px solid rgba(248,113,113,0.9)"
+                      : "1px solid rgba(34,197,94,0.6)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  maxWidth: 260,
+                }}
+              >
+                <span>{toast.message}</span>
+
+                {toast.type === "confirm" && (
+                  <div style={{ display: "flex", gap: 4 }}>
+                    <button
+                      type="button"
+                      style={{
+                        background: "#ef4444",
+                        border: "none",
+                        color: "#f9fafb",
+                        padding: "2px 6px",
+                        borderRadius: 4,
+                        fontSize: 11,
+                        cursor: "pointer",
+                      }}
+                      onClick={onConfirmLogout}
+                    >
+                      {t("patient.logout_confirm_yes") || "Yes"}
+                    </button>
+
+                    <button
+                      type="button"
+                      style={{
+                        background: "transparent",
+                        border:
+                          "1px solid rgba(148,163,184,0.6)",
+                        color: "#e5e7eb",
+                        padding: "2px 6px",
+                        borderRadius: 4,
+                        fontSize: 11,
+                        cursor: "pointer",
+                      }}
+                      onClick={clearToast}
+                    >
+                      {t("patient.logout_confirm_no") || "Cancel"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>
   );
 }
-
-/* ============== Patient Home ============== */
 
 export default function PatientHome({
   onLogout,
@@ -162,12 +231,12 @@ export default function PatientHome({
   onOpenPrescriptions,
   onOpenSettings,
   onOpenScreenCall,
+  patientInfo,
 }) {
   const { t } = useTranslation();
   const scrollDir = useScrollDirection();
   const [theme, setTheme] = useState(getDayTheme());
 
-  // تثبيت أن الدور الحالي = مريض
   useEffect(() => {
     localStorage.setItem("role", "Patient");
   }, []);
@@ -175,9 +244,70 @@ export default function PatientHome({
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(null);
+  const [assistantMessage, setAssistantMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const handleLogoutClick = () => {
+    setToast({
+      type: "confirm",
+      message:
+        t("patient.logout_confirm") ||
+        "Are you sure you want to log out?",
+    });
+  };
+
+  const handleConfirmLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+    localStorage.removeItem("patientData");
+    localStorage.removeItem("patientSettings");
+    localStorage.removeItem("appointmentsData");
+
+    setToast({
+      type: "success",
+      message:
+        t("patient.logout_message") ||
+        "You have been logged out successfully",
+    });
+
+    setTimeout(() => {
+      setToast(null);
+      onLogout();
+    }, 1500);
+  };
+
+  const handleSendAssistantMessage = async () => {
+    if (!assistantMessage.trim()) return;
+
+    try {
+      setIsSending(true);
+
+      const response = await fetch("/api/patient/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: assistantMessage,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      setAssistantMessage("");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   const patient = {
-    name: "Sara",
+    name: patientInfo?.name ?? "Sara",
     status: t("patient.status_stable"),
     alert: t("patient.alert_none"),
     encouragement: t("patient.encouragement"),
@@ -249,11 +379,14 @@ export default function PatientHome({
     >
       <TopNav
         active="Home"
-        onLogout={onLogout}
+        onLogout={handleLogoutClick}
         onOpenAppointments={onOpenAppointments}
         onOpenPrescriptions={onOpenPrescriptions}
         onOpenSettings={onOpenSettings}
         onOpenScreenCall={onOpenScreenCall}
+        toast={toast}
+        onConfirmLogout={handleConfirmLogout}
+        clearToast={() => setToast(null)}
       />
 
       <nav className={`pj-nav ${scrollDir === "down" ? "hide" : ""}`}>
@@ -288,7 +421,9 @@ export default function PatientHome({
                 className="pj-icon pj-blue"
                 onClick={onOpenAppointments}
               >
-                <span className="pj-glyph" aria-hidden="true">🗓</span>
+                <span className="pj-glyph" aria-hidden="true">
+                  🗓
+                </span>
                 <span className="sr-only">
                   {t("patient.nav_appointments")}
                 </span>
@@ -299,7 +434,9 @@ export default function PatientHome({
                 className="pj-icon pj-aqua"
                 onClick={onOpenPrescriptions}
               >
-                <span className="pj-glyph" aria-hidden="true">💊</span>
+                <span className="pj-glyph" aria-hidden="true">
+                  💊
+                </span>
                 <span className="sr-only">
                   {t("patient.nav_prescriptions")}
                 </span>
@@ -346,7 +483,9 @@ export default function PatientHome({
 
       <main className="pj-main">
         <section className="pj-section" id="journey">
-          <div className="pj-sectionTitle">{t("patient.journey_title")}</div>
+          <div className="pj-sectionTitle">
+            {t("patient.journey_title")}
+          </div>
 
           <div className="pj-rail">
             <div className="pj-railLine" aria-hidden="true" />
@@ -438,8 +577,15 @@ export default function PatientHome({
             className="pj-textarea"
             placeholder={t("patient.assistant_quick_placeholder")}
             rows={4}
+            value={assistantMessage}
+            onChange={(e) => setAssistantMessage(e.target.value)}
           />
-          <button className="pj-btn" type="button">
+          <button
+            className="pj-btn"
+            type="button"
+            onClick={handleSendAssistantMessage}
+            disabled={isSending}
+          >
             {t("patient.assistant_send")}
           </button>
         </div>

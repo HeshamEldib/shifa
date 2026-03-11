@@ -1,26 +1,20 @@
+/* ======================================
+   Settings Page (scoped)
+   ====================================== */
 
-/* ======================================Setting Page ========================================================*/
-
-/* =========================================================
-   SETTINGS (SCOPED) – put at END of your single CSS file
-   Applies only inside: <div class="cc-root shf-settings">
-   ========================================================= */
-
+/* الجذر: شفاف، ياخد الخلفية من app-container */
 .shf-settings.cc-root{
   min-height:100vh;
   display:flex;
   flex-direction:column;
   color:#eaf0ff;
-  background:
-    radial-gradient(1200px 700px at 15% 10%, rgba(34, 211, 238, 0.18), transparent 60%),
-    radial-gradient(900px 600px at 70% 20%, rgba(124, 58, 237, 0.16), transparent 60%),
-    radial-gradient(900px 700px at 40% 85%, rgba(59, 130, 246, 0.10), transparent 60%),
-    linear-gradient(160deg, #050814, #030615 55%, #030513);
+  background: transparent;
   position:relative;
   overflow:hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* الخلفية المحيطة الخفيفة (لو حابب نفس الجو) */
 .shf-settings .cc-ambient{
   position:fixed;
   inset:-40px;
@@ -33,6 +27,7 @@
   z-index:-1;
 }
 
+/* المساحة الرئيسية */
 .shf-settings .cc-main{
   flex:1;
   padding:20px;
@@ -41,6 +36,7 @@
   width:100%;
 }
 
+/* الكروت (زجاج) */
 .shf-settings .cc-card{
   position:relative;
   border-radius:20px;
@@ -72,11 +68,27 @@
 }
 .shf-settings .cc-card:hover::before{ opacity:1; }
 
-.shf-settings .cc-cardTitle{ font-weight:900; letter-spacing:0.01em; }
-.shf-settings .cc-cardSub{ font-size:11px; color: rgba(203,213,255,0.62); margin-top:4px; }
-.shf-settings .cc-muted{ font-size:11px; color: rgba(203,213,255,0.62); }
-.shf-settings .cc-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.shf-settings .cc-cardTitle{
+  font-weight:900;
+  letter-spacing:0.01em;
+}
+.shf-settings .cc-cardSub{
+  font-size:11px;
+  color: rgba(203,213,255,0.62);
+  margin-top:4px;
+}
+.shf-settings .cc-muted{
+  font-size:11px;
+  color: rgba(203,213,255,0.62);
+}
+.shf-settings .cc-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
 
+/* الأزرار */
 .shf-settings .cc-btn{
   padding:10px 12px;
   border-radius:14px;
@@ -99,22 +111,19 @@
   border-color: rgba(148, 163, 184, 0.16);
 }
 
-/* ---------- SELECT: fix dropdown options visibility ---------- */
+/* SELECT */
 .shf-settings .cc-select{
   appearance:none;
   -webkit-appearance:none;
   -moz-appearance:none;
-
   padding:8px 10px;
   padding-right:34px;
   border-radius:12px;
-
   border:1px solid rgba(34,211,238,0.22);
   background-color: rgba(255,255,255,0.06);
   color: rgba(234,240,255,0.95);
   outline:none;
   color-scheme: dark;
-
   background-image:
     linear-gradient(45deg, transparent 50%, rgba(234,240,255,0.85) 50%),
     linear-gradient(135deg, rgba(234,240,255,0.85) 50%, transparent 50%);
@@ -123,7 +132,6 @@
     calc(100% - 11px) 50%;
   background-size: 6px 6px, 6px 6px;
   background-repeat:no-repeat;
-
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
@@ -137,14 +145,13 @@
   color:#eaf0ff;
 }
 
-/* ---------- TOGGLE: super glow + pulse when ON ---------- */
+/* TOGGLE */
 .shf-settings .shf-toggle{
   position: relative;
   display: inline-block;
   width: 42px;
   height: 22px;
 }
-
 .shf-settings .shf-toggle input{ display:none; }
 
 .shf-settings .shf-toggle-track{
@@ -156,7 +163,6 @@
   border:1px solid rgba(56,189,248,0.75);
   transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
 }
-
 .shf-settings .shf-toggle-thumb{
   position:absolute;
   left:3px;
@@ -170,7 +176,7 @@
   transition: transform 140ms ease, filter 140ms ease, box-shadow 140ms ease;
 }
 
-/* ON state: stronger "shine" */
+/* ON state */
 .shf-settings .shf-toggle input:checked + .shf-toggle-track{
   background:
     radial-gradient(circle at 30% 30%, rgba(34,211,238,0.22), rgba(2,6,23,0.92) 70%);

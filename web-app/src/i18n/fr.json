@@ -207,85 +207,94 @@
     "sub_done": "Vérifiez votre boîte mail.",
     "esc_hint": "Appuyez sur Échap pour revenir maintenant. Nous vous ramènerons automatiquement dans 0,5 minute."
   },
+"patient": {
+  "nav_home": "Accueil",
+  "nav_appointments": "Mes rendez‑vous",
+  "nav_more": "Plus",
+  "nav_prescriptions": "Ordonnances",
+  "nav_screen_call": "Appel écran",
+  "nav_settings": "Paramètres",
+  "nav_logout": "Déconnexion",
 
-  "patient": {
-    "nav_home": "Accueil",
-    "nav_appointments": "Mes rendez‑vous",
-    "nav_more": "Plus",
-    "nav_prescriptions": "Ordonnances",
-    "nav_screen_call": "Appel écran",
-    "nav_settings": "Paramètres",
-    "nav_logout": "Déconnexion",
+  "status_stable": "Stable",
+  "alert_none": "Aucune alerte urgente",
+  "encouragement": "Vous êtes sur la bonne voie. Continuez comme ça.",
 
-    "status_stable": "Stable",
-    "alert_none": "Aucune alerte urgente",
-    "encouragement": "Vous êtes sur la bonne voie. Continuez comme ça.",
+  "hero_welcome": "Ravi de vous revoir, {{name}}",
+  "hero_today": "Aujourd’hui : {{status}} · {{alert}}",
 
-    "hero_welcome": "Ravi de vous revoir, {{name}}",
-    "hero_today": "Aujourd’hui : {{status}} · {{alert}}",
+  "event_appointment_type": "Rendez‑vous",
+  "event_appointment_title": "Suivi à distance avec votre médecin",
+  "event_appointment_tip": "Séance en ligne via la clinique Shifaa",
 
-    "event_appointment_type": "Rendez‑vous",
-    "event_appointment_title": "Dr Ahmed Hassan (Médecine interne)",
-    "event_appointment_tip": "Clinique Shifaa · 2ᵉ étage",
+  "event_medication_type": "Médicament",
+  "event_medication_title": "Metformine 500 mg",
+  "event_medication_tip": "Avec les repas",
 
-    "event_medication_type": "Médicament",
-    "event_medication_title": "Metformine 500 mg",
-    "event_medication_tip": "Avec les repas",
+  "event_message_type": "Message",
+  "event_message_time": "Il y a 2 jours",
+  "event_message_title": "Assistant de la clinique",
+  "event_message_tip": "Les résultats sont bons.",
 
-    "event_message_type": "Message",
-    "event_message_time": "Il y a 2 jours",
-    "event_message_title": "Assistant de la clinique",
-    "event_message_tip": "Les résultats sont bons.",
+  "today_timeline": "Chronologie du jour",
 
-    "today_timeline": "Chronologie du jour",
+  "btn_open_assistant": "Ouvrir l’assistant intelligent",
+  "btn_continue_journey": "Poursuivre votre parcours",
 
-    "btn_open_assistant": "Ouvrir l’assistant intelligent",
-    "btn_continue_journey": "Poursuivre votre parcours",
+  "tab_today": "Aujourd’hui",
+  "tab_journey": "Parcours",
+  "tab_messages": "Messages",
 
-    "tab_today": "Aujourd’hui",
-    "tab_journey": "Parcours",
-    "tab_messages": "Messages",
+  "journey_title": "Votre parcours",
+  "journey_view": "Voir",
 
-    "journey_title": "Votre parcours",
-    "journey_view": "Voir",
+  "journey_stage_past": "Passé",
+  "journey_past_title": "Analyse de laboratoire terminée",
+  "journey_past_meta": "Il y a 1 mois",
+  "journey_past_details": "Les analyses ont été réalisées avec succès. Continuez à suivre vos symptômes et le plan de soins.",
 
-    "journey_stage_past": "Passé",
-    "journey_past_title": "Analyse de laboratoire terminée",
-    "journey_past_meta": "Il y a 1 mois",
-    "journey_past_details": "Les analyses ont été réalisées avec succès. Continuez à suivre vos symptômes et le plan de soins.",
+  "journey_stage_current": "Actuel",
+  "journey_current_title": "Objectif de cette semaine",
+  "journey_current_meta": "Hydratation · Marche 20 min · Observance",
+  "journey_current_details": "Concentrez‑vous sur les habitudes quotidiennes. Si vous manquez une prise, consultez votre plan ou demandez à l’assistant.",
 
-    "journey_stage_current": "Actuel",
-    "journey_current_title": "Objectif de cette semaine",
-    "journey_current_meta": "Hydratation · Marche 20 min · Observance",
-    "journey_current_details": "Concentrez‑vous sur les habitudes quotidiennes. Si vous manquez une prise, consultez votre plan ou demandez à l’assistant.",
+  "journey_stage_next": "À venir",
+  "journey_next_title": "Prochain rendez‑vous",
+  "journey_next_meta": "Samedi · 20 h 30",
+  "journey_next_details": "Préparez vos dernières questions. Essayez d’arriver 10 minutes en avance.",
 
-    "journey_stage_next": "À venir",
-    "journey_next_title": "Prochain rendez‑vous",
-    "journey_next_meta": "Samedi · 20 h 30",
-    "journey_next_details": "Préparez vos dernières questions. Essayez d’arriver 10 minutes en avance.",
+  "messages_title": "Messages",
+  "messages_clinic_assistant": "Assistant de la clinique",
+  "messages_body": "Vos derniers résultats sont bons.",
+  "messages_body_sub": "Continuez à suivre le plan.",
+  "messages_meta": "Il y a 2 jours",
 
-    "messages_title": "Messages",
-    "messages_clinic_assistant": "Assistant de la clinique",
-    "messages_body": "Vos derniers résultats sont bons.",
-    "messages_body_sub": "Continuez à suivre le plan.",
-    "messages_meta": "Il y a 2 jours",
+  "footer_last_update": "Dernière mise à jour : {{value}}",
 
-    "footer_last_update": "Dernière mise à jour : {{value}}",
+  "assistant_title": "Assistant intelligent",
+  "assistant_suggested": "Actions suggérées",
+  "assistant_schedule_followup": "Planifier une visite de contrôle",
+  "assistant_set_reminder": "Définir un rappel de médicament",
+  "assistant_ask_results": "Demander mes résultats",
+  "assistant_quick_message": "Message rapide",
+  "assistant_quick_placeholder": "Tapez votre question...",
+  "assistant_send": "Envoyer",
 
-    "assistant_title": "Assistant intelligent",
-    "assistant_suggested": "Actions suggérées",
-    "assistant_schedule_followup": "Planifier une visite de contrôle",
-    "assistant_set_reminder": "Définir un rappel de médicament",
-    "assistant_ask_results": "Demander mes résultats",
-    "assistant_quick_message": "Message rapide",
-    "assistant_quick_placeholder": "Tapez votre question...",
-    "assistant_send": "Envoyer",
+  "modal_title": "{{stage}} : {{title}}",
+  "modal_fallback": "Détails",
+  "modal_done": "Terminé",
+  "modal_ask_assistant": "Demander à l’assistant",
+ 
+  "logout_confirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
+  "logout_confirm_yes": "Oui, se déconnecter",
+  "logout_confirm_no": "Annuler",
+  "logout_message": "Vous avez été déconnecté avec succès"
+}
 
-    "modal_title": "{{stage}} : {{title}}",
-    "modal_fallback": "Détails",
-    "modal_done": "Terminé",
-    "modal_ask_assistant": "Demander à l’assistant"
-  },
+
+
+
+,
 
   "about": {
     "back": "Retour",
@@ -646,8 +655,26 @@
   "recent_3": "Ahmed Khaled retiré du suivi.",
 
   "assistant_title": "Note de l’assistant",
-  "assistant_note": "Utilisez cette vue pour avoir une idée rapide de la charge du jour, puis ouvrez le mode silencieux ou les ordonnances intelligentes quand vous avez besoin d’aide plus profonde."
-},
+  "assistant_note": "Utilisez cette vue pour avoir une idée rapide de la charge du jour, puis ouvrez le mode silencieux ou les ordonnances intelligentes quand vous avez besoin d’aide plus profonde.",
+ 
+    "account_title": "Paramètres du compte médecin",
+    "account_subtitle": "Mettez à jour vos informations personnelles et vos coordonnées.",
+    "field_name": "Nom",
+    "field_specialty": "Spécialité",
+    "field_phone": "Numéro de téléphone",
+    "field_email": "Adresse e-mail",
+    "save_changes": "Enregistrer les modifications",
+   
+    "logout": "Se déconnecter",
+    "logout_confirm_title": "Confirmer la déconnexion",
+    "logout_confirm_text": "Êtes-vous sûr de vouloir vous déconnecter du compte médecin ?"
+  },
+  "common": {
+    "cancel": "Annuler"
+  }
+
+
+,
 "doctorPatientRecords": {
   "back_to_dashboard": "Retour au tableau de bord",
   "title": "Vue d’ensemble du patient",
@@ -847,7 +874,8 @@
 
   "qr_panel_title": "QR pour la pharmacie",
   "qr_panel_desc": "Ce code QR représente l’ordonnance ID {{id}}. Dans le système réel, la pharmacie le scannera pour récupérer les détails.",
-  "qr_preview": "Aperçu du QR"
+  "qr_preview": "Aperçu du QR","close": "Fermer"
+
 },
 "silentScreen": {
   "back": "Retour",
@@ -1178,7 +1206,16 @@
   "admin_simulation_text": "Lancer une simulation sûre de charge d’urgence pour voir comment temps de réponse, alertes et files d’attente se comportent sans affecter les données réelles.",
   "admin_simulation_btn": "Simuler une charge d’urgence",
   "admin_simulation_after": "Après la simulation, un court rapport résumera les performances et goulots d’étranglement du système."
+},
+  "role_patient": "patient",
+  "role_doctor": "médecin",
+  "role_admin": "administrateur",
+  "role_settings_title": "Paramètres pour {{role}}",
+  "role_settings_sub": "Ajustez le fonctionnement de Shifaa pour ce profil.",
+  "page_title": "Paramètres du système",
+  "back": "Retour"
 }
 
 
-}
+
+

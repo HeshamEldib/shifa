@@ -11,7 +11,7 @@ function ContactSection({
   onAboutClick,
   onSignupClick,
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -34,6 +34,15 @@ function ContactSection({
     setMessage("");
   };
 
+  // ضبط اتجاه اللغة على مستوى الصفحة
+  const currentLang = i18n.language || "en";
+  const isRTL = currentLang.startsWith("ar");
+
+  React.useEffect(() => {
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = isRTL ? "rtl" : "ltr";
+  }, [currentLang, isRTL]);
+
   return (
     <>
       {/* الخلفية */}
@@ -50,7 +59,47 @@ function ContactSection({
       {/* الهيدر */}
       <nav className={`navbar ${isLoaded ? "fade-in-down" : ""}`}>
         <div className="logo-container" onClick={onBackClick}>
-          {/* نفس اللوجو */}
+          <svg
+            width="52"
+            height="52"
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="team-logo-svg"
+          >
+            <path
+              d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50"
+              stroke="url(#logo-gradient)"
+              strokeWidth="8"
+              strokeLinecap="round"
+            />
+            <path
+              d="M20 50 L35 50 L45 30 L55 70 L65 50 L80 50"
+              stroke="white"
+              strokeWidth="7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="pulse-path"
+            />
+            <text
+              x="50"
+              y="57"
+              textAnchor="middle"
+              fontSize="36"
+              fontWeight="700"
+              fill="#e5f4ff"
+              className="logo-s-letter"
+            >
+              S
+            </text>
+            <defs>
+              <linearGradient id="logo-gradient" x1="0" y1="0" x2="100" y2="100">
+                <stop offset="0%" stopColor="#22d3ee" />
+                <stop offset="100%" stopColor="#7c3aed" />
+              </linearGradient>
+            </defs>
+          </svg>
+
           <span className="logo-text-main">Shifaa</span>
         </div>
 
@@ -69,7 +118,10 @@ function ContactSection({
           >
             {t("navbar.about")}
           </button>
-          <button type="button" className="nav-item">
+          <button
+            type="button"
+            className="nav-item"
+          >
             {t("navbar.contact")}
           </button>
         </div>

@@ -8,7 +8,7 @@ import "./SignUp.css";
 const ROLES = [
   { key: "patient", label: "signup.role_patient", icon: "👤" },
   { key: "doctor", label: "signup.role_doctor", icon: "👨‍⚕️" },
-  { key: "center", label: "signup.role_center", icon: "🏥" }
+  { key: "center", label: "signup.role_center", icon: "🏥" },
 ];
 
 function passwordStrength(pw) {
@@ -23,7 +23,7 @@ function passwordStrength(pw) {
   return { label: "Strong", score: 3 };
 }
 
-function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess }) {
+function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.resolvedLanguage === "ar";
 
@@ -45,7 +45,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
     medicalId: "",
     centerName: "",
     licenseNumber: "",
-    agree: false
+    agree: false,
   });
 
   const [touched, setTouched] = useState({});
@@ -64,47 +64,47 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
 
     if (!form.fullName.trim())
       e.fullName = t("signup.full_name_required", {
-        defaultValue: "Full name is required."
+        defaultValue: "Full name is required.",
       });
 
     if (!form.email.trim())
       e.email = t("signup.email_required", {
-        defaultValue: "Email is required."
+        defaultValue: "Email is required.",
       });
     else if (!/^\S+@\S+\.\S+$/.test(form.email))
       e.email = t("signup.email_invalid", {
-        defaultValue: "Enter a valid email address."
+        defaultValue: "Enter a valid email address.",
       });
 
     if (!form.password)
       e.password = t("signup.password_required", {
-        defaultValue: "Password is required."
+        defaultValue: "Password is required.",
       });
     else if (form.password.length < 8)
       e.password = t("signup.password_min", {
-        defaultValue: "Password must be at least 8 characters."
+        defaultValue: "Password must be at least 8 characters.",
       });
 
     if (step >= 2) {
       if (!form.phone.trim())
         e.phone = t("signup.phone_required", {
-          defaultValue: "Phone number is required."
+          defaultValue: "Phone number is required.",
         });
       if (!form.gender)
         e.gender = t("signup.gender_required", {
-          defaultValue: "Gender is required."
+          defaultValue: "Gender is required.",
         });
       if (!form.age)
         e.age = t("signup.age_required", {
-          defaultValue: "Age is required."
+          defaultValue: "Age is required.",
         });
       else if (Number(form.age) < 1 || Number(form.age) > 120)
         e.age = t("signup.age_invalid", {
-          defaultValue: "Enter a valid age."
+          defaultValue: "Enter a valid age.",
         });
       if (!form.country)
         e.country = t("signup.country_required", {
-          defaultValue: "Country is required."
+          defaultValue: "Country is required.",
         });
     }
 
@@ -112,26 +112,26 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
       if (role === "doctor") {
         if (!form.specialization.trim())
           e.specialization = t("signup.specialization_required", {
-            defaultValue: "Specialization is required."
+            defaultValue: "Specialization is required.",
           });
         if (!form.medicalId.trim())
           e.medicalId = t("signup.medical_id_required", {
-            defaultValue: "Medical ID is required."
+            defaultValue: "Medical ID is required.",
           });
       }
       if (role === "center") {
         if (!form.centerName.trim())
           e.centerName = t("signup.center_name_required", {
-            defaultValue: "Center name is required."
+            defaultValue: "Center name is required.",
           });
         if (!form.licenseNumber.trim())
           e.licenseNumber = t("signup.license_required", {
-            defaultValue: "License number is required."
+            defaultValue: "License number is required.",
           });
       }
       if (!form.agree)
         e.agree = t("signup.agree_required", {
-          defaultValue: "You must agree to Terms & Privacy Policy."
+          defaultValue: "You must agree to Terms & Privacy Policy.",
         });
     }
 
@@ -153,7 +153,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
       ...p,
       ...(step === 1
         ? { fullName: true, email: true, password: true }
-        : {})
+        : {}),
     }));
     if (!canGoNext()) return;
     setStep((s) => Math.min(stepCount, s + 1));
@@ -176,7 +176,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
       medicalId: true,
       centerName: true,
       licenseNumber: true,
-      agree: true
+      agree: true,
     }));
     if (Object.keys(errors).length) return;
 
@@ -187,15 +187,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
     else if (role === "center") finalRole = "Admin";
 
     try {
-      // TODO: real signup API
-      // const res = await api.signup({ ...form, role: finalRole });
-      // onSignupSuccess?.({
-      //   role: res.user.role,
-      //   token: res.token,
-      //   userId: res.user.id,
-      // });
-
-      window.setTimeout(() => {
+      setTimeout(() => {
         setSubmitState("success");
         if (typeof onSignupSuccess === "function") {
           onSignupSuccess({ role: finalRole });
@@ -259,11 +251,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
 
       <main className="su-page">
         <section className={`su-left ${isLoaded ? "fade-in-up" : ""}`}>
-          <div
-            className="su-brand"
-            onClick={onBackClick}
-            style={{ cursor: "pointer" }}
-          >
+          <div className="su-brand">
             <span className="su-brand-mark">+</span>
             <span className="su-brand-text">Shifaa</span>
           </div>
@@ -521,7 +509,6 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                         <option value="male">
                           {t("signup.gender_male")}
                         </option>
-                        {/* لو مش عايزة other خلاص شيلناه */}
                       </select>
                       {renderFieldStatus("gender")}
                     </div>
@@ -603,7 +590,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                             onBlur={() =>
                               setTouched((p) => ({
                                 ...p,
-                                specialization: true
+                                specialization: true,
                               }))
                             }
                             placeholder={t(
@@ -634,7 +621,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                             onBlur={() =>
                               setTouched((p) => ({
                                 ...p,
-                                medicalId: true
+                                medicalId: true,
                               }))
                             }
                             placeholder={t(
@@ -669,7 +656,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                             onBlur={() =>
                               setTouched((p) => ({
                                 ...p,
-                                centerName: true
+                                centerName: true,
                               }))
                             }
                             placeholder={t(
@@ -700,7 +687,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                             onBlur={() =>
                               setTouched((p) => ({
                                 ...p,
-                                licenseNumber: true
+                                licenseNumber: true,
                               }))
                             }
                             placeholder={t(
@@ -770,11 +757,10 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                 <button
                   type="button"
                   className="su-ghost"
-                  onClick={step === 1 ? onBackClick : goPrev}
+                  onClick={goPrev}
+                  disabled={step === 1}
                 >
-                  {step === 1
-                    ? t("signup.back")
-                    : t("signup.previous")}
+                  {t("signup.previous")}
                 </button>
 
                 {step < 3 ? (
@@ -823,7 +809,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
             <button
               type="button"
               className="su-next"
-              onClick={onBackClick}
+              onClick={onLoginClick}
             >
               {t("signup.success_button")}
             </button>

@@ -292,8 +292,8 @@
   "hero_today": "اليوم: {{status}} · {{alert}}",
 
   "event_appointment_type": "موعد",
-  "event_appointment_title": "د. أحمد حسن (باطنة)",
-  "event_appointment_tip": "عيادة شفاء · الدور الثاني",
+  "event_appointment_title": "موعد متابعة عن بُعد مع طبيبك",
+  "event_appointment_tip": "جلسة أونلاين عبر عيادة شفاء",
 
   "event_medication_type": "دواء",
   "event_medication_title": "ميتفورمين 500 مجم",
@@ -351,8 +351,16 @@
   "modal_title": "{{stage}}: {{title}}",
   "modal_fallback": "التفاصيل",
   "modal_done": "تم",
-  "modal_ask_assistant": "اسأل المساعد"
-},
+  "modal_ask_assistant": "اسأل المساعد",
+  "logout_confirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "logout_confirm_yes": "نعم، تسجيل الخروج",
+  "logout_confirm_no": "إلغاء",
+  "logout_message": "تم تسجيل خروجك بنجاح"
+}
+
+
+  
+,
  "about": {
   "back": "رجوع",
   "header_title": "عن شفاء",
@@ -635,7 +643,26 @@
 
   "assistant_title": "ملاحظة المساعد",
   "assistant_note": "استخدم هذه الشاشة لأخذ فكرة سريعة عن ضغط اليوم، ثم افتح وضع التشخيص الصامت أو الوصفات الذكية عندما تحتاج مساعدة أعمق."
-},
+  ,
+    "account_title": "إعدادات حساب الطبيب",
+    "account_subtitle": "حدّث بياناتك الشخصية وطرق التواصل مع المرضى.",
+    "field_name": "الاسم",
+    "field_specialty": "التخصص",
+    "field_phone": "رقم الهاتف",
+    "field_email": "البريد الإلكتروني",
+    "save_changes": "حفظ التغييرات",
+  
+    "logout": "تسجيل الخروج",
+    "logout_confirm_title": "تأكيد تسجيل الخروج",
+    "logout_confirm_text": "هل أنت متأكد أنك تريد تسجيل الخروج من حساب الطبيب؟"
+  },
+  "common": {
+    "cancel": "إلغاء"
+  }
+
+
+
+,
 
 "doctorPatientRecords": {
   "back_to_dashboard": "الرجوع إلى لوحة التحكم",
@@ -835,7 +862,9 @@
 
   "qr_panel_title": "QR للصيدلية",
   "qr_panel_desc": "يمثل هذا الرمز QR الروشتة رقم {{id}}. في النظام الفعلي ستقوم الصيدلية بمسحه للحصول على تفاصيل الروشتة.",
-  "qr_preview": "معاينة QR"
+  "qr_preview": "معاينة QR",
+  "close": "إغلاق"
+
 },"silentScreen": {
   "back": "رجوع",
   "live_pill": "اللحظة الحالية",
@@ -1163,8 +1192,18 @@
   "admin_simulation_text": "شغّل محاكاة آمنة لحالات الطوارئ لترى كيف يتغير زمن الاستجابة والتنبيهات والطوابير بدون التأثير على البيانات الحقيقية.",
   "admin_simulation_btn": "محاكاة حمل طارئ",
   "admin_simulation_after": "بعد المحاكاة سيتم إنشاء تقرير مختصر لأداء النظام ونقاط الضعف."
+},
+  
+  "role_patient": "المريض",
+  "role_doctor": "الطبيب",
+  "role_admin": "الأدمن",
+  "role_settings_title": "إعدادات {{role}}",
+  "role_settings_sub": "اضبط طريقة عمل شفاء لهذا الملف الشخصي.",
+  "page_title": "إعدادات النظام",
+  "back": "رجوع"
 }
 
 
 
-}
+
+

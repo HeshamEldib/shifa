@@ -7,7 +7,6 @@ import "./Login.css";
 
 function LoginSection({
   isLoaded,
-  onBackClick,
   onSignupClick,
   onForgotClick,
   onLoginSuccess,
@@ -38,16 +37,6 @@ function LoginSection({
     setIsSubmitting(true);
 
     try {
-      // TODO: استبدل هذا الجزء بنداء الباك إند الحقيقي
-      // const res = await api.login({ email, password });
-      // onLoginSuccess?.({
-      //   role: res.user.role,
-      //   token: res.token,
-      //   userId: res.user.id,
-      //   email: res.user.email,
-      // });
-
-      // Demo مؤقت
       const demoRole = "Patient";
       const fakeData = {
         token: "DEMO_TOKEN",
@@ -79,6 +68,7 @@ function LoginSection({
 
   return (
     <>
+      {/* الخلفية */}
       <div className="background-wrapper">
         <div
           className="bg-image"
@@ -89,17 +79,14 @@ function LoginSection({
         <div className="glow-orb orb-2"></div>
       </div>
 
+      {/* navbar بسيط: لوجو بس */}
       <nav className={`navbar ${isLoaded ? "fade-in-down" : ""}`}>
         <div className="logo-container">
-          <span className="logo-text-main">شفاء</span>
-        </div>
-        <div className="nav-buttons desktop-only">
-          <button className="btn-secondary" onClick={onBackClick}>
-            {t("login.back_home")}
-          </button>
+          <span className="logo-text-main">Shifaa</span>
         </div>
       </nav>
 
+      {/* محتوى صفحة اللوجين */}
       <main className="login-wrapper">
         <div className={`login-card ${isLoaded ? "fade-in-up" : ""}`}>
           <div className="login-header">
@@ -109,7 +96,6 @@ function LoginSection({
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
-            {/* Email */}
             <div className="form-group">
               <label htmlFor="email">{t("login.email")}</label>
               <input
@@ -123,7 +109,6 @@ function LoginSection({
               />
             </div>
 
-            {/* Password with toggle */}
             <div className="form-group password-group">
               <label htmlFor="password">{t("login.password")}</label>
               <div

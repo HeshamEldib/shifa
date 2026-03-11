@@ -1,3 +1,4 @@
+// src/components/website/ForgotPassword.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./ForgotPass.css";
@@ -6,11 +7,11 @@ function isValidEmail(v) {
   return /^\S+@\S+\.\S+$/.test(String(v || "").trim());
 }
 
-function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
+function ForgotPassword({ isLoaded, role = "patient", onDone }) {
   const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
-  const [phase, setPhase] = useState("typing");
+  const [phase, setPhase] = useState("typing"); // typing | sending | done
   const [hint, setHint] = useState("you@");
   const [showEscape, setShowEscape] = useState(false);
   const [showEscHint, setShowEscHint] = useState(false);
@@ -22,7 +23,7 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
     const map = {
       patient: t("forgot.role_patient"),
       doctor: t("forgot.role_doctor"),
-      center: t("forgot.role_center")
+      center: t("forgot.role_center"),
     };
     return map[role] || t("forgot.role_default");
   }, [role, t]);
@@ -31,20 +32,14 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
     inputRef.current?.focus();
   }, []);
 
+  // بعد 10 ثواني من الكتابة يظهر زر "مش دلوقتي"
   useEffect(() => {
     if (phase !== "typing") return;
     const tmr = setTimeout(() => setShowEscape(true), 10000);
     return () => clearTimeout(tmr);
   }, [phase]);
 
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") onBackClick?.();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onBackClick]);
-
+  // تدوير الـ placeholder
   useEffect(() => {
     if (phase !== "typing") return;
     const samples = ["you@", "name@", "account@", "email@"];
@@ -71,6 +66,7 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
 
     setPhase("sending");
 
+    // هنا مكان الـ API الحقيقي
     await new Promise((r) => setTimeout(r, 900));
 
     setPhase("done");
@@ -82,6 +78,7 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
     scheduleAutoSend(v);
   };
 
+  // بعد ما تخلص: hint + رجوع تلقائي لو onDone متوفر
   useEffect(() => {
     if (phase !== "done") {
       setShowEscHint(false);
@@ -93,21 +90,25 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
     }, 4000);
 
     const autoBackTimer = setTimeout(() => {
-      onBackClick?.();
+      if (typeof onDone === "function") onDone();
     }, 30000);
 
     return () => {
       clearTimeout(hintTimer);
       clearTimeout(autoBackTimer);
     };
-  }, [phase, onBackClick]);
+  }, [phase, onDone]);
 
   return (
     <main className={`ne-page ${isLoaded ? "fade-in-up" : ""}`}>
       <div className="ne-bg" />
 
-      {phase === "typing" && showEscape && (
-        <button type="button" className="ne-escape" onClick={onBackClick}>
+      {phase === "typing" && showEscape && onDone && (
+        <button
+          type="button"
+          className="ne-escape"
+          onClick={onDone}
+        >
           ← {t("forgot.not_now")}
         </button>
       )}

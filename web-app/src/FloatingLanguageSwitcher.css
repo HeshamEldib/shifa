@@ -1,8 +1,9 @@
 .fab-lang-container {
   position: fixed;
-  bottom: 80px;
-  right: 80px;
+  bottom: 24px;
+  right: 24px;
   z-index: 9999;
+  will-change: transform;
 }
 
 .fab-center {
@@ -20,13 +21,17 @@
   height: 56px;
   border-radius: 50%;
   border: none;
-  cursor: pointer;
+  cursor: grab;
   background: linear-gradient(135deg, #22d3ee, #7c3aed);
   color: #ffffff;
   font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.fab-lang-button:active {
+  cursor: grabbing;
 }
 
 /* حاوية الأعلام */

@@ -1,0 +1,203 @@
+/* =========================
+   Doctor Profile Page
+   ========================= */
+
+.dd-profile-shell {
+  min-height: 100vh;
+  padding: 18px 20px 26px;
+  background: transparent;
+  color: #e5e7eb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+}
+
+/* توسيط الكارت */
+.dd-profile-main {
+  min-height: calc(100vh - 36px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* الكارت نفسه */
+.dd-profile-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 14px;
+  background: rgba(2, 6, 23, 0.95);
+  border: 1px solid rgba(30, 64, 175, 0.8);
+  padding: 16px 18px 18px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
+}
+
+/* عنوان ووصف */
+.dd-profile-header-title {
+  margin-bottom: 10px;
+}
+
+.dd-profile-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  margin: 0;
+}
+
+.dd-profile-subtitle {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  margin: 2px 0 0;
+}
+
+/* الجزء اللي فوق: الصورة + الاسم + التخصص */
+.dd-profile-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+/* الصورة الدائرية – معتمدة على .dd-sidebar-avatar العامة */
+.dd-profile-avatar {
+  width: 56px;
+  height: 56px;
+  font-size: 22px;
+}
+
+/* الاسم + التخصص */
+.dd-profile-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.dd-profile-role {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+/* الحقول */
+.dd-profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.dd-profile-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dd-profile-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* input */
+.dd-profile-input {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 9px;
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.dd-profile-input:focus {
+  border-color: rgba(59, 130, 246, 0.9);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+}
+
+/* زر حفظ */
+.dd-profile-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dd-profile-save {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #22d3ee);
+  color: #f9fafb;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+  transition: filter 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+.dd-profile-save:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.5);
+}
+
+.dd-profile-save:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* دعم RTL */
+html[dir="rtl"] .dd-profile-top {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .dd-profile-fields {
+  direction: rtl;
+}
+
+html[dir="rtl"] .dd-profile-label {
+  text-align: right;
+}
+
+html[dir="rtl"] .dd-profile-actions {
+  justify-content: flex-start;
+}
+
+/* رسبونسيف */
+
+@media (max-width: 768px) {
+  .dd-profile-main {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .dd-profile-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .dd-profile-shell {
+    padding: 12px 10px 18px;
+  }
+
+  .dd-profile-card {
+    padding: 12px 12px 14px;
+  }
+
+  .dd-profile-title {
+    font-size: 0.95rem;
+  }
+
+  .dd-profile-name {
+    font-size: 1rem;
+  }
+
+  .dd-profile-input {
+    font-size: 0.85rem;
+    padding: 6px 8px;
+  }
+
+  .dd-profile-save {
+    padding-inline: 10px;
+    font-size: 0.75rem;
+  }
+}

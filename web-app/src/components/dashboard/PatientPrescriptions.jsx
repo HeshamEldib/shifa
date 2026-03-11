@@ -14,32 +14,36 @@ function fakeAiExplain(medicine, t) {
   return t("patientPrescriptions.ai_default");
 }
 
-export default function PatientPrescriptions({
-  patient,
-  prescriptions,
-  onBack,
-}) {
+export default function PatientPrescriptions({ patient, prescriptions, onBack }) {
   const { t } = useTranslation();
 
+  // لو مفيش روشتات خالص
+  const hasPrescriptions = Array.isArray(prescriptions) && prescriptions.length > 0;
+
   const [selectedId, setSelectedId] = useState(
-    prescriptions?.[0]?.id || null
-  );
-  const selected = useMemo(
-    () =>
-      prescriptions.find((p) => p.id === selectedId) ||
-      prescriptions[0] ||
-      null,
-    [prescriptions, selectedId]
+    hasPrescriptions ? prescriptions[0].id : null
   );
 
-  const [takenCount, setTakenCount] = useState(0);
+  const selected = useMemo(() => {
+    if (!hasPrescriptions) return null;
+    return (
+      prescriptions.find((p) => p.id === selectedId) ||
+      prescriptions[0] ||
+      null
+    );
+  }, [hasPrescriptions, prescriptions, selectedId]);
+
   const meds = selected?.medicines || [];
+
+  // adherence demo (يقدر الباك بعدين يبعت قيم جاهزة لو حابب)
+  const [takenCount, setTakenCount] = useState(0);
   const totalDosesDemo = Math.max(meds.length * 3, 1);
   const adherencePct = Math.min(
     100,
     Math.round((takenCount / totalDosesDemo) * 100)
   );
 
+  // panels state
   const [showReminderPanel, setShowReminderPanel] = useState(false);
   const [reminderChannel, setReminderChannel] = useState("app");
   const [reminderTime, setReminderTime] = useState("08:00");
@@ -57,27 +61,41 @@ export default function PatientPrescriptions({
     setShowQrPanel(false);
   };
 
-  const handleDownloadPdf = () => {
+  // جاهز للباك: مجرد trigger، الباك يعمل generate PDF ويرجع link لو حابب
+  const handleDownloadPdf = async () => {
     if (!selected) return;
-    setDownloadInfo(
-      t("patientPrescriptions.pdf_ready", {
-        id: selected.id,
-        date: new Date(selected.createdAt).toLocaleDateString(),
-      })
-    );
+    try {
+      // مثال فقط – انت تشبّكه بالـ endpoint الفعلي عندك
+      // const res = await fetch(`/api/patient/prescriptions/${selected.id}/pdf`, { method: "POST" });
+      // const data = await res.json();
+
+      setDownloadInfo(
+        t("patientPrescriptions.pdf_ready", {
+          id: selected.id,
+          date: selected.createdAt
+            ? new Date(selected.createdAt).toLocaleDateString()
+            : "",
+        })
+      );
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleReminderSave = (e) => {
     e.preventDefault();
+    // هنا الباك يقدر ياخد reminderChannel + reminderTime لو حابب
     setShowReminderPanel(false);
   };
 
   const handleRefillSave = (e) => {
     e.preventDefault();
+    // هنا الباك يقدر ياخد refillNotes ويخزنها
     setShowRefillPanel(false);
   };
 
   const handleGenerateQr = () => {
+    // جاهز إنك تشبكه بـ endpoint يرجّع QR image / data
     setShowQrPanel(true);
   };
 
@@ -95,13 +113,11 @@ export default function PatientPrescriptions({
       </button>
 
       <div className="pp-title-row">
-        <h2 className="pp-title">
-          {t("patientPrescriptions.title")}
-        </h2>
+        <h2 className="pp-title">{t("patientPrescriptions.title")}</h2>
         <div className="pp-sub">
           {t("patientPrescriptions.patient_label", {
-            name: patient?.name,
-            id: patient?.id,
+            name: patient?.name || "—",
+            id: patient?.id || "—",
           })}
         </div>
       </div>
@@ -117,7 +133,7 @@ export default function PatientPrescriptions({
             💊 {t("patientPrescriptions.timeline_title")}
           </div>
           <div className="pp-list">
-            {prescriptions.length === 0 ? (
+            {!hasPrescriptions ? (
               <div className="pp-empty">
                 {t("patientPrescriptions.no_prescriptions")}
               </div>
@@ -127,7 +143,7 @@ export default function PatientPrescriptions({
                   key={p.id}
                   type="button"
                   className={
-                    p.id === selected?.id
+                    selected && p.id === selected.id
                       ? "pp-item is-active"
                       : "pp-item"
                   }
@@ -135,7 +151,10 @@ export default function PatientPrescriptions({
                 >
                   <div className="pp-item-id">{p.id}</div>
                   <div className="pp-item-meta">
-                    {new Date(p.createdAt).toLocaleString()} · {p.status}
+                    {p.createdAt
+                      ? new Date(p.createdAt).toLocaleString()
+                      : "—"}{" "}
+                    · {p.status || "—"}
                   </div>
                 </button>
               ))
@@ -151,9 +170,7 @@ export default function PatientPrescriptions({
               <div className="pp-right-label">
                 {t("patientPrescriptions.selected_prescription")}
               </div>
-              <div className="pp-right-id">
-                {selected?.id || "—"}
-              </div>
+              <div className="pp-right-id">{selected?.id || "—"}</div>
             </div>
 
             <div className="pp-actions">
@@ -301,9 +318,15 @@ export default function PatientPrescriptions({
             {showReminderPanel && (
               <div className="pp-panelCard">
                 <h4>
-                  {t("patientPrescriptions.reminder_panel_title")}
+                  {t(
+                    "patientPrescriptions.reminder_panel_title"
+                  )}
                 </h4>
-                <p>{t("patientPrescriptions.reminder_panel_desc")}</p>
+                <p>
+                  {t(
+                    "patientPrescriptions.reminder_panel_desc"
+                  )}
+                </p>
                 <form onSubmit={handleReminderSave}>
                   <div className="pp-panel-grid">
                     <div className="pp-field">
@@ -317,19 +340,27 @@ export default function PatientPrescriptions({
                         }
                       >
                         <option value="app">
-                          {t("patientPrescriptions.channel_app")}
+                          {t(
+                            "patientPrescriptions.channel_app"
+                          )}
                         </option>
                         <option value="sms">
-                          {t("patientPrescriptions.channel_sms")}
+                          {t(
+                            "patientPrescriptions.channel_sms"
+                          )}
                         </option>
                         <option value="whatsapp">
-                          {t("patientPrescriptions.channel_whatsapp")}
+                          {t(
+                            "patientPrescriptions.channel_whatsapp"
+                          )}
                         </option>
                       </select>
                     </div>
                     <div className="pp-field">
                       <label>
-                        {t("patientPrescriptions.first_reminder_time")}
+                        {t(
+                          "patientPrescriptions.first_reminder_time"
+                        )}
                       </label>
                       <input
                         type="time"
@@ -344,7 +375,9 @@ export default function PatientPrescriptions({
                     <button
                       type="button"
                       className="pp-adherence-btn"
-                      onClick={() => setShowReminderPanel(false)}
+                      onClick={() =>
+                        setShowReminderPanel(false)
+                      }
                     >
                       {t("patientPrescriptions.close")}
                     </button>
@@ -352,7 +385,9 @@ export default function PatientPrescriptions({
                       type="submit"
                       className="pp-adherence-btn"
                     >
-                      {t("patientPrescriptions.save_reminders")}
+                      {t(
+                        "patientPrescriptions.save_reminders"
+                      )}
                     </button>
                   </div>
                 </form>
@@ -361,8 +396,16 @@ export default function PatientPrescriptions({
 
             {showRefillPanel && (
               <div className="pp-panelCard">
-                <h4>{t("patientPrescriptions.refill_panel_title")}</h4>
-                <p>{t("patientPrescriptions.refill_panel_desc")}</p>
+                <h4>
+                  {t(
+                    "patientPrescriptions.refill_panel_title"
+                  )}
+                </h4>
+                <p>
+                  {t(
+                    "patientPrescriptions.refill_panel_desc"
+                  )}
+                </p>
                 <form onSubmit={handleRefillSave}>
                   <div className="pp-field">
                     <label>
@@ -371,7 +414,9 @@ export default function PatientPrescriptions({
                     <textarea
                       rows={3}
                       value={refillNotes}
-                      onChange={(e) => setRefillNotes(e.target.value)}
+                      onChange={(e) =>
+                        setRefillNotes(e.target.value)
+                      }
                       placeholder={t(
                         "patientPrescriptions.refill_placeholder"
                       )}
@@ -381,7 +426,9 @@ export default function PatientPrescriptions({
                     <button
                       type="button"
                       className="pp-adherence-btn"
-                      onClick={() => setShowRefillPanel(false)}
+                      onClick={() =>
+                        setShowRefillPanel(false)
+                      }
                     >
                       {t("patientPrescriptions.close")}
                     </button>
@@ -389,7 +436,9 @@ export default function PatientPrescriptions({
                       type="submit"
                       className="pp-adherence-btn"
                     >
-                      {t("patientPrescriptions.save_refill_note")}
+                      {t(
+                        "patientPrescriptions.save_refill_note"
+                      )}
                     </button>
                   </div>
                 </form>
@@ -398,7 +447,9 @@ export default function PatientPrescriptions({
 
             {showQrPanel && (
               <div className="pp-panelCard">
-                <h4>{t("patientPrescriptions.qr_panel_title")}</h4>
+                <h4>
+                  {t("patientPrescriptions.qr_panel_title")}
+                </h4>
                 <p>
                   {t("patientPrescriptions.qr_panel_desc", {
                     id: selected?.id || "—",
