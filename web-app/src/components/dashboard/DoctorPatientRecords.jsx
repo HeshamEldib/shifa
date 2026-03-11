@@ -1,80 +1,76 @@
+// src/components/dashboard/DoctorPatientRecords.jsx
 import React from "react";
 import "./DoctorPatientRecords.css";
 import { useTranslation } from "react-i18next";
 
-function DoctorPatientRecords({ onBack, onOpenPrescription }) {
+function DoctorPatientRecords({ onOpenPrescription, patientOverview }) {
   const { t } = useTranslation();
 
-  // بيانات المريض (ممكن تيجي من الباك زي ما هي)
-  const patient = {
-    id: "2026-01",
-    name: "Rana Ali",
-    age: 32,
-    gender: "female", // كود للترجمة
-    condition: "type2_diabetes", // كود للترجمة
-    lastVisit: "21 Jan 2026",
-    assignedDoctor: "Dr. Sara Ahmed",
-  };
+  const data =
+    patientOverview || {
+      patient: {
+        id: "2026-01",
+        name: "Rana Ali",
+        age: 32,
+        gender: "female",
+        condition: "type2_diabetes",
+        lastVisit: "21 Jan 2026",
+        assignedDoctor: "Dr. Sara Ahmed",
+      },
+      upcoming: [
+        {
+          id: 1,
+          type: "follow_up",
+          doctorName: "Dr. Ahmed Samir",
+          specialty: "cardiology",
+          date: "Sun, 8 Feb 2026",
+          time: "10:30 AM",
+          location: "Building A - Clinic 203",
+        },
+        {
+          id: 2,
+          type: "new_consult",
+          doctorName: "Dr. Sara Ali",
+          specialty: "dermatology",
+          date: "Tue, 10 Feb 2026",
+          time: "4:00 PM",
+          location: "Online video",
+        },
+      ],
+      recentActivity: [
+        {
+          id: 1,
+          date: "21 Jan 2026",
+          type: "visit",
+          label: "visit_with_omar",
+        },
+        {
+          id: 2,
+          date: "18 Jan 2026",
+          type: "lab",
+          label: "blood_test_hba1c_lipid",
+        },
+        {
+          id: 3,
+          date: "10 Jan 2026",
+          type: "visit",
+          label: "online_consult_ahmed",
+        },
+      ],
+      meds: [
+        { id: 1, name: "metformin_500", note: "metformin_note" },
+        { id: 2, name: "atorvastatin_20", note: "atorvastatin_note" },
+      ],
+      allergies: ["Penicillin"],
+      notesLines: [
+        "note_monitor_hba1c",
+        "note_lifestyle",
+        "note_bp_followup",
+      ],
+    };
 
-  // المواعيد القادمة
-  const upcoming = [
-    {
-      id: 1,
-      type: "follow_up", // كود
-      doctorName: "Dr. Ahmed Samir",
-      specialty: "cardiology", // كود
-      date: "Sun, 8 Feb 2026",
-      time: "10:30 AM",
-      location: "Building A - Clinic 203",
-    },
-    {
-      id: 2,
-      type: "new_consult", // كود
-      doctorName: "Dr. Sara Ali",
-      specialty: "dermatology", // كود
-      date: "Tue, 10 Feb 2026",
-      time: "4:00 PM",
-      location: "Online video",
-    },
-  ];
-
-  // النشاط الصحي الأخير
-  const recentActivity = [
-    {
-      id: 1,
-      date: "21 Jan 2026",
-      type: "visit", // كود
-      label: "visit_with_omar", // كود
-    },
-    {
-      id: 2,
-      date: "18 Jan 2026",
-      type: "lab", // كود
-      label: "blood_test_hba1c_lipid", // كود
-    },
-    {
-      id: 3,
-      date: "10 Jan 2026",
-      type: "visit",
-      label: "online_consult_ahmed",
-    },
-  ];
-
-  // الأدوية
-  const meds = [
-    { id: 1, name: "metformin_500", note: "metformin_note" },
-    { id: 2, name: "atorvastatin_20", note: "atorvastatin_note" },
-  ];
-
-  // الحساسية (للتبسيط سيبناها نص مباشر، ممكن تبقى كود برضه)
-  const allergies = ["Penicillin"];
-
-  // ملاحظات الطبيب
-  const notesLines = [
-    "note_monitor_hba1c",
-    "note_lifestyle",
-    "note_bp_followup",
-  ];
+  const { patient, upcoming, recentActivity, meds, allergies, notesLines } =
+    data;
 
   const initials = patient.name
     .split(" ")
@@ -86,9 +82,6 @@ function DoctorPatientRecords({ onBack, onOpenPrescription }) {
   return (
     <div className="pr-shell">
       <header className="pr-topbar">
-        <button type="button" className="pr-back" onClick={onBack}>
-          ← {t("doctorPatientRecords.back_to_dashboard")}
-        </button>
         <div>
           <h1 className="pr-title">
             {t("doctorPatientRecords.title")}
@@ -99,7 +92,6 @@ function DoctorPatientRecords({ onBack, onOpenPrescription }) {
         </div>
       </header>
 
-      {/* بطاقة المريض */}
       <section className="pr-patient-card">
         <div className="pr-patient-main">
           <div className="pr-avatar-circle">{initials}</div>
@@ -149,7 +141,6 @@ function DoctorPatientRecords({ onBack, onOpenPrescription }) {
       </section>
 
       <main className="pr-layout">
-        {/* عمود المواعيد والنشاط */}
         <section className="pr-column">
           <article className="pr-card">
             <header className="pr-card-header">
@@ -165,7 +156,6 @@ function DoctorPatientRecords({ onBack, onOpenPrescription }) {
               </span>
             </header>
 
-            {/* المواعيد القادمة */}
             <div className="pr-block">
               <div className="pr-block-title">
                 {t("doctorPatientRecords.upcoming")}
@@ -203,8 +193,9 @@ function DoctorPatientRecords({ onBack, onOpenPrescription }) {
                       {t(
                         `doctorPatientRecords.location_${a.location
                           .replace(/\s+/g, "_")
-                          .toLowerCase()}`
-                      , a.location)}
+                          .toLowerCase()}`,
+                        a.location
+                      )}
                     </div>
                   </div>
 
@@ -215,7 +206,6 @@ function DoctorPatientRecords({ onBack, onOpenPrescription }) {
               ))}
             </div>
 
-            {/* النشاط الصحي الأخير */}
             <div className="pr-block">
               <div className="pr-block-title">
                 {t("doctorPatientRecords.recent_activity")}
@@ -245,7 +235,6 @@ function DoctorPatientRecords({ onBack, onOpenPrescription }) {
           </article>
         </section>
 
-        {/* عمود العلاج والملاحظات */}
         <section className="pr-column">
           <article className="pr-card">
             <header className="pr-card-header">

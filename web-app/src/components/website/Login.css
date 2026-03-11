@@ -188,6 +188,11 @@
   background: linear-gradient(135deg, #0ea5e9, #9333ea);
 }
 
+.login-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .login-error {
   color: #f87171;
   font-size: 0.85rem;
@@ -198,4 +203,21 @@
   margin-top: 10px;
   font-size: 0.85rem;
   color: #cbd5e1;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .login-wrapper {
+    padding: 110px 16px 40px;
+  }
+
+  .login-card {
+    padding: 22px 18px;
+    border-radius: 20px;
+  }
+
+  .login-title {
+    font-size: 1.6rem;
+  }
 }

@@ -206,84 +206,90 @@
   },
 
   "patient": {
-    "nav_home": "首页",
-    "nav_appointments": "我的预约",
-    "nav_more": "更多",
-    "nav_prescriptions": "处方",
-    "nav_screen_call": "屏幕通话",
-    "nav_settings": "设置",
-    "nav_logout": "退出登录",
+  "nav_home": "首页",
+  "nav_appointments": "我的预约",
+  "nav_more": "更多",
+  "nav_prescriptions": "处方",
+  "nav_screen_call": "屏幕通话",
+  "nav_settings": "设置",
+  "nav_logout": "退出登录",
 
-    "status_stable": "稳定",
-    "alert_none": "暂无紧急提醒",
-    "encouragement": "你做得很好，继续保持。",
+  "status_stable": "稳定",
+  "alert_none": "暂无紧急提醒",
+  "encouragement": "你做得很好，继续保持。",
 
-    "hero_welcome": "欢迎回来，{{name}}",
-    "hero_today": "今天：{{status}} · {{alert}}",
+  "hero_welcome": "欢迎回来，{{name}}",
+  "hero_today": "今天：{{status}} · {{alert}}",
 
-    "event_appointment_type": "预约",
-    "event_appointment_title": "Ahmed Hassan 医生（内科）",
-    "event_appointment_tip": "Shifaa 诊所 · 2 楼",
+  "event_appointment_type": "预约",
+  "event_appointment_title": "与你的医生进行远程随访",
+  "event_appointment_tip": "通过 Shifaa 诊所在线会诊",
 
-    "event_medication_type": "用药",
-    "event_medication_title": "二甲双胍 500mg",
-    "event_medication_tip": "随餐服用",
+  "event_medication_type": "用药",
+  "event_medication_title": "二甲双胍 500mg",
+  "event_medication_tip": "随餐服用",
 
-    "event_message_type": "消息",
-    "event_message_time": "2 天前",
-    "event_message_title": "门诊助理",
-    "event_message_tip": "你的最近结果情况良好。",
+  "event_message_type": "消息",
+  "event_message_time": "2 天前",
+  "event_message_title": "门诊助理",
+  "event_message_tip": "你的最近结果情况良好。",
 
-    "today_timeline": "今天时间轴",
+  "today_timeline": "今天时间轴",
 
-    "btn_open_assistant": "打开智能助手",
-    "btn_continue_journey": "继续你的旅程",
+  "btn_open_assistant": "打开智能助手",
+  "btn_continue_journey": "继续你的旅程",
 
-    "tab_today": "今天",
-    "tab_journey": "旅程",
-    "tab_messages": "消息",
+  "tab_today": "今天",
+  "tab_journey": "旅程",
+  "tab_messages": "消息",
 
-    "journey_title": "你的旅程",
-    "journey_view": "查看",
+  "journey_title": "你的旅程",
+  "journey_view": "查看",
 
-    "journey_stage_past": "过去",
-    "journey_past_title": "化验检查完成",
-    "journey_past_meta": "1 个月前",
-    "journey_past_details": "化验已顺利完成。继续记录症状并遵循治疗计划。",
+  "journey_stage_past": "过去",
+  "journey_past_title": "化验检查完成",
+  "journey_past_meta": "1 个月前",
+  "journey_past_details": "化验已顺利完成。继续记录症状并遵循治疗计划。",
 
-    "journey_stage_current": "当前",
-    "journey_current_title": "本周重点",
-    "journey_current_meta": "补水 · 每天步行 20 分钟 · 用药依从性",
-    "journey_current_details": "专注于日常习惯。如果漏服一剂，请查看你的计划或询问助手。",
+  "journey_stage_current": "当前",
+  "journey_current_title": "本周重点",
+  "journey_current_meta": "补水 · 每天步行 20 分钟 · 用药依从性",
+  "journey_current_details": "专注于日常习惯。如果漏服一剂，请查看你的计划或询问助手。",
 
-    "journey_stage_next": "下一步",
-    "journey_next_title": "即将到来的预约",
-    "journey_next_meta": "星期六 · 晚上 8:30",
-    "journey_next_details": "带上你最近的问题，尽量提前 10 分钟到达。",
+  "journey_stage_next": "下一步",
+  "journey_next_title": "即将到来的预约",
+  "journey_next_meta": "星期六 · 晚上 8:30",
+  "journey_next_details": "带上你最近的问题，尽量提前 10 分钟到达。",
 
-    "messages_title": "消息",
-    "messages_clinic_assistant": "门诊助理",
-    "messages_body": "你最近的检查结果情况良好。",
-    "messages_body_sub": "请继续按照计划进行。",
-    "messages_meta": "2 天前",
+  "messages_title": "消息",
+  "messages_clinic_assistant": "门诊助理",
+  "messages_body": "你最近的检查结果情况良好。",
+  "messages_body_sub": "请继续按照计划进行。",
+  "messages_meta": "2 天前",
 
-    "footer_last_update": "最近更新：{{value}}",
+  "footer_last_update": "最近更新：{{value}}",
 
-    "assistant_title": "智能助手",
-    "assistant_suggested": "推荐操作",
-    "assistant_schedule_followup": "安排复诊",
-    "assistant_set_reminder": "设置用药提醒",
-    "assistant_ask_results": "询问我的检查结果",
-    "assistant_quick_message": "快速消息",
-    "assistant_quick_placeholder": "输入你的问题…",
-    "assistant_send": "发送",
+  "assistant_title": "智能助手",
+  "assistant_suggested": "推荐操作",
+  "assistant_schedule_followup": "安排复诊",
+  "assistant_set_reminder": "设置用药提醒",
+  "assistant_ask_results": "询问我的检查结果",
+  "assistant_quick_message": "快速消息",
+  "assistant_quick_placeholder": "输入你的问题…",
+  "assistant_send": "发送",
 
-    "modal_title": "{{stage}}：{{title}}",
-    "modal_fallback": "详情",
-    "modal_done": "完成",
-    "modal_ask_assistant": "询问助手"
-  },
+  "modal_title": "{{stage}}：{{title}}",
+  "modal_fallback": "详情",
+  "modal_done": "完成",
+  "modal_ask_assistant": "询问助手",
+  "logout_confirm": "确定要退出登录吗？",
+  "logout_confirm_yes": "确定退出",
+  "logout_confirm_no": "取消",
+  "logout_message": "您已成功退出登录"
+}
 
+
+,
   "about": {
     "back": "返回",
     "header_title": "关于 Shifaa",
@@ -564,7 +570,27 @@
     "recent_3": "Ahmed Khaled 已结束随访。",
 
     "assistant_title": "助手提示",
-    "assistant_note": "使用此视图快速了解今天的工作负载，然后在需要更深入帮助时打开静默模式或智能处方。"
+    "assistant_note": "使用此视图快速了解今天的工作负载，然后在需要更深入帮助时打开静默模式或智能处方。",
+    "account_title": "医生账户设置",
+    "account_subtitle": "更新您的个人信息和联系方式。",
+    "field_name": "姓名",
+    "field_specialty": "专业",
+    "field_phone": "电话号码",
+    "field_email": "电子邮箱",
+    "save_changes": "保存更改",
+  
+    "logout": "退出登录",
+    "logout_confirm_title": "确认退出登录",
+    "logout_confirm_text": "确定要从医生账号退出登录吗？"
+  },
+  "common": {
+    "cancel": "取消"
+  
+
+
+
+ 
+
   },
 
   "doctorPatientRecords": {
@@ -767,7 +793,8 @@
 
   "qr_panel_title": "药房二维码",
   "qr_panel_desc": "此二维码代表处方 ID {{id}}。在真实系统中，药房会扫描它以获取处方详情。",
-  "qr_preview": "二维码预览"
+  "qr_preview": "二维码预览","close": "关闭"
+
 },
 
 "silentScreen": {
@@ -1100,5 +1127,14 @@
   "admin_simulation_text": "运行一场安全的急诊负载模拟，以观察在不影响真实数据的情况下，响应时间、告警和队列的表现。",
   "admin_simulation_btn": "模拟急诊负载",
   "admin_simulation_after": "模拟结束后，一份简短报告会总结系统性能和瓶颈。"
+},
+  "role_patient": "患者",
+  "role_doctor": "医生",
+  "role_admin": "管理员",
+  "role_settings_title": "{{role}}的设置",
+  "role_settings_sub": "调整 Shifaa 在此个人资料中的工作方式。",
+  "page_title": "系统设置",
+  "back": "返回"
 }
-}
+
+

@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./AdminDashboard.css";
-
 import {
   ResponsiveContainer,
   LineChart,
@@ -89,23 +88,21 @@ function Segmented({ value, onChange, items }) {
   );
 }
 
-// Seeded random (stable “behavior map” per mode)
 function seeded(seed) {
   let x = seed % 2147483647;
   if (x <= 0) x += 2147483646;
   return () => (x = (x * 16807) % 2147483647) / 2147483647;
 }
 
- export default function AdminDashboard({ onLogout, onOpenSettings }) {
+export default function AdminDashboard({ onLogout, onOpenSettings }) {
   const { t } = useTranslation();
 
-  // تثبيت أن الدور الحالي = Admin
   useEffect(() => {
     localStorage.setItem("role", "Admin");
   }, []);
 
-  const [tab, setTab] = useState("overview"); // overview | patients | doctors | appointments | reports
-  const [timeMode, setTimeMode] = useState("now"); // past | now | future
+  const [tab, setTab] = useState("overview");
+  const [timeMode, setTimeMode] = useState("now");
 
   const [notifOpen, setNotifOpen] = useState(false);
 
@@ -216,7 +213,14 @@ function seeded(seed) {
     },
   ]);
 
+  const [editingPatientId, setEditingPatientId] = useState(null);
+  const [editingPatientDraft, setEditingPatientDraft] = useState(null);
 
+  const [editingDoctorId, setEditingDoctorId] = useState(null);
+  const [editingDoctorDraft, setEditingDoctorDraft] = useState(null);
+
+  const [editingAppointmentId, setEditingAppointmentId] = useState(null);
+  const [editingAppointmentDraft, setEditingAppointmentDraft] = useState(null);
 
   const pendingApprovalsNow = useMemo(() => {
     const pendingAppts = appointments.filter(
@@ -608,6 +612,77 @@ function seeded(seed) {
     );
   }, [appointments, q]);
 
+  const startEditPatient = (p) => {
+    setEditingPatientId(p.id);
+    setEditingPatientDraft({ ...p });
+  };
+
+  const cancelEditPatient = () => {
+    setEditingPatientId(null);
+    setEditingPatientDraft(null);
+  };
+
+  const saveEditPatient = () => {
+    if (!editingPatientDraft) return;
+    setPatients((prev) =>
+      prev.map((p) => (p.id === editingPatientDraft.id ? editingPatientDraft : p))
+    );
+    setEditingPatientId(null);
+    setEditingPatientDraft(null);
+  };
+
+  const handleDeletePatient = (id) => {
+    setPatients((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const startEditDoctor = (d) => {
+    setEditingDoctorId(d.id);
+    setEditingDoctorDraft({ ...d });
+  };
+
+  const cancelEditDoctor = () => {
+    setEditingDoctorId(null);
+    setEditingDoctorDraft(null);
+  };
+
+  const saveEditDoctor = () => {
+    if (!editingDoctorDraft) return;
+    setDoctors((prev) =>
+      prev.map((d) => (d.id === editingDoctorDraft.id ? editingDoctorDraft : d))
+    );
+    setEditingDoctorId(null);
+    setEditingDoctorDraft(null);
+  };
+
+  const handleDeleteDoctor = (id) => {
+    setDoctors((prev) => prev.filter((d) => d.id !== id));
+  };
+
+  const startEditAppointment = (a) => {
+    setEditingAppointmentId(a.id);
+    setEditingAppointmentDraft({ ...a });
+  };
+
+  const cancelEditAppointment = () => {
+    setEditingAppointmentId(null);
+    setEditingAppointmentDraft(null);
+  };
+
+  const saveEditAppointment = () => {
+    if (!editingAppointmentDraft) return;
+    setAppointments((prev) =>
+      prev.map((a) =>
+        a.id === editingAppointmentDraft.id ? editingAppointmentDraft : a
+      )
+    );
+    setEditingAppointmentId(null);
+    setEditingAppointmentDraft(null);
+  };
+
+  const handleDeleteAppointment = (id) => {
+    setAppointments((prev) => prev.filter((a) => a.id !== id));
+  };
+
   return (
     <div className="cc-root">
       <div className="cc-ambient" aria-hidden="true" />
@@ -813,7 +888,6 @@ function seeded(seed) {
           </div>
         </header>
 
-        {/* OVERVIEW */}
         {tab === "overview" && (
           <div className="cc-content">
             <section className="cc-grid4">
@@ -1105,7 +1179,6 @@ function seeded(seed) {
           </div>
         )}
 
-        {/* PATIENTS */}
         {tab === "patients" && (
           <div className="cc-content">
             <section className="cc-card">
@@ -1136,18 +1209,107 @@ function seeded(seed) {
                       <th>Email</th>
                       <th>{t("admin.col_phone")}</th>
                       <th>{t("admin.col_created")}</th>
+                      <th>{t("admin.col_actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPatients.map((p) => (
-                      <tr key={p.id} className="cc-tr">
-                        <td className="cc-mono">{p.id}</td>
-                        <td>{p.name}</td>
-                        <td className="cc-mono">{p.email}</td>
-                        <td className="cc-mono">{p.phone}</td>
-                        <td className="cc-mono">{p.createdAt}</td>
-                      </tr>
-                    ))}
+                    {filteredPatients.map((p) => {
+                      const isEditing = editingPatientId === p.id;
+                      const draft = isEditing ? editingPatientDraft : p;
+
+                      return (
+                        <tr key={p.id} className="cc-tr">
+                          <td className="cc-mono">{p.id}</td>
+                          <td>
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.name}
+                                onChange={(e) =>
+                                  setEditingPatientDraft((prev) => ({
+                                    ...prev,
+                                    name: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              p.name
+                            )}
+                          </td>
+                          <td className="cc-mono">
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.email}
+                                onChange={(e) =>
+                                  setEditingPatientDraft((prev) => ({
+                                    ...prev,
+                                    email: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              p.email
+                            )}
+                          </td>
+                          <td className="cc-mono">
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.phone}
+                                onChange={(e) =>
+                                  setEditingPatientDraft((prev) => ({
+                                    ...prev,
+                                    phone: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              p.phone
+                            )}
+                          </td>
+                          <td className="cc-mono">{p.createdAt}</td>
+                          <td>
+                            {isEditing ? (
+                              <div style={{ display: "flex", gap: 4 }}>
+                                <button
+                                  type="button"
+                                  className="cc-link"
+                                  onClick={saveEditPatient}
+                                >
+                                  {t("admin.save")}
+                                </button>
+                                <button
+                                  type="button"
+                                  className="cc-link cc-link-muted"
+                                  onClick={cancelEditPatient}
+                                >
+                                  {t("admin.cancel")}
+                                </button>
+                              </div>
+                            ) : (
+                              <div style={{ display: "flex", gap: 4 }}>
+                                                            <button
+                                type="button"
+                                className="cc-link"
+                                onClick={() => startEditPatient(p)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                className="cc-link cc-link-danger"
+                                onClick={() => handleDeletePatient(p.id)}
+                              >
+                                Delete
+                              </button>
+
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
                 {filteredPatients.length === 0 && (
@@ -1160,7 +1322,6 @@ function seeded(seed) {
           </div>
         )}
 
-        {/* DOCTORS */}
         {tab === "doctors" && (
           <div className="cc-content">
             <section className="cc-card">
@@ -1191,20 +1352,110 @@ function seeded(seed) {
                       <th>{t("admin.col_specialty")}</th>
                       <th>{t("admin.col_status")}</th>
                       <th>{t("admin.col_created")}</th>
+                      <th>{t("admin.col_actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredDoctors.map((d) => (
-                      <tr key={d.id} className="cc-tr">
-                        <td className="cc-mono">{d.id}</td>
-                        <td>{d.name}</td>
-                        <td>{d.specialty}</td>
-                        <td>
-                          <StatusPill status={d.status} />
-                        </td>
-                        <td className="cc-mono">{d.createdAt}</td>
-                      </tr>
-                    ))}
+                    {filteredDoctors.map((d) => {
+                      const isEditing = editingDoctorId === d.id;
+                      const draft = isEditing ? editingDoctorDraft : d;
+
+                      return (
+                        <tr key={d.id} className="cc-tr">
+                          <td className="cc-mono">{d.id}</td>
+                          <td>
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.name}
+                                onChange={(e) =>
+                                  setEditingDoctorDraft((prev) => ({
+                                    ...prev,
+                                    name: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              d.name
+                            )}
+                          </td>
+                          <td>
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.specialty}
+                                onChange={(e) =>
+                                  setEditingDoctorDraft((prev) => ({
+                                    ...prev,
+                                    specialty: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              d.specialty
+                            )}
+                          </td>
+                          <td>
+                            {isEditing ? (
+                              <select
+                                className="cc-input-inline"
+                                value={draft.status}
+                                onChange={(e) =>
+                                  setEditingDoctorDraft((prev) => ({
+                                    ...prev,
+                                    status: e.target.value,
+                                  }))
+                                }
+                              >
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                              </select>
+                            ) : (
+                              <StatusPill status={d.status} />
+                            )}
+                          </td>
+                          <td className="cc-mono">{d.createdAt}</td>
+                          <td>
+                              {isEditing ? (
+                                <div style={{ display: "flex", gap: 4 }}>
+                                  <button
+                                    type="button"
+                                    className="cc-link"
+                                    onClick={saveEditDoctor}
+                                  >
+                                    {t("admin.save")}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="cc-link cc-link-muted"
+                                    onClick={cancelEditDoctor}
+                                  >
+                                    {t("admin.cancel")}
+                                  </button>
+                                </div>
+                              ) : (
+                                <div style={{ display: "flex", gap: 4 }}>
+                                  <button
+                                    type="button"
+                                    className="cc-link"
+                                    onClick={() => startEditDoctor(d)}
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="cc-link cc-link-danger"
+                                    onClick={() => handleDeleteDoctor(d.id)}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
                 {filteredDoctors.length === 0 && (
@@ -1217,7 +1468,6 @@ function seeded(seed) {
           </div>
         )}
 
-        {/* APPOINTMENTS */}
         {tab === "appointments" && (
           <div className="cc-content">
             <section className="cc-card">
@@ -1248,37 +1498,153 @@ function seeded(seed) {
                       <th>{t("admin.col_doctor")}</th>
                       <th>{t("admin.col_time")}</th>
                       <th>{t("admin.col_status")}</th>
-                      <th>{t("admin.col_action")}</th>
+                      <th>{t("admin.col_actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredAppointments.map((a) => (
-                      <tr key={a.id} className="cc-tr">
-                        <td className="cc-mono">{a.id}</td>
-                        <td>{a.patient}</td>
-                        <td>{a.doctor}</td>
-                        <td className="cc-mono">{a.time}</td>
-                        <td>
-                          <StatusPill status={a.status} />
-                        </td>
-                        <td>
-                          <select
-                            className="cc-select"
-                            value={a.status}
-                            onChange={(e) =>
-                              handleChangeAppointmentStatus(
-                                a.id,
-                                e.target.value
-                              )
-                            }
-                          >
-                            <option>Pending</option>
-                            <option>Confirmed</option>
-                            <option>Cancelled</option>
-                          </select>
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredAppointments.map((a) => {
+  const isEditing = editingAppointmentId === a.id;
+  const draft = isEditing ? editingAppointmentDraft : a;
+  const s = String(a.status || "").toLowerCase();
+
+  return (
+    <tr
+      key={a.id}
+      className={
+        "cc-tr " +
+        (s === "cancelled"
+          ? "cc-row-bad"
+          : s === "pending"
+          ? "cc-row-warn"
+          : s === "confirmed"
+          ? "cc-row-ok"
+          : "")
+      }
+    >
+      <td className="cc-mono">{a.id}</td>
+      <td>
+        {isEditing ? (
+          <input
+            className="cc-input-inline"
+            value={draft.patient}
+            onChange={(e) =>
+              setEditingAppointmentDraft((prev) => ({
+                ...prev,
+                patient: e.target.value,
+              }))
+            }
+          />
+        ) : (
+          a.patient
+        )}
+      </td>
+      <td>
+        {isEditing ? (
+          <input
+            className="cc-input-inline"
+            value={draft.doctor}
+            onChange={(e) =>
+              setEditingAppointmentDraft((prev) => ({
+                ...prev,
+                doctor: e.target.value,
+              }))
+            }
+          />
+        ) : (
+          a.doctor
+        )}
+      </td>
+      <td className="cc-mono">
+        {isEditing ? (
+          <input
+            className="cc-input-inline"
+            value={draft.time}
+            onChange={(e) =>
+              setEditingAppointmentDraft((prev) => ({
+                ...prev,
+                time: e.target.value,
+              }))
+            }
+          />
+        ) : (
+          a.time
+        )}
+      </td>
+      <td>
+        {isEditing ? (
+          <select
+            className="cc-input-inline"
+            value={draft.status}
+            onChange={(e) =>
+              setEditingAppointmentDraft((prev) => ({
+                ...prev,
+                status: e.target.value,
+              }))
+            }
+          >
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Cancelled</option>
+          </select>
+        ) : (
+          <StatusPill status={a.status} />
+        )}
+      </td>
+      <td>
+        {isEditing ? (
+          <div style={{ display: "flex", gap: 4 }}>
+            <button
+              type="button"
+              className="cc-link"
+              onClick={saveEditAppointment}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="cc-link cc-link-muted"
+              onClick={cancelEditAppointment}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: 4 }}>
+            <button
+              type="button"
+              className="cc-link"
+              onClick={() => startEditAppointment(a)}
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              className="cc-link cc-link-danger"
+              onClick={() => handleDeleteAppointment(a.id)}
+            >
+              Delete
+            </button>
+            <select
+              className="cc-select"
+              value={a.status}
+              onChange={(e) =>
+                handleChangeAppointmentStatus(
+                  a.id,
+                  e.target.value
+                )
+              }
+            >
+              <option>Pending</option>
+              <option>Confirmed</option>
+              <option>Cancelled</option>
+            </select>
+          </div>
+        )}
+      </td>
+    </tr>
+  );
+})}
+
                   </tbody>
                 </table>
                 {filteredAppointments.length === 0 && (
@@ -1291,7 +1657,6 @@ function seeded(seed) {
           </div>
         )}
 
-        {/* REPORTS */}
         {tab === "reports" && (
           <ReportsPanel
             timeMode={timeMode}
@@ -1302,7 +1667,6 @@ function seeded(seed) {
         )}
       </main>
 
-      {/* MODALS */}
       <Modal
         open={openAddPatient}
         title={t("admin.modal_add_patient_title")}
@@ -1384,13 +1748,10 @@ function seeded(seed) {
   );
 }
 
-/* ===========================
-   REPORTS (Area + Line)
-   =========================== */
 function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
   const { t } = useTranslation();
-  const [range, setRange] = React.useState("last7"); // last7 | last30 | custom
-  const [focus, setFocus] = React.useState("summary"); // summary | pending
+  const [range, setRange] = React.useState("last7");
+  const [focus, setFocus] = React.useState("summary");
 
   const total = Math.max(1, appointments.length);
   const cancelled = appointments.filter(
@@ -1556,7 +1917,6 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
         </div>
       </section>
 
-      {/* Charts row */}
       <section className="cc-grid2">
         <article className="cc-card">
           <div className="cc-cardTitle">
@@ -1631,7 +1991,6 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
         </article>
       </section>
 
-      {/* Pending drilldown */}
       {focus === "pending" && (
         <section className="cc-card">
           <div className="cc-cardHeadRow">
@@ -1688,7 +2047,6 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
         </section>
       )}
 
-      {/* Summary view */}
       {focus === "summary" && (
         <section className="cc-card">
           <div className="cc-cardHeadRow">
@@ -1733,10 +2091,6 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
     </div>
   );
 }
-
-/* ===========================
-   Forms
-   =========================== */
 
 function AddPatientForm({ onSubmit, onCancel }) {
   const { t } = useTranslation();

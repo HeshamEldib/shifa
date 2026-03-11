@@ -1,4 +1,4 @@
-// src/components/SmartPrescription.jsx
+// src/components/dashboard/SmartPrescription.jsx
 import React, { useMemo, useState } from "react";
 import "./SmartPrescription.css";
 import { useTranslation } from "react-i18next";
@@ -8,14 +8,19 @@ const initialMedicines = [
   { id: 2, name: "ORS solution", dose: "200 ml", note: "After each loose stool" },
 ];
 
-export default function SmartPrescription({ onBack, patient, onIssue }) {
+export default function SmartPrescription({
+  onBack,
+  patient,
+  onIssue,
+  onViewProfile,
+}) {
   const { t } = useTranslation();
 
   const [medicines, setMedicines] = useState(initialMedicines);
   const [form, setForm] = useState({ name: "", dose: "", note: "" });
+  const [search, setSearch] = useState("");
   const [acceptedSuggestion, setAcceptedSuggestion] = useState(false);
-  const [safetyStatus, setSafetyStatus] = useState("not-run"); // not-run | ok
-
+  const [safetyStatus, setSafetyStatus] = useState("not-run");
   const [issuedRx, setIssuedRx] = useState(null);
   const [toastMsg, setToastMsg] = useState("");
 
@@ -26,6 +31,12 @@ export default function SmartPrescription({ onBack, patient, onIssue }) {
     const id = patient?.id || "—";
     return t("smartRx.patient_meta", { gender: g, age: a, id });
   }, [patient, t]);
+
+  const filteredMedicines = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return medicines;
+    return medicines.filter((m) => m.name.toLowerCase().includes(q));
+  }, [medicines, search]);
 
   const handleAddMedicine = () => {
     if (!form.name.trim()) return;
@@ -64,17 +75,21 @@ export default function SmartPrescription({ onBack, patient, onIssue }) {
 
   const runSafetyCheck = () => setSafetyStatus("ok");
 
-  const issueNow = () => {
+  const issueNow = async () => {
     setToastMsg("");
     if (!onIssue) {
       setToastMsg(t("smartRx.toast_no_onIssue"));
       return;
     }
-    const rx = onIssue(medicines);
-    setIssuedRx(rx || null);
-    setToastMsg(
-      rx?.id ? t("smartRx.toast_issued_sent") : t("smartRx.toast_issued")
-    );
+    try {
+      const rx = await onIssue(medicines);
+      setIssuedRx(rx || null);
+      setToastMsg(
+        rx?.id ? t("smartRx.toast_issued_sent") : t("smartRx.toast_issued")
+      );
+    } catch (e) {
+      setToastMsg(t("smartRx.toast_error"));
+    }
   };
 
   const qrId = issuedRx?.id || "SHIFAA-RX-2026-000123";
@@ -82,23 +97,17 @@ export default function SmartPrescription({ onBack, patient, onIssue }) {
   return (
     <div className="rx-shell">
       <header className="rx-topbar">
-        <button className="rx-link" onClick={onBack} type="button">
-          ← {t("smartRx.back")}
-        </button>
-
         <div className="rx-topbar-center">
-          <span className="rx-top-title">
-            {t("smartRx.title")}
-          </span>
-          <span className="rx-top-meta">
-            {t("smartRx.auto_saved")}
-          </span>
+          <span className="rx-top-title">{t("smartRx.title")}</span>
+          <span className="rx-top-meta">{t("smartRx.auto_saved")}</span>
         </div>
 
         <div className="rx-topbar-right">
           <input
             className="rx-search"
             placeholder={t("smartRx.search_placeholder")}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <div className="rx-avatar">S</div>
         </div>
@@ -111,7 +120,11 @@ export default function SmartPrescription({ onBack, patient, onIssue }) {
               <div className="rx-patient-name">{patientName}</div>
               <div className="rx-patient-meta">{patientMeta}</div>
             </div>
-            <button className="rx-link-button" type="button">
+            <button
+              className="rx-link-button"
+              type="button"
+              onClick={() => onViewProfile && onViewProfile(patient)}
+            >
               {t("smartRx.view_full_profile")}
             </button>
           </div>
@@ -122,7 +135,7 @@ export default function SmartPrescription({ onBack, patient, onIssue }) {
             </div>
 
             <div className="rx-med-list">
-              {medicines.map((m) => (
+              {filteredMedicines.map((m) => (
                 <div key={m.id} className="rx-med-item">
                   <div className="rx-med-main">
                     <div className="rx-med-name">{m.name}</div>

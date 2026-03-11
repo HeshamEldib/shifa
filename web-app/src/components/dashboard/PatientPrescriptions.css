@@ -1,22 +1,18 @@
-
-
-/* ==============================
-   Patient Medication Hub (pp-*)
-   ============================== */
-
-/* غلّفي الـ div الرئيسي بإضافة className="pp-shell" في JSX
-   بدلاً من style inline لو حابة، أو سيبيه بالـ style الحالية والـ CSS ده هيكمّل الشكل العام */
+/* ===========================
+   Patient Prescriptions (pp-*)
+   =========================== */
 
 .pp-shell {
   min-height: 100vh;
   padding: 18px 20px 26px;
-  background: radial-gradient(circle at 0 0, #020617 0, #020617 40%, #000000 100%);
+  /* خليه شفاف عشان ياخد خلفية app-container الموحدة */
+  background: transparent;
   color: #e5e7eb;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
 }
 
-/* Header bar */
+/* Back + title */
 
 .pp-back {
   border-radius: 999px;
@@ -27,6 +23,7 @@
   padding: 6px 12px;
   cursor: pointer;
   transition: background 140ms ease, transform 140ms ease, border-color 140ms ease;
+  margin-bottom: 10px;
 }
 
 .pp-back:hover {
@@ -54,7 +51,19 @@
   color: #9ca3af;
 }
 
-/* Main grid */
+/* download info */
+
+.pp-download-info {
+  margin: 6px 0 10px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(37, 99, 235, 0.5);
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+/* Main layout */
 
 .pp-main {
   display: grid;
@@ -62,7 +71,7 @@
   gap: 16px;
 }
 
-/* Left: timeline/list */
+/* Left list */
 
 .pp-left {
   border-radius: 18px;
@@ -97,6 +106,7 @@
   cursor: pointer;
   transition: background 140ms ease, border-color 140ms ease, transform 140ms ease,
     box-shadow 140ms ease;
+  color: #e5e7eb;
 }
 
 .pp-item:hover {
@@ -124,9 +134,10 @@
 .pp-empty {
   font-size: 12px;
   color: #9ca3af;
+  padding: 8px 2px;
 }
 
-/* Right: Hub container */
+/* Right hub */
 
 .pp-right {
   border-radius: 18px;
@@ -134,6 +145,9 @@
   background: radial-gradient(circle at 0 0, #020617, #020617 60%, #020617);
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.95);
   padding: 14px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* Header + actions */
@@ -154,6 +168,7 @@
 }
 
 .pp-right-id {
+  font-size: 18px;
   font-weight: 800;
 }
 
@@ -183,7 +198,7 @@
   transform: translateY(-1px);
 }
 
-/* QR + Refill row */
+/* QR + refill row */
 
 .pp-row-2 {
   margin-top: 12px;
@@ -197,6 +212,7 @@
   border: 1px solid rgba(51, 65, 85, 0.9);
   background: rgba(15, 23, 42, 0.96);
   padding: 10px 12px;
+  color: #e5e7eb;
 }
 
 .pp-card-title {
@@ -204,6 +220,14 @@
   font-weight: 700;
   margin-bottom: 6px;
 }
+
+.pp-card-strong-title {
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+/* QR */
 
 .pp-qr-box {
   border: 1px dashed #475569;
@@ -222,16 +246,10 @@
   color: #9ca3af;
 }
 
-/* Medicines + AI */
+/* Medicines */
 
 .pp-row-3 {
   margin-top: 12px;
-}
-
-.pp-card-strong-title {
-  font-size: 13px;
-  font-weight: 800;
-  margin-bottom: 6px;
 }
 
 .pp-med-item {
@@ -250,7 +268,7 @@
 
 .pp-med-dose {
   font-size: 11px;
-  color: #9ca3af;
+  color: #a5b4fc;
   font-weight: 400;
 }
 
@@ -261,7 +279,7 @@
 
 .pp-med-ai {
   font-size: 11px;
-  color: #9ca3af;
+  color: #f97316;
   margin-top: 3px;
 }
 
@@ -273,7 +291,7 @@
 
 .pp-adherence-text {
   font-size: 12px;
-  color: #9ca3af;
+  color: #e5e7eb;
   margin-bottom: 8px;
 }
 
@@ -288,7 +306,8 @@
 
 .pp-adherence-bar-inner {
   height: 100%;
-  background: linear-gradient(90deg, #22d3ee, #3b82f6);
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  transition: width 160ms ease-out;
 }
 
 .pp-adherence-actions {
@@ -314,33 +333,7 @@
   transform: translateY(-1px);
 }
 
-/* Responsive */
-
-@media (max-width: 900px) {
-  .pp-main {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .pp-row-2 {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .pp-shell {
-    padding: 14px 12px 22px;
-  }
-}
-
-.pp-download-info {
-  margin: 8px 0 0;
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: rgba(15,23,42,0.9);
-  border: 1px solid rgba(37,99,235,0.5);
-  font-size: 12px;
-  color: #e5e7eb;
-}
+/* Panels */
 
 .pp-panels {
   margin-top: 12px;
@@ -350,11 +343,12 @@
 }
 
 .pp-panelCard {
-  background: rgba(15,23,42,0.96);
+  background: rgba(15, 23, 42, 0.96);
   border-radius: 12px;
-  border: 1px solid rgba(37,99,235,0.6);
+  border: 1px solid rgba(37, 99, 235, 0.6);
   padding: 12px 14px;
   max-width: 560px;
+  font-size: 12px;
 }
 
 .pp-panelCard h4 {
@@ -374,6 +368,10 @@
   margin-bottom: 10px;
 }
 
+.pp-field {
+  flex: 1;
+}
+
 .pp-field label {
   display: block;
   font-size: 11px;
@@ -388,9 +386,13 @@
   font-size: 13px;
   padding: 6px 8px;
   border-radius: 8px;
-  border: 1px solid rgba(148,163,184,0.5);
-  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(15, 23, 42, 0.9);
   color: #e5e7eb;
+}
+
+.pp-field select {
+  cursor: pointer;
 }
 
 .pp-panel-actions {
@@ -398,4 +400,89 @@
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+}
+
+/* Responsive */
+
+/* تابلت / لابتوب أصغر */
+@media (max-width: 900px) {
+  .pp-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pp-row-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* موبايل عادي */
+@media (max-width: 640px) {
+  .pp-shell {
+    padding: 14px 12px 22px;
+  }
+
+  .pp-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pp-panel-grid {
+    flex-direction: column;
+  }
+}
+
+/* موبايل صغير جدًا (≤ 360px) */
+@media (max-width: 360px) {
+  .pp-shell {
+    padding: 10px 10px 18px;
+  }
+
+  .pp-right {
+    padding: 10px 10px 8px;
+    gap: 8px;
+  }
+
+  .pp-left {
+    padding: 10px 10px 8px;
+  }
+
+  .pp-title {
+    font-size: 18px;
+  }
+
+  .pp-sub {
+    font-size: 11px;
+  }
+
+  .pp-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .pp-chip-btn {
+    font-size: 10px;
+    padding-inline: 8px;
+  }
+
+  .pp-row-2 {
+    gap: 10px;
+  }
+
+  .pp-card-title,
+  .pp-card-strong-title {
+    font-size: 12px;
+  }
+}
+
+/* ضمان النص أبيض في العناصر الأساسية */
+
+.pp-item,
+.pp-item *,
+.pp-card,
+.pp-card *,
+.pp-panelCard,
+.pp-panelCard *,
+.pp-chip-btn,
+.pp-adherence-btn {
+  color: #ffffff !important;
 }

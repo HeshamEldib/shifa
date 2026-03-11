@@ -1,10 +1,8 @@
 // src/App.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-
 import { useTranslation } from "react-i18next";
 import "./i18n";
-
 import "./index.css";
 
 import PageTitle from "./components/PageTitle.jsx";
@@ -28,6 +26,7 @@ import PatientPrescriptions from "./components/dashboard/PatientPrescriptions.js
 import AdminDashboard from "./components/dashboard/AdminDashboard.jsx";
 import SettingsPage from "./components/dashboard/SettingsPage.jsx";
 import DoctorPatientRecords from "./components/dashboard/DoctorPatientRecords.jsx";
+import DoctorProfile from "./components/dashboard/DoctorProfile.jsx";
 
 // ---------- favicon SVG ----------
 const shifaaFaviconSvg = `
@@ -133,15 +132,15 @@ function MainApp() {
   const currentRole = localStorage.getItem("role") || "Patient";
 
   return (
-    <div className="app-container">
+    <>
       <FloatingLanguageSwitcher />
 
       <Routes>
-        {/* Website */}
+        {/* Website داخل app-container */}
         <Route
           path="/"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.home")} />
               <HomeSection
                 isLoaded={isLoaded}
@@ -149,15 +148,21 @@ function MainApp() {
                 onContactClick={() => navigate("/contact")}
                 onAboutClick={() => navigate("/about")}
                 onSignupClick={() => navigate("/signup")}
+                role={currentRole}
+                onGoPatient={() => navigate("/patient")}
+                onGoAppointments={() => navigate("/appointments")}
+                onGoPatientPrescriptions={() =>
+                  navigate("/patient-prescriptions")
+                }
               />
-            </>
+            </div>
           }
         />
 
         <Route
           path="/login"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.login")} />
               <LoginSection
                 isLoaded={isLoaded}
@@ -167,7 +172,6 @@ function MainApp() {
                 onLoginSuccess={(data) => {
                   const r = data?.role || "Patient";
 
-                  // تخزين جاهز للباك
                   localStorage.setItem("role", r);
                   if (data?.token) {
                     localStorage.setItem("token", data.token);
@@ -181,14 +185,14 @@ function MainApp() {
                   else if (r === "Admin") navigate("/admin");
                 }}
               />
-            </>
+            </div>
           }
         />
 
         <Route
           path="/contact"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.contact")} />
               <ContactSection
                 isLoaded={isLoaded}
@@ -197,27 +201,27 @@ function MainApp() {
                 onAboutClick={() => navigate("/about")}
                 onSignupClick={() => navigate("/signup")}
               />
-            </>
+            </div>
           }
         />
 
         <Route
           path="/about"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.about")} />
               <AboutSection
                 isLoaded={isLoaded}
                 onBackClick={() => navigate("/")}
               />
-            </>
+            </div>
           }
         />
 
         <Route
           path="/signup"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.signup")} />
               <SignUpSection
                 isLoaded={isLoaded}
@@ -235,10 +239,11 @@ function MainApp() {
                   else navigate("/patient");
                 }}
               />
-            </>
+            </div>
           }
         />
 
+        {/* Forgot خارج app-container */}
         <Route
           path="/forgot"
           element={
@@ -246,7 +251,7 @@ function MainApp() {
               <PageTitle title={t("pages.forgot")} />
               <ForgotPassword
                 isLoaded={isLoaded}
-                onBackClick={() => navigate("/login")}
+                onDone={() => navigate("/login")}
               />
             </>
           }
@@ -256,42 +261,40 @@ function MainApp() {
         <Route
           path="/patient"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.patient_dashboard")} />
               <PatientHome
                 onLogout={() => navigate("/")}
                 onOpenAppointments={() => navigate("/appointments")}
-                onOpenPrescriptions={() =>
-                  navigate("/patient-prescriptions")
-                }
+                onOpenPrescriptions={() => navigate("/patient-prescriptions")}
                 onOpenSettings={() => navigate("/settings")}
                 onOpenScreenCall={() => navigate("/silent")}
               />
-            </>
+            </div>
           }
         />
 
         <Route
           path="/appointments"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.appointments")} />
               <PatientAppointments onBack={() => navigate(-1)} />
-            </>
+            </div>
           }
         />
 
         <Route
           path="/patient-prescriptions"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.prescriptions")} />
               <PatientPrescriptions
                 patient={activePatient}
                 prescriptions={patientPrescriptions}
                 onBack={() => navigate(-1)}
               />
-            </>
+            </div>
           }
         />
 
@@ -299,7 +302,7 @@ function MainApp() {
         <Route
           path="/doctor"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.doctor_dashboard")} />
               <DoctorDashboard
                 onLogout={() => navigate("/")}
@@ -308,44 +311,59 @@ function MainApp() {
                 onOpenPrescription={() => navigate("/prescription")}
                 onOpenAppointments={() => navigate("/doctor-records")}
               />
-            </>
+            </div>
+          }
+        />
+
+        <Route
+          path="/doctor/profile"
+          element={
+            <div className="app-container">
+              <PageTitle title={t("pages.doctor_profile", "Doctor profile")} />
+              <DoctorProfile />
+            </div>
           }
         />
 
         <Route
           path="/doctor-records"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.patient_records")} />
               <DoctorPatientRecords
                 onBack={() => navigate("/doctor")}
                 onOpenPrescription={() => navigate("/prescription")}
               />
-            </>
+            </div>
           }
         />
 
         <Route
           path="/silent"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.silent_diagnosis")} />
               <SilentDiagnosisScreen onBack={() => navigate(-1)} />
-            </>
+            </div>
           }
         />
 
         <Route
           path="/prescription"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.smart_prescription")} />
               <SmartPrescription
                 onBack={() => navigate(-1)}
                 patient={activePatient}
                 onIssue={issuePrescription}
+                onViewProfile={(patientFromRx) =>
+                  navigate("/doctor-records", {
+                    state: { patient: patientFromRx || activePatient },
+                  })
+                }
               />
-            </>
+            </div>
           }
         />
 
@@ -353,13 +371,13 @@ function MainApp() {
         <Route
           path="/admin"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.admin_dashboard")} />
               <AdminDashboard
                 onLogout={() => navigate("/")}
                 onOpenSettings={() => navigate("/settings")}
               />
-            </>
+            </div>
           }
         />
 
@@ -367,14 +385,14 @@ function MainApp() {
         <Route
           path="/settings"
           element={
-            <>
+            <div className="app-container">
               <PageTitle title={t("pages.settings")} />
               <SettingsPage role={currentRole} onBack={() => navigate(-1)} />
-            </>
+            </div>
           }
         />
       </Routes>
-    </div>
+    </>
   );
 }
 

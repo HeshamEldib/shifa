@@ -1,8 +1,10 @@
 // src/components/PatientAppointments.jsx
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./appointments.css";
 import { useTranslation } from "react-i18next";
 
+// ========= MOCK DATA FOR NOW (NO API YET) =========
+// جاهز للتجربة بدون باك، ولما الـ API يجهز هنستبدل الجزء ده بالـ fetch
 const MOCK_APPOINTMENTS = [
   {
     id: 1,
@@ -10,7 +12,7 @@ const MOCK_APPOINTMENTS = [
     specialty: "cardiology",
     type: "follow_up",
     datetime: "Sun, 8 Feb 2026 • 10:30 AM",
-    location: "building_a_203",
+    location: "online_video",
     status: "upcoming",
     phase: "treatment",
   },
@@ -59,8 +61,14 @@ const MOCK_TIMELINE = [
 
 function PatientAppointments({ onBack }) {
   const { t } = useTranslation();
+
+  const [appointments, setAppointments] = useState([]);
+  const [timeline, setTimeline] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const [selectedFilter, setSelectedFilter] = useState("upcoming");
-  const [selectedId, setSelectedId] = useState(1);
+  const [selectedId, setSelectedId] = useState(null);
 
   const [showFollowUp, setShowFollowUp] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
@@ -76,8 +84,15 @@ function PatientAppointments({ onBack }) {
   const [testFileName, setTestFileName] = useState("");
   const [symptomsText, setSymptomsText] = useState("");
 
-  const appointments = useMemo(() => MOCK_APPOINTMENTS, []);
-  const timeline = useMemo(() => MOCK_TIMELINE, []);
+  // ========= DEMO MODE (NO REAL API YET) =========
+  // لما الباك يجهز، نقدر نستبدل هذا الـ useEffect بنسخة fetch الحقيقية
+  useEffect(() => {
+    setError("");
+    setAppointments(MOCK_APPOINTMENTS);
+    setTimeline(MOCK_TIMELINE);
+    setSelectedId(MOCK_APPOINTMENTS[0]?.id ?? null);
+    setLoading(false);
+  }, []);
 
   const filtered = useMemo(
     () => appointments.filter((a) => a.status === selectedFilter),
@@ -85,9 +100,11 @@ function PatientAppointments({ onBack }) {
   );
 
   const selected = useMemo(() => {
+    if (!appointments.length) return null;
     const byId = appointments.find((a) => a.id === selectedId);
     if (byId) return byId;
-    return filtered[0] || appointments[0];
+    if (filtered.length > 0) return filtered[0];
+    return appointments[0];
   }, [appointments, filtered, selectedId]);
 
   const counts = useMemo(() => {
@@ -95,10 +112,6 @@ function PatientAppointments({ onBack }) {
     const past = appointments.filter((a) => a.status === "past").length;
     return { up, past };
   }, [appointments]);
-
-  function toast(msg) {
-    alert(msg);
-  }
 
   const closeAllForms = () => {
     setShowFollowUp(false);
@@ -133,103 +146,162 @@ function PatientAppointments({ onBack }) {
     setShowSymptoms(true);
   };
 
-  const handleConfirm = () => {
+  // تحت: نفس دوال الـ API اللي الباك هيستخدمها بعدين
+  const handleConfirm = async () => {
     if (!selected) return;
-    toast(
-      t("patientAppointments.toast_confirm", { doctor: selected.doctor })
-    );
-  };
-
-  const handleFollowUpSubmit = (e) => {
-    e.preventDefault();
-    if (!followUpDate || !followUpTime) {
-      toast(t("patientAppointments.toast_followup_missing"));
-      return;
+    try {
+      await fetch(`/api/patient/appointments/${selected.id}/confirm`, {
+        method: "POST",
+      });
+      setAppointments((prev) =>
+        prev.map((a) =>
+          a.id === selected.id ? { ...a, status: "upcoming" } : a
+        )
+      );
+    } catch (e) {
+      console.error(e);
     }
-    toast(
-      t("patientAppointments.toast_followup_booked", {
-        date: followUpDate,
-        time: followUpTime,
-        doctor: selected?.doctor || "",
-      })
-    );
-    setFollowUpDate("");
-    setFollowUpTime("");
-    setShowFollowUp(false);
   };
 
-  const handleRescheduleSubmit = (e) => {
+  const handleFollowUpSubmit = async (e) => {
     e.preventDefault();
-    if (!rescheduleDate || !rescheduleTime) {
-      toast(t("patientAppointments.toast_reschedule_missing"));
-      return;
+    if (!selected || !followUpDate || !followUpTime) return;
+
+    try {
+      await fetch(`/api/patient/appointments/${selected.id}/followup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: followUpDate, time: followUpTime }),
+      });
+      setFollowUpDate("");
+      setFollowUpTime("");
+      setShowFollowUp(false);
+    } catch (err) {
+      console.error(err);
     }
-    toast(
-      t("patientAppointments.toast_rescheduled", {
-        date: rescheduleDate,
-        time: rescheduleTime,
-        doctor: selected?.doctor || "",
-      })
-    );
-    setRescheduleDate("");
-    setRescheduleTime("");
-    setShowReschedule(false);
   };
 
-  const handleConfirmCancel = (e) => {
+  const handleRescheduleSubmit = async (e) => {
     e.preventDefault();
-    toast(
-      t("patientAppointments.toast_cancelled", {
-        doctor: selected?.doctor || "",
-        reason: cancelReason ? `(${cancelReason})` : "",
-      })
-    );
-    setCancelReason("");
-    setShowCancelConfirm(false);
-  };
+    if (!selected || !rescheduleDate || !rescheduleTime) return;
 
-  const handleUploadResultSubmit = (e) => {
-    e.preventDefault();
-    if (!testFileName) {
-      toast(t("patientAppointments.toast_upload_missing"));
-      return;
+    try {
+      await fetch(`/api/patient/appointments/${selected.id}/reschedule`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: rescheduleDate, time: rescheduleTime }),
+      });
+      setRescheduleDate("");
+      setRescheduleTime("");
+      setShowReschedule(false);
+    } catch (err) {
+      console.error(err);
     }
-    toast(
-      t("patientAppointments.toast_upload_submitted", {
-        file: testFileName,
-        doctor: selected?.doctor || "",
-      })
-    );
-    setTestFileName("");
-    setShowUploadResult(false);
   };
 
-  const handleSymptomsSubmit = (e) => {
+  const handleConfirmCancel = async (e) => {
     e.preventDefault();
-    if (!symptomsText.trim()) {
-      toast(t("patientAppointments.toast_symptoms_missing"));
-      return;
-    }
-    toast(
-      t("patientAppointments.toast_symptoms_submitted", {
-        doctor: selected?.doctor || "",
-        text: symptomsText.slice(0, 60),
-      })
-    );
-    setSymptomsText("");
-    setShowSymptoms(false);
-  };
-
-  const handleAddToCalendar = () => {
     if (!selected) return;
-    const typeLabel = t(`patientAppointments.type_${selected.type}`);
-    toast(
-      t("patientAppointments.toast_added_calendar", {
-        type: typeLabel,
-        datetime: selected.datetime,
-      })
-    );
+
+    try {
+      await fetch(`/api/patient/appointments/${selected.id}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: cancelReason || null }),
+      });
+      setAppointments((prev) =>
+        prev.map((a) =>
+          a.id === selected.id ? { ...a, status: "cancelled" } : a
+        )
+      );
+      setCancelReason("");
+      setShowCancelConfirm(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  const handleUploadResultSubmit = async (e) => {
+    e.preventDefault();
+    if (!selected || !testFileName) return;
+
+    try {
+      await fetch(
+        `/api/patient/appointments/${selected.id}/upload-test-result`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName: testFileName }),
+        }
+      );
+      setTestFileName("");
+      setShowUploadResult(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSymptomsSubmit = async (e) => {
+    e.preventDefault();
+    if (!selected || !symptomsText.trim()) return;
+
+    try {
+      await fetch(`/api/patient/appointments/${selected.id}/symptoms`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: symptomsText }),
+      });
+      setSymptomsText("");
+      setShowSymptoms(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAddToCalendar = async () => {
+    if (!selected) return;
+    try {
+      await fetch(`/api/patient/appointments/${selected.id}/add-to-calendar`, {
+        method: "POST",
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="ap-shell">
+        <header className="ap-header">
+          <button className="ap-back" onClick={onBack}>
+            ← {t("patientAppointments.back")}
+          </button>
+          <div className="ap-header-text">
+            <h2 className="ap-title">{t("patientAppointments.title")}</h2>
+          </div>
+        </header>
+        <div className="ap-loading">
+          {t("patientAppointments.loading")}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="ap-shell">
+        <header className="ap-header">
+          <button className="ap-back" onClick={onBack}>
+            ← {t("patientAppointments.back")}
+          </button>
+          <div className="ap-header-text">
+            <h2 className="ap-title">{t("patientAppointments.title")}</h2>
+          </div>
+        </header>
+        <div className="ap-error">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="ap-shell">
@@ -250,7 +322,7 @@ function PatientAppointments({ onBack }) {
       </header>
 
       <section className="ap-main">
-        {/* القائمة على الشمال */}
+        {/* القائمة */}
         <aside className="ap-inbox">
           <div className="ap-inbox-top">
             <h3>{t("patientAppointments.health_inbox")}</h3>
@@ -270,7 +342,9 @@ function PatientAppointments({ onBack }) {
               </button>
               <button
                 className={
-                  selectedFilter === "past" ? "ap-chip is-active" : "ap-chip"
+                  selectedFilter === "past"
+                    ? "ap-chip is-active"
+                    : "ap-chip"
                 }
                 onClick={() => {
                   setSelectedFilter("past");
@@ -287,7 +361,9 @@ function PatientAppointments({ onBack }) {
               <button
                 key={a.id}
                 className={
-                  a.id === selected?.id ? "ap-card is-active" : "ap-card"
+                  selected && a.id === selected.id
+                    ? "ap-card is-active"
+                    : "ap-card"
                 }
                 onClick={() => {
                   setSelectedId(a.id);
@@ -301,11 +377,15 @@ function PatientAppointments({ onBack }) {
                   <div>
                     <div className="ap-doctor">{a.doctor}</div>
                     <div className="ap-spec">
-                      {t(`patientAppointments.specialty_${a.specialty}`)}
+                      {t(
+                        `patientAppointments.specialty_${a.specialty}`
+                      )}
                     </div>
                   </div>
                   <span className="ap-pill">
-                    {t(`patientAppointments.status_${a.status}`)}
+                    {t(
+                      `patientAppointments.status_${a.status}`
+                    )}
                   </span>
                 </div>
                 <div className="ap-type">
@@ -320,15 +400,19 @@ function PatientAppointments({ onBack }) {
                 {t("patientAppointments.no_appointments", {
                   status:
                     selectedFilter === "upcoming"
-                      ? t("patientAppointments.filter_upcoming").toLowerCase()
-                      : t("patientAppointments.filter_past").toLowerCase(),
+                      ? t(
+                          "patientAppointments.filter_upcoming"
+                        ).toLowerCase()
+                      : t(
+                          "patientAppointments.filter_past"
+                        ).toLowerCase(),
                 })}
               </div>
             )}
           </div>
         </aside>
 
-        {/* تفاصيل الموعد + Before your visit */}
+        {/* التفاصيل + Before your visit */}
         <div className="ap-detail">
           {selected && (
             <div className="ap-detail-card">
@@ -340,9 +424,13 @@ function PatientAppointments({ onBack }) {
               </div>
               <div className="ap-detail-meta">
                 {selected.doctor} ·{" "}
-                {t(`patientAppointments.specialty_${selected.specialty}`)}
+                {t(
+                  `patientAppointments.specialty_${selected.specialty}`
+                )}
               </div>
-              <div className="ap-detail-meta">{selected.datetime}</div>
+              <div className="ap-detail-meta">
+                {selected.datetime}
+              </div>
               <div className="ap-detail-meta">
                 {t(
                   `patientAppointments.location_${selected.location}`,
@@ -352,17 +440,23 @@ function PatientAppointments({ onBack }) {
 
               <div className="ap-tags">
                 <span className="ap-tag">
-                  {t(`patientAppointments.phase_${selected.phase}`)}
+                  {t(
+                    `patientAppointments.phase_${selected.phase}`
+                  )}
                 </span>
               </div>
 
               <div className="ap-actions">
                 <button
                   className="ap-btn ap-btn-secondary"
-                  title={t("patientAppointments.book_followup_title")}
+                  title={t(
+                    "patientAppointments.book_followup_title"
+                  )}
                   onClick={openFollowUp}
                 >
-                  {t("patientAppointments.btn_treatment_followup")}
+                  {t(
+                    "patientAppointments.btn_treatment_followup"
+                  )}
                 </button>
 
                 <button
@@ -400,7 +494,9 @@ function PatientAppointments({ onBack }) {
                 title={t("patientAppointments.upload_title")}
                 onClick={openUploadResult}
               >
-                {t("patientAppointments.upload_test_result")}
+                {t(
+                  "patientAppointments.upload_test_result"
+                )}
               </button>
 
               <button
@@ -439,7 +535,9 @@ function PatientAppointments({ onBack }) {
                   <input
                     type="date"
                     value={followUpDate}
-                    onChange={(e) => setFollowUpDate(e.target.value)}
+                    onChange={(e) =>
+                      setFollowUpDate(e.target.value)
+                    }
                   />
                 </div>
                 <div className="ap-field">
@@ -447,7 +545,9 @@ function PatientAppointments({ onBack }) {
                   <input
                     type="time"
                     value={followUpTime}
-                    onChange={(e) => setFollowUpTime(e.target.value)}
+                    onChange={(e) =>
+                      setFollowUpTime(e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -463,8 +563,13 @@ function PatientAppointments({ onBack }) {
                 >
                   {t("patientAppointments.close")}
                 </button>
-                <button type="submit" className="ap-btn ap-btn-primary">
-                  {t("patientAppointments.book_followup_btn")}
+                <button
+                  type="submit"
+                  className="ap-btn ap-btn-primary"
+                >
+                  {t(
+                    "patientAppointments.book_followup_btn"
+                  )}
                 </button>
               </div>
             </form>
@@ -473,7 +578,11 @@ function PatientAppointments({ onBack }) {
 
         {showReschedule && (
           <div className="ap-formCard">
-            <h4>{t("patientAppointments.reschedule_main_title")}</h4>
+            <h4>
+              {t(
+                "patientAppointments.reschedule_main_title"
+              )}
+            </h4>
             <p>
               {t("patientAppointments.reschedule_desc", {
                 doctor: selected?.doctor || "",
@@ -482,19 +591,27 @@ function PatientAppointments({ onBack }) {
             <form onSubmit={handleRescheduleSubmit}>
               <div className="ap-formGrid">
                 <div className="ap-field">
-                  <label>{t("patientAppointments.new_date")}</label>
+                  <label>
+                    {t("patientAppointments.new_date")}
+                  </label>
                   <input
                     type="date"
                     value={rescheduleDate}
-                    onChange={(e) => setRescheduleDate(e.target.value)}
+                    onChange={(e) =>
+                      setRescheduleDate(e.target.value)
+                    }
                   />
                 </div>
                 <div className="ap-field">
-                  <label>{t("patientAppointments.new_time")}</label>
+                  <label>
+                    {t("patientAppointments.new_time")}
+                  </label>
                   <input
                     type="time"
                     value={rescheduleTime}
-                    onChange={(e) => setRescheduleTime(e.target.value)}
+                    onChange={(e) =>
+                      setRescheduleTime(e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -510,8 +627,13 @@ function PatientAppointments({ onBack }) {
                 >
                   {t("patientAppointments.close")}
                 </button>
-                <button type="submit" className="ap-btn ap-btn-primary">
-                  {t("patientAppointments.save_new_time")}
+                <button
+                  type="submit"
+                  className="ap-btn ap-btn-primary"
+                >
+                  {t(
+                    "patientAppointments.save_new_time"
+                  )}
                 </button>
               </div>
             </form>
@@ -520,19 +642,32 @@ function PatientAppointments({ onBack }) {
 
         {showCancelConfirm && (
           <div className="ap-formCard">
-            <h4>{t("patientAppointments.cancel_main_title")}</h4>
+            <h4>
+              {t(
+                "patientAppointments.cancel_main_title"
+              )}
+            </h4>
             <p>
               {t("patientAppointments.cancel_desc", {
                 doctor: selected?.doctor || "",
               })}
             </p>
             <form onSubmit={handleConfirmCancel}>
-              <div className="ap-field" style={{ marginTop: 8 }}>
-                <label>{t("patientAppointments.reason_optional")}</label>
+              <div
+                className="ap-field"
+                style={{ marginTop: 8 }}
+              >
+                <label>
+                  {t(
+                    "patientAppointments.reason_optional"
+                  )}
+                </label>
                 <input
                   type="text"
                   value={cancelReason}
-                  onChange={(e) => setCancelReason(e.target.value)}
+                  onChange={(e) =>
+                    setCancelReason(e.target.value)
+                  }
                   placeholder={t(
                     "patientAppointments.reason_placeholder"
                   )}
@@ -547,10 +682,17 @@ function PatientAppointments({ onBack }) {
                     setCancelReason("");
                   }}
                 >
-                  {t("patientAppointments.keep_appointment")}
+                  {t(
+                    "patientAppointments.keep_appointment"
+                  )}
                 </button>
-                <button type="submit" className="ap-btn ap-btn-primary">
-                  {t("patientAppointments.cancel_appointment")}
+                <button
+                  type="submit"
+                  className="ap-btn ap-btn-primary"
+                >
+                  {t(
+                    "patientAppointments.cancel_appointment"
+                  )}
                 </button>
               </div>
             </form>
@@ -559,14 +701,24 @@ function PatientAppointments({ onBack }) {
 
         {showUploadResult && (
           <div className="ap-formCard">
-            <h4>{t("patientAppointments.upload_main_title")}</h4>
+            <h4>
+              {t(
+                "patientAppointments.upload_main_title"
+              )}
+            </h4>
             <form onSubmit={handleUploadResultSubmit}>
               <div className="ap-field">
-                <label>{t("patientAppointments.file_name_label")}</label>
+                <label>
+                  {t(
+                    "patientAppointments.file_name_label"
+                  )}
+                </label>
                 <input
                   type="text"
                   value={testFileName}
-                  onChange={(e) => setTestFileName(e.target.value)}
+                  onChange={(e) =>
+                    setTestFileName(e.target.value)
+                  }
                   placeholder={t(
                     "patientAppointments.file_name_placeholder"
                   )}
@@ -583,7 +735,10 @@ function PatientAppointments({ onBack }) {
                 >
                   {t("patientAppointments.close")}
                 </button>
-                <button type="submit" className="ap-btn ap-btn-primary">
+                <button
+                  type="submit"
+                  className="ap-btn ap-btn-primary"
+                >
                   {t("patientAppointments.submit")}
                 </button>
               </div>
@@ -593,14 +748,22 @@ function PatientAppointments({ onBack }) {
 
         {showSymptoms && (
           <div className="ap-formCard">
-            <h4>{t("patientAppointments.symptoms_main_title")}</h4>
+            <h4>
+              {t(
+                "patientAppointments.symptoms_main_title"
+              )}
+            </h4>
             <form onSubmit={handleSymptomsSubmit}>
               <div className="ap-field">
-                <label>{t("patientAppointments.symptoms_label")}</label>
+                <label>
+                  {t("patientAppointments.symptoms_label")}
+                </label>
                 <textarea
                   rows={3}
                   value={symptomsText}
-                  onChange={(e) => setSymptomsText(e.target.value)}
+                  onChange={(e) =>
+                    setSymptomsText(e.target.value)
+                  }
                   placeholder={t(
                     "patientAppointments.symptoms_placeholder"
                   )}
@@ -617,7 +780,10 @@ function PatientAppointments({ onBack }) {
                 >
                   {t("patientAppointments.close")}
                 </button>
-                <button type="submit" className="ap-btn ap-btn-primary">
+                <button
+                  type="submit"
+                  className="ap-btn ap-btn-primary"
+                >
                   {t("patientAppointments.share")}
                 </button>
               </div>

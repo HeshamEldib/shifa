@@ -1,7 +1,7 @@
 // src/components/HomeSection.jsx
-import React from "react";
+import React, { useState } from "react";
 import "./Home.css";
-import { ArrowRight, Hospital, BriefcaseMedical, Pill } from "lucide-react";
+import { ArrowRight, Hospital, BriefcaseMedical, Pill, Menu, X } from "lucide-react";
 import heroImg from "../../assets/hero-illustration.png";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +17,7 @@ function HomeSection({
   role,
 }) {
   const { t } = useTranslation();
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const isLoggedIn =
     role === "Patient" || role === "Doctor" || role === "Admin";
@@ -30,6 +31,11 @@ function HomeSection({
     if (type === "consultation") onGoPatient();
     if (type === "booking") onGoAppointments();
     if (type === "prescriptions") onGoPatientPrescriptions();
+  };
+
+  const handleNavLinkClick = (callback) => {
+    if (callback) callback();
+    setIsMobileNavOpen(false);
   };
 
   return (
@@ -47,51 +53,54 @@ function HomeSection({
 
       {/* الهيدر */}
       <nav className={`navbar ${isLoaded ? "fade-in-down" : ""}`}>
-        <div className="logo-container">
-          <svg
-            width="52"
-            height="52"
-            viewBox="0 0 100 100"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="team-logo-svg"
-          >
-            <path
-              d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50"
-              stroke="url(#logo-gradient)"
-              strokeWidth="8"
-              strokeLinecap="round"
-            />
-            <path
-              d="M20 50 L35 50 L45 30 L55 70 L65 50 L80 50"
-              stroke="white"
-              strokeWidth="7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="pulse-path"
-            />
-            <text
-              x="50"
-              y="57"
-              textAnchor="middle"
-              fontSize="36"
-              fontWeight="700"
-              fill="#e5f4ff"
-              className="logo-s-letter"
+        <div className="navbar-left">
+          <div className="logo-container">
+            <svg
+              width="52"
+              height="52"
+              viewBox="0 0 100 100"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="team-logo-svg"
             >
-              S
-            </text>
-            <defs>
-              <linearGradient id="logo-gradient" x1="0" y1="0" x2="100" y2="100">
-                <stop offset="0%" stopColor="#22d3ee" />
-                <stop offset="100%" stopColor="#7c3aed" />
-              </linearGradient>
-            </defs>
-          </svg>
+              <path
+                d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50"
+                stroke="url(#logo-gradient)"
+                strokeWidth="8"
+                strokeLinecap="round"
+              />
+              <path
+                d="M20 50 L35 50 L45 30 L55 70 L65 50 L80 50"
+                stroke="white"
+                strokeWidth="7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="pulse-path"
+              />
+              <text
+                x="50"
+                y="57"
+                textAnchor="middle"
+                fontSize="36"
+                fontWeight="700"
+                fill="#e5f4ff"
+                className="logo-s-letter"
+              >
+                S
+              </text>
+              <defs>
+                <linearGradient id="logo-gradient" x1="0" y1="0" x2="100" y2="100">
+                  <stop offset="0%" stopColor="#22d3ee" />
+                  <stop offset="100%" stopColor="#7c3aed" />
+                </linearGradient>
+              </defs>
+            </svg>
 
-          <span className="logo-text-main">Shifaa</span>
+            <span className="logo-text-main">Shifaa</span>
+          </div>
         </div>
 
+        {/* روابط الديسكتوب */}
         <div className="nav-links desktop-only">
           <a href="#home" className="nav-item">
             {t("navbar.home")}
@@ -117,6 +126,62 @@ function HomeSection({
             {t("navbar.login")}
           </button>
           <button className="btn-primary" onClick={onSignupClick}>
+            {t("navbar.signup")}
+          </button>
+        </div>
+
+        {/* زرار الموبايل */}
+        <button
+          type="button"
+          className="mobile-menu-toggle mobile-only"
+          onClick={() => setIsMobileNavOpen((prev) => !prev)}
+          aria-label="Toggle navigation"
+        >
+          {isMobileNavOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+
+        {/* منيو الموبايل */}
+        <div
+          className={`mobile-nav-panel mobile-only ${
+            isMobileNavOpen ? "open" : ""
+          }`}
+        >
+          <a
+            href="#home"
+            className="mobile-nav-item"
+            onClick={() => setIsMobileNavOpen(false)}
+          >
+            {t("navbar.home")}
+          </a>
+          <button
+            type="button"
+            className="mobile-nav-item"
+            onClick={() => handleNavLinkClick(onAboutClick)}
+          >
+            {t("navbar.about")}
+          </button>
+          <button
+            type="button"
+            className="mobile-nav-item"
+            onClick={() => handleNavLinkClick(onContactClick)}
+          >
+            {t("navbar.contact")}
+          </button>
+
+          <div className="mobile-nav-divider" />
+
+          <button
+            type="button"
+            className="mobile-nav-btn secondary"
+            onClick={() => handleNavLinkClick(onLoginClick)}
+          >
+            {t("navbar.login")}
+          </button>
+          <button
+            type="button"
+            className="mobile-nav-btn primary"
+            onClick={() => handleNavLinkClick(onSignupClick)}
+          >
             {t("navbar.signup")}
           </button>
         </div>
@@ -220,8 +285,7 @@ function HomeSection({
         <div className="footer-inner">
           <div className="footer-column">
             <div className="footer-ecg-logo">
-              {/* نفس اللوجو */}
-              {/* ... */}
+              {/* تقدر هنا تحط نفس الـ SVG بتاع اللوجو لو حابب */}
               <span className="footer-ecg-text">Shifaa</span>
             </div>
 

@@ -1,5 +1,5 @@
 // src/components/SilentDiagnosisScreen.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Screen.css";
 import { useTranslation } from "react-i18next";
 
@@ -20,7 +20,8 @@ const decisions = [
   },
 ];
 
-function SilentDiagnosisScreen({ onBack }) {
+// exposeBuildPayload: دالة يبعتهالك الأب عشان يقدر ياخد payload وقت ما يحب
+function SilentDiagnosisScreen({ onBack, sessionId, patientId, exposeBuildPayload }) {
   const { t } = useTranslation();
   const [pulseOn, setPulseOn] = useState(true);
   const [cantSpeakMode, setCantSpeakMode] = useState(false);
@@ -109,7 +110,7 @@ function SilentDiagnosisScreen({ onBack }) {
     setTimeout(() => setBreathingActive(false), 10000);
   };
 
-  // ===== Summary =====
+  // ===== Summary text (لواجهة المريض/الدكتور) =====
   const summaryText = () => {
     const negatives = Object.entries(observations)
       .filter(([_, v]) => v === "no")
@@ -130,17 +131,47 @@ function SilentDiagnosisScreen({ onBack }) {
       : "";
 
     if (selectedDecision === "safe") {
-      return (
-        concernsPart + t("silentScreen.summary_decision_safe")
-      );
+      return concernsPart + t("silentScreen.summary_decision_safe");
     }
     if (selectedDecision === "exam") {
       return concernsPart + t("silentScreen.summary_decision_exam");
     }
-    return (
-      concernsPart + t("silentScreen.summary_decision_emergency")
-    );
+    return concernsPart + t("silentScreen.summary_decision_emergency");
   };
+
+  // ===== build payload للباك (مافيش UI جديد) =====
+  const buildSilentSummaryPayload = () => ({
+    sessionId: sessionId || null,
+    patientId: patientId || null,
+    at: new Date().toISOString(),
+    observations,
+    log,
+    decision: selectedDecision,
+    gestures: {
+      lastGesture,
+      painLocation: painLocation || null,
+      painScale,
+      breathingActive,
+    },
+  });
+
+  // نبعت الفانكشن للأب كل ما تتغير (عشان يشوف آخر حالة لو حب يحفظ)
+  useEffect(() => {
+    if (typeof exposeBuildPayload === "function") {
+      exposeBuildPayload(buildSilentSummaryPayload);
+    }
+  }, [
+    exposeBuildPayload,
+    sessionId,
+    patientId,
+    observations,
+    log,
+    selectedDecision,
+    lastGesture,
+    painLocation,
+    painScale,
+    breathingActive,
+  ]);
 
   return (
     <div className="sds-shell">
