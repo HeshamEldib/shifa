@@ -1,13 +1,14 @@
-
-// src/components/SignUpSection.jsx
+// src/components/website/SignUpSection.jsx
 import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Eye, EyeOff } from "lucide-react";
 import heroImg from "../../assets/hero-illustration.png";
 import "./SignUp.css";
 
 const ROLES = [
-  { key: "patient", label: "Patient", icon: "👤" },
-  { key: "doctor", label: "Doctor", icon: "👨‍⚕️" },
-  { key: "center", label: "Medical center / Pharmacy", icon: "🏥" },
+  { key: "patient", label: "signup.role_patient", icon: "👤" },
+  { key: "doctor", label: "signup.role_doctor", icon: "👨‍⚕️" },
+  { key: "center", label: "signup.role_center", icon: "🏥" },
 ];
 
 function passwordStrength(pw) {
@@ -22,14 +23,15 @@ function passwordStrength(pw) {
   return { label: "Strong", score: 3 };
 }
 
-function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess }) {
-  // باقي الكود كما هو
+function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.resolvedLanguage === "ar";
 
   const [role, setRole] = useState("patient");
   const [step, setStep] = useState(1);
   const [showPw, setShowPw] = useState(false);
-  const [socialLoading, setSocialLoading] = useState(null); // 'google' | 'apple' | null
-  const [submitState, setSubmitState] = useState("idle"); // idle | loading | success
+  const [socialLoading, setSocialLoading] = useState(null);
+  const [submitState, setSubmitState] = useState("idle");
 
   const [form, setForm] = useState({
     fullName: "",
@@ -60,55 +62,89 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
   const errors = useMemo(() => {
     const e = {};
 
-    // Step 1
-    if (!form.fullName.trim()) e.fullName = "Full name is required.";
-    if (!form.email.trim()) e.email = "Email is required.";
-    else if (!/^\S+@\S+\.\S+$/.test(form.email))
-      e.email = "Enter a valid email address.";
-    if (!form.password) e.password = "Password is required.";
-    else if (form.password.length < 8)
-      e.password = "Password must be at least 8 characters.";
+    if (!form.fullName.trim())
+      e.fullName = t("signup.full_name_required", {
+        defaultValue: "Full name is required.",
+      });
 
-    // Step 2
+    if (!form.email.trim())
+      e.email = t("signup.email_required", {
+        defaultValue: "Email is required.",
+      });
+    else if (!/^\S+@\S+\.\S+$/.test(form.email))
+      e.email = t("signup.email_invalid", {
+        defaultValue: "Enter a valid email address.",
+      });
+
+    if (!form.password)
+      e.password = t("signup.password_required", {
+        defaultValue: "Password is required.",
+      });
+    else if (form.password.length < 8)
+      e.password = t("signup.password_min", {
+        defaultValue: "Password must be at least 8 characters.",
+      });
+
     if (step >= 2) {
-      if (!form.phone.trim()) e.phone = "Phone number is required.";
-      if (!form.gender) e.gender = "Gender is required.";
-      if (!form.age) e.age = "Age is required.";
+      if (!form.phone.trim())
+        e.phone = t("signup.phone_required", {
+          defaultValue: "Phone number is required.",
+        });
+      if (!form.gender)
+        e.gender = t("signup.gender_required", {
+          defaultValue: "Gender is required.",
+        });
+      if (!form.age)
+        e.age = t("signup.age_required", {
+          defaultValue: "Age is required.",
+        });
       else if (Number(form.age) < 1 || Number(form.age) > 120)
-        e.age = "Enter a valid age.";
-      if (!form.country) e.country = "Country is required.";
+        e.age = t("signup.age_invalid", {
+          defaultValue: "Enter a valid age.",
+        });
+      if (!form.country)
+        e.country = t("signup.country_required", {
+          defaultValue: "Country is required.",
+        });
     }
 
-    // Step 3 role-based
     if (step >= 3) {
       if (role === "doctor") {
         if (!form.specialization.trim())
-          e.specialization = "Specialization is required.";
-        if (!form.medicalId.trim()) e.medicalId = "Medical ID is required.";
+          e.specialization = t("signup.specialization_required", {
+            defaultValue: "Specialization is required.",
+          });
+        if (!form.medicalId.trim())
+          e.medicalId = t("signup.medical_id_required", {
+            defaultValue: "Medical ID is required.",
+          });
       }
       if (role === "center") {
         if (!form.centerName.trim())
-          e.centerName = "Center name is required.";
+          e.centerName = t("signup.center_name_required", {
+            defaultValue: "Center name is required.",
+          });
         if (!form.licenseNumber.trim())
-          e.licenseNumber = "License number is required.";
+          e.licenseNumber = t("signup.license_required", {
+            defaultValue: "License number is required.",
+          });
       }
       if (!form.agree)
-        e.agree = "You must agree to Terms & Privacy Policy.";
+        e.agree = t("signup.agree_required", {
+          defaultValue: "You must agree to Terms & Privacy Policy.",
+        });
     }
 
     return e;
-  }, [form, role, step]);
+  }, [form, role, step, t]);
 
   const stepCount = 3;
   const progressPct = Math.round((step / stepCount) * 100);
 
   const canGoNext = () => {
-    if (step === 1)
-      return !errors.fullName && !errors.email && !errors.password;
+    if (step === 1) return !errors.fullName && !errors.email && !errors.password;
     if (step === 2)
-      return (
-        !errors.phone && !errors.gender && !errors.age && !errors.country
-      );
+      return !errors.phone && !errors.gender && !errors.age && !errors.country;
     return true;
   };
 
@@ -125,41 +161,42 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
 
   const goPrev = () => setStep((s) => Math.max(1, s - 1));
 
-  const onSubmit = (e) => {
-  e.preventDefault();
-  setTouched((p) => ({
-    ...p,
-    fullName: true,
-    email: true,
-    password: true,
-    phone: true,
-    gender: true,
-    age: true,
-    country: true,
-    specialization: true,
-    medicalId: true,
-    centerName: true,
-    licenseNumber: true,
-    agree: true,
-  }));
-  if (Object.keys(errors).length) return;
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setTouched((p) => ({
+      ...p,
+      fullName: true,
+      email: true,
+      password: true,
+      phone: true,
+      gender: true,
+      age: true,
+      country: true,
+      specialization: true,
+      medicalId: true,
+      centerName: true,
+      licenseNumber: true,
+      agree: true,
+    }));
+    if (Object.keys(errors).length) return;
 
-  setSubmitState("loading");
+    setSubmitState("loading");
 
-  // هنا منطق اختيار الـrole النهائي زي ما محتاجاه للـDashboard
-  let finalRole = "Patient";
-  if (role === "doctor") finalRole = "Doctor";
-  else if (role === "center") finalRole = "Admin";
+    let finalRole = "Patient";
+    if (role === "doctor") finalRole = "Doctor";
+    else if (role === "center") finalRole = "Admin";
 
-  window.setTimeout(() => {
-    setSubmitState("success");
-    // ابعتي الـrole دا للبّيرنت لو محتاجه
-    if (typeof onSignupSuccess === "function") {
-      onSignupSuccess({ role: finalRole });
+    try {
+      setTimeout(() => {
+        setSubmitState("success");
+        if (typeof onSignupSuccess === "function") {
+          onSignupSuccess({ role: finalRole });
+        }
+      }, 900);
+    } catch (err) {
+      setSubmitState("idle");
     }
-  }, 900);
-};
-
+  };
 
   const handleSocialClick = (provider) => {
     setSocialLoading(provider);
@@ -173,21 +210,34 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
   const validMark = (name) => touched[name] && !errors[name] && form[name];
 
   const renderFieldStatus = (name) => {
-    if (showError(name)) return <span className="su-status su-bad">✖</span>;
-    if (validMark(name)) return <span className="su-status su-good">✔</span>;
+    if (showError(name))
+      return (
+        <span
+          className={`su-status ${isArabic ? "rtl" : "ltr"} su-bad`}
+        >
+          ✖
+        </span>
+      );
+    if (validMark(name))
+      return (
+        <span
+          className={`su-status ${isArabic ? "rtl" : "ltr"} su-good`}
+        >
+          ✔
+        </span>
+      );
     return null;
   };
 
   const stepHint =
     step === 1
-      ? "Account basics"
+      ? t("signup.step1_hint")
       : step === 2
-      ? "Personal details"
-      : "Professional info";
+      ? t("signup.step2_hint")
+      : t("signup.step3_hint");
 
   return (
     <>
-      {/* Split background */}
       <div className="su-split-bg">
         <div className="su-left-bg">
           <div className="su-left-grad" />
@@ -200,45 +250,37 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
       </div>
 
       <main className="su-page">
-        {/* Left branding */}
         <section className={`su-left ${isLoaded ? "fade-in-up" : ""}`}>
-          <div
-            className="su-brand"
-            onClick={onBackClick}
-            style={{ cursor: "pointer" }}
-          >
+          <div className="su-brand">
             <span className="su-brand-mark">+</span>
             <span className="su-brand-text">Shifaa</span>
           </div>
 
           <h1 className="su-left-title">
-            Start your health journey with confidence
+            {t("signup.left_title")}
           </h1>
           <p className="su-left-sub">
-            Shifaa helps you manage appointments, results, and conversations in
-            one calm place.
+            {t("signup.left_sub")}
           </p>
 
           <div className="su-left-points">
             <div className="su-left-point">
               <span className="su-dot" />
-              <span>Appointments, results, and messaging in one timeline.</span>
+              <span>{t("signup.point_1")}</span>
             </div>
             <div className="su-left-point">
               <span className="su-dot" />
-              <span>Flows designed to feel natural, not stressful.</span>
+              <span>{t("signup.point_2")}</span>
             </div>
             <div className="su-left-point">
               <span className="su-dot" />
-              <span>A privacy‑first home for your medical data.</span>
+              <span>{t("signup.point_3")}</span>
             </div>
           </div>
         </section>
 
-        {/* Right form */}
         <section className={`su-right ${isLoaded ? "fade-in-up" : ""}`}>
           <div className="su-form-shell">
-            {/* Social */}
             <div className="su-social">
               <button
                 type="button"
@@ -249,8 +291,8 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                 <span className="su-social-ic">G</span>
                 <span>
                   {socialLoading === "google"
-                    ? "Connecting to Google…"
-                    : "Sign up with Google"}
+                    ? t("signup.social_google_loading")
+                    : t("signup.social_google")}
                 </span>
               </button>
               <button
@@ -262,20 +304,19 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                 <span className="su-social-ic"></span>
                 <span>
                   {socialLoading === "apple"
-                    ? "Connecting to Apple…"
-                    : "Sign up with Apple"}
+                    ? t("signup.social_apple_loading")
+                    : t("signup.social_apple")}
                 </span>
               </button>
               <div className="su-sep">
                 <span />
-                <em>or create your account manually</em>
+                <em>{t("signup.manual_title")}</em>
                 <span />
               </div>
             </div>
 
-            {/* Role selection */}
             <div className="su-role">
-              <h2 className="su-h2">Choose account type</h2>
+              <h2 className="su-h2">{t("signup.choose_type")}</h2>
               <div
                 className="su-role-grid"
                 role="radiogroup"
@@ -293,17 +334,16 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                     onClick={() => setRole(r.key)}
                   >
                     <span className="su-role-ic">{r.icon}</span>
-                    <span className="su-role-label">{r.label}</span>
+                    <span className="su-role-label">{t(r.label)}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Progress */}
             <div className="su-progress">
               <div className="su-progress-top">
                 <span className="su-step-text">
-                  Step {step} of {stepCount}
+                  {t("signup.step_of", { step, total: stepCount })}
                 </span>
                 <span className="su-step-hint">{stepHint}</span>
               </div>
@@ -315,9 +355,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
               </div>
             </div>
 
-            {/* Form */}
             <form className="su-form" onSubmit={onSubmit} noValidate>
-              {/* STEP 1 */}
               {step === 1 && (
                 <div className="su-step">
                   <div
@@ -325,7 +363,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                       showError("fullName") ? "has-error" : ""
                     }`}
                   >
-                    <label>Full name</label>
+                    <label>{t("signup.full_name_label")}</label>
                     <div className="su-input-wrap">
                       <input
                         value={form.fullName}
@@ -333,7 +371,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                         onBlur={() =>
                           setTouched((p) => ({ ...p, fullName: true }))
                         }
-                        placeholder="Full name"
+                        placeholder={t("signup.full_name_placeholder")}
                         autoComplete="name"
                       />
                       {renderFieldStatus("fullName")}
@@ -348,7 +386,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                       showError("email") ? "has-error" : ""
                     }`}
                   >
-                    <label>Email address</label>
+                    <label>{t("signup.email_label")}</label>
                     <div className="su-input-wrap">
                       <input
                         value={form.email}
@@ -356,7 +394,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                         onBlur={() =>
                           setTouched((p) => ({ ...p, email: true }))
                         }
-                        placeholder="you@example.com"
+                        placeholder={t("signup.email_placeholder")}
                         autoComplete="email"
                         inputMode="email"
                       />
@@ -372,25 +410,36 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                       showError("password") ? "has-error" : ""
                     }`}
                   >
-                    <label>Password</label>
-                    <div className="su-input-wrap">
+                    <label>{t("signup.password_label")}</label>
+                    <div
+                      className={`su-input-wrap su-password-wrap ${
+                        isArabic ? "rtl" : "ltr"
+                      }`}
+                    >
                       <input
                         value={form.password}
-                        onChange={(e) => setField("password", e.target.value)}
+                        onChange={(e) =>
+                          setField("password", e.target.value)
+                        }
                         onBlur={() =>
                           setTouched((p) => ({ ...p, password: true }))
                         }
-                        placeholder="Create a password"
+                        placeholder={t("signup.password_placeholder")}
                         type={showPw ? "text" : "password"}
                         autoComplete="new-password"
+                        className="su-password-input"
                       />
                       <button
                         type="button"
                         className="su-eye"
                         onClick={() => setShowPw((v) => !v)}
-                        aria-label={showPw ? "Hide password" : "Show password"}
+                        aria-label={
+                          showPw
+                            ? t("signup.hide_password")
+                            : t("signup.show_password")
+                        }
                       >
-                        {showPw ? "Hide" : "Show"}
+                        {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                       {renderFieldStatus("password")}
                     </div>
@@ -409,7 +458,6 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                 </div>
               )}
 
-              {/* STEP 2 */}
               {step === 2 && (
                 <div className="su-step">
                   <div
@@ -417,7 +465,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                       showError("phone") ? "has-error" : ""
                     }`}
                   >
-                    <label>Phone number</label>
+                    <label>{t("signup.phone_label")}</label>
                     <div className="su-input-wrap">
                       <input
                         value={form.phone}
@@ -425,7 +473,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                         onBlur={() =>
                           setTouched((p) => ({ ...p, phone: true }))
                         }
-                        placeholder="+20 ..."
+                        placeholder={t("signup.phone_placeholder")}
                         autoComplete="tel"
                         inputMode="tel"
                       />
@@ -441,19 +489,26 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                       showError("gender") ? "has-error" : ""
                     }`}
                   >
-                    <label>Gender</label>
+                    <label>{t("signup.gender_label")}</label>
                     <div className="su-input-wrap">
                       <select
                         value={form.gender}
-                        onChange={(e) => setField("gender", e.target.value)}
+                        onChange={(e) =>
+                          setField("gender", e.target.value)
+                        }
                         onBlur={() =>
                           setTouched((p) => ({ ...p, gender: true }))
                         }
                       >
-                        <option value="">Select</option>
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
-                        <option value="other">Other</option>
+                        <option value="">
+                          {t("signup.gender_select")}
+                        </option>
+                        <option value="female">
+                          {t("signup.gender_female")}
+                        </option>
+                        <option value="male">
+                          {t("signup.gender_male")}
+                        </option>
                       </select>
                       {renderFieldStatus("gender")}
                     </div>
@@ -467,7 +522,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                       showError("age") ? "has-error" : ""
                     }`}
                   >
-                    <label>Age</label>
+                    <label>{t("signup.age_label")}</label>
                     <div className="su-input-wrap">
                       <input
                         value={form.age}
@@ -475,7 +530,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                         onBlur={() =>
                           setTouched((p) => ({ ...p, age: true }))
                         }
-                        placeholder="e.g. 23"
+                        placeholder={t("signup.age_placeholder")}
                         inputMode="numeric"
                       />
                       {renderFieldStatus("age")}
@@ -490,11 +545,13 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                       showError("country") ? "has-error" : ""
                     }`}
                   >
-                    <label>Country</label>
+                    <label>{t("signup.country_label")}</label>
                     <div className="su-input-wrap">
                       <select
                         value={form.country}
-                        onChange={(e) => setField("country", e.target.value)}
+                        onChange={(e) =>
+                          setField("country", e.target.value)
+                        }
                         onBlur={() =>
                           setTouched((p) => ({ ...p, country: true }))
                         }
@@ -514,7 +571,6 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                 </div>
               )}
 
-              {/* STEP 3 */}
               {step === 3 && (
                 <div className="su-step">
                   {role === "doctor" && (
@@ -524,7 +580,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                           showError("specialization") ? "has-error" : ""
                         }`}
                       >
-                        <label>Specialization</label>
+                        <label>{t("signup.specialization_label")}</label>
                         <div className="su-input-wrap">
                           <input
                             value={form.specialization}
@@ -537,7 +593,9 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                                 specialization: true,
                               }))
                             }
-                            placeholder="e.g. Cardiology"
+                            placeholder={t(
+                              "signup.specialization_placeholder"
+                            )}
                           />
                           {renderFieldStatus("specialization")}
                         </div>
@@ -553,7 +611,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                           showError("medicalId") ? "has-error" : ""
                         }`}
                       >
-                        <label>Medical ID</label>
+                        <label>{t("signup.medical_id_label")}</label>
                         <div className="su-input-wrap">
                           <input
                             value={form.medicalId}
@@ -566,12 +624,16 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                                 medicalId: true,
                               }))
                             }
-                            placeholder="ID number"
+                            placeholder={t(
+                              "signup.medical_id_placeholder"
+                            )}
                           />
                           {renderFieldStatus("medicalId")}
                         </div>
                         {showError("medicalId") && (
-                          <small className="su-err">{errors.medicalId}</small>
+                          <small className="su-err">
+                            {errors.medicalId}
+                          </small>
                         )}
                       </div>
                     </>
@@ -584,7 +646,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                           showError("centerName") ? "has-error" : ""
                         }`}
                       >
-                        <label>Center name</label>
+                        <label>{t("signup.center_name_label")}</label>
                         <div className="su-input-wrap">
                           <input
                             value={form.centerName}
@@ -597,7 +659,9 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                                 centerName: true,
                               }))
                             }
-                            placeholder="Center name"
+                            placeholder={t(
+                              "signup.center_name_placeholder"
+                            )}
                           />
                           {renderFieldStatus("centerName")}
                         </div>
@@ -613,7 +677,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                           showError("licenseNumber") ? "has-error" : ""
                         }`}
                       >
-                        <label>License number</label>
+                        <label>{t("signup.license_label")}</label>
                         <div className="su-input-wrap">
                           <input
                             value={form.licenseNumber}
@@ -626,7 +690,9 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                                 licenseNumber: true,
                               }))
                             }
-                            placeholder="License number"
+                            placeholder={t(
+                              "signup.license_placeholder"
+                            )}
                           />
                           {renderFieldStatus("licenseNumber")}
                         </div>
@@ -641,7 +707,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
 
                   {role === "patient" && (
                     <div className="su-patient-note">
-                      No extra details needed for patient accounts.
+                      {t("signup.patient_note")}
                     </div>
                   )}
 
@@ -653,19 +719,27 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                     <input
                       type="checkbox"
                       checked={form.agree}
-                      onChange={(e) => setField("agree", e.target.checked)}
+                      onChange={(e) =>
+                        setField("agree", e.target.checked)
+                      }
                       onBlur={() =>
                         setTouched((p) => ({ ...p, agree: true }))
                       }
                     />
                     <span>
-                      I agree to{" "}
-                      <button type="button" className="su-inline-link">
-                        Terms
+                      {t("signup.agree_prefix")}{" "}
+                      <button
+                        type="button"
+                        className="su-inline-link"
+                      >
+                        {t("signup.terms")}
                       </button>{" "}
-                      &
-                      <button type="button" className="su-inline-link">
-                        Privacy Policy
+                      &nbsp;
+                      <button
+                        type="button"
+                        className="su-inline-link"
+                      >
+                        {t("signup.privacy")}
                       </button>
                     </span>
                   </label>
@@ -674,19 +748,19 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                   )}
 
                   <p className="su-lock">
-                    🔒 Your data is encrypted and securely stored.
+                    🔒 {t("signup.lock_note")}
                   </p>
                 </div>
               )}
 
-              {/* Nav buttons */}
               <div className="su-nav">
                 <button
                   type="button"
                   className="su-ghost"
-                  onClick={step === 1 ? onBackClick : goPrev}
+                  onClick={goPrev}
+                  disabled={step === 1}
                 >
-                  {step === 1 ? "Back" : "Previous"}
+                  {t("signup.previous")}
                 </button>
 
                 {step < 3 ? (
@@ -696,7 +770,7 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                     onClick={goNext}
                     disabled={!canGoNext()}
                   >
-                    Next
+                    {t("signup.next")}
                   </button>
                 ) : (
                   <button
@@ -704,19 +778,21 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
                     className="su-next"
                     disabled={submitState === "loading"}
                   >
-                    {submitState === "loading" ? "Creating…" : "Create account"}
+                    {submitState === "loading"
+                      ? t("signup.creating")
+                      : t("signup.create_account")}
                   </button>
                 )}
               </div>
 
               <div className="su-footer">
-                <span>Already have an account?</span>{" "}
+                <span>{t("signup.have_account")}</span>{" "}
                 <button
                   type="button"
                   className="su-inline-link"
                   onClick={onLoginClick}
                 >
-                  Log in
+                  {t("signup.login")}
                 </button>
               </div>
             </form>
@@ -724,15 +800,18 @@ function SignUpSection({ isLoaded, onBackClick, onLoginClick, onSignupSuccess })
         </section>
       </main>
 
-      {/* Success overlay */}
       {submitState === "success" && (
         <div className="su-success-overlay" role="dialog" aria-modal="true">
           <div className="su-success-card">
             <div className="su-success-check">✔</div>
-            <h3>Account created successfully</h3>
-            <p>Your health journey starts now.</p>
-            <button type="button" className="su-next" onClick={onBackClick}>
-              Go to dashboard
+            <h3>{t("signup.success_title")}</h3>
+            <p>{t("signup.success_sub")}</p>
+            <button
+              type="button"
+              className="su-next"
+              onClick={onLoginClick}
+            >
+              {t("signup.success_button")}
             </button>
           </div>
         </div>

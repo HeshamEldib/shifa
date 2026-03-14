@@ -1,21 +1,28 @@
 // src/components/SilentDiagnosisScreen.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Screen.css";
+import { useTranslation } from "react-i18next";
 
 const observationItems = [
-  { id: "breathing", label: "Breathing pattern" },
-  { id: "facial", label: "Facial tension" },
-  { id: "eyes", label: "Eye focus" },
-  { id: "voice", label: "Voice clarity (last sentence)" },
+  { id: "breathing", labelKey: "breathing" },
+  { id: "facial", labelKey: "facial" },
+  { id: "eyes", labelKey: "eyes" },
+  { id: "voice", labelKey: "voice" },
 ];
 
 const decisions = [
-  { id: "safe", label: "Safe follow-up", colorClass: "sds-decision-safe" },
-  { id: "exam", label: "Needs physical exam", colorClass: "sds-decision-exam" },
-  { id: "emergency", label: "Emergency now", colorClass: "sds-decision-emergency" },
+  { id: "safe", labelKey: "safe_label", colorClass: "sds-decision-safe" },
+  { id: "exam", labelKey: "exam_label", colorClass: "sds-decision-exam" },
+  {
+    id: "emergency",
+    labelKey: "emergency_label",
+    colorClass: "sds-decision-emergency",
+  },
 ];
 
-function SilentDiagnosisScreen({ onBack }) {
+// exposeBuildPayload: دالة يبعتهالك الأب عشان يقدر ياخد payload وقت ما يحب
+function SilentDiagnosisScreen({ onBack, sessionId, patientId, exposeBuildPayload }) {
+  const { t } = useTranslation();
   const [pulseOn, setPulseOn] = useState(true);
   const [cantSpeakMode, setCantSpeakMode] = useState(false);
 
@@ -24,14 +31,16 @@ function SilentDiagnosisScreen({ onBack }) {
 
   const [selectedDecision, setSelectedDecision] = useState(null);
 
-  // ===== بيانات الـ silent gestures =====
-  const [lastGesture, setLastGesture] = useState(null); // آخر input
+  const [lastGesture, setLastGesture] = useState(null);
   const [painLocation, setPainLocation] = useState("");
   const [painScale, setPainScale] = useState(null);
   const [breathingActive, setBreathingActive] = useState(false);
 
   const timeNow = () =>
-    new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   const handlePulseToggle = () => {
     setPulseOn((prev) => !prev);
@@ -50,81 +59,131 @@ function SilentDiagnosisScreen({ onBack }) {
     setSelectedDecision(id);
   };
 
-  // ===== Handlers للـ gestures =====
+  // ===== Gestures =====
   const handleYes = () => {
-    setLastGesture({ type: "Yes 👍", at: timeNow() });
+    setLastGesture({
+      type: t("silentScreen.gesture_yes"),
+      at: timeNow(),
+    });
   };
 
   const handleNo = () => {
-    setLastGesture({ type: "No 👎", at: timeNow() });
+    setLastGesture({
+      type: t("silentScreen.gesture_no"),
+      at: timeNow(),
+    });
   };
 
   const handlePainLocation = () => {
-    const loc = window.prompt("Where is the pain? (e.g. left chest)");
+    const loc = window.prompt(
+      t("silentScreen.prompt_pain_location_placeholder")
+    );
     if (loc && loc.trim()) {
       setPainLocation(loc.trim());
-      setLastGesture({ type: "Pain location updated", at: timeNow() });
+      setLastGesture({
+        type: t("silentScreen.gesture_pain_location_updated"),
+        at: timeNow(),
+      });
     }
   };
 
   const handlePainScale = () => {
-    const value = window.prompt("Pain scale 1–10 (fingers):");
+    const value = window.prompt(
+      t("silentScreen.prompt_pain_scale_placeholder")
+    );
     const num = Number(value);
     if (!Number.isNaN(num) && num >= 1 && num <= 10) {
       setPainScale(num);
-      setLastGesture({ type: `Pain scale: ${num}/10`, at: timeNow() });
+      setLastGesture({
+        type: t("silentScreen.gesture_pain_scale_label", { num }),
+        at: timeNow(),
+      });
     }
   };
 
   const handleBreathing = () => {
     setBreathingActive(true);
-    setLastGesture({ type: "Breathing coach started", at: timeNow() });
-    setTimeout(() => setBreathingActive(false), 10000); // 10 ثواني
+    setLastGesture({
+      type: t("silentScreen.gesture_breathing_started"),
+      at: timeNow(),
+    });
+    setTimeout(() => setBreathingActive(false), 10000);
   };
 
-  // ===== Session summary =====
+  // ===== Summary text (لواجهة المريض/الدكتور) =====
   const summaryText = () => {
     const negatives = Object.entries(observations)
       .filter(([_, v]) => v === "no")
       .map(([key]) => {
         const item = observationItems.find((o) => o.id === key);
-        return item ? item.label : key;
+        if (!item) return key;
+        return t(`silentScreen.observation_${item.labelKey}`);
       });
 
     if (!selectedDecision) {
-      return "No final decision selected yet. Tap one of the outcomes above.";
+      return t("silentScreen.summary_no_decision");
     }
 
     const concernsPart = negatives.length
-      ? `Concerns in: ${negatives.join(", ")}. `
+      ? t("silentScreen.summary_concerns", {
+          list: negatives.join(", "),
+        }) + " "
       : "";
 
     if (selectedDecision === "safe") {
-      return (
-        concernsPart +
-        "Decision: stable enough for remote follow-up with clear safety advice."
-      );
+      return concernsPart + t("silentScreen.summary_decision_safe");
     }
     if (selectedDecision === "exam") {
-      return (
-        concernsPart +
-        "Decision: schedule an in-person physical exam as soon as possible."
-      );
+      return concernsPart + t("silentScreen.summary_decision_exam");
     }
-    // emergency
-    return (
-      concernsPart +
-      "Decision: high risk – trigger emergency protocol immediately."
-    );
+    return concernsPart + t("silentScreen.summary_decision_emergency");
   };
+
+  // ===== build payload للباك (مافيش UI جديد) =====
+  const buildSilentSummaryPayload = () => ({
+    sessionId: sessionId || null,
+    patientId: patientId || null,
+    at: new Date().toISOString(),
+    observations,
+    log,
+    decision: selectedDecision,
+    gestures: {
+      lastGesture,
+      painLocation: painLocation || null,
+      painScale,
+      breathingActive,
+    },
+  });
+
+  // نبعت الفانكشن للأب كل ما تتغير (عشان يشوف آخر حالة لو حب يحفظ)
+  useEffect(() => {
+    if (typeof exposeBuildPayload === "function") {
+      exposeBuildPayload(buildSilentSummaryPayload);
+    }
+  }, [
+    exposeBuildPayload,
+    sessionId,
+    patientId,
+    observations,
+    log,
+    selectedDecision,
+    lastGesture,
+    painLocation,
+    painScale,
+    breathingActive,
+  ]);
 
   return (
     <div className="sds-shell">
-      {/* Top bar اختياري: زر رجوع */}
+      {/* Top bar */}
       {onBack && (
         <div className="sds-topbar">
-          <button type="button" className="sds-back-btn" onClick={onBack}>
-            ← Back
+          <button
+            type="button"
+            className="sds-back-btn"
+            onClick={onBack}
+          >
+            ← {t("silentScreen.back")}
           </button>
         </div>
       )}
@@ -133,31 +192,43 @@ function SilentDiagnosisScreen({ onBack }) {
       <section className="sds-section sds-live">
         <header className="sds-section-header">
           <div className="sds-section-title">
-            <span className="sds-pill sds-pill-live">Live moment</span>
+            <span className="sds-pill sds-pill-live">
+              {t("silentScreen.live_pill")}
+            </span>
             <span className="sds-section-sub">
-              Pulsed video · focus during silence
+              {t("silentScreen.live_subtitle")}
             </span>
           </div>
           <div className="sds-live-controls">
             <button
-              className={`sds-pulse-toggle ${pulseOn ? "is-on" : "is-off"}`}
+              className={`sds-pulse-toggle ${
+                pulseOn ? "is-on" : "is-off"
+              }`}
               onClick={handlePulseToggle}
             >
-              {pulseOn ? "Pulse mode: ON" : "Pulse mode: OFF"}
+              {pulseOn
+                ? t("silentScreen.pulse_on")
+                : t("silentScreen.pulse_off")}
             </button>
             <button
-              className={`sds-cant-speak ${cantSpeakMode ? "is-active" : ""}`}
+              className={`sds-cant-speak ${
+                cantSpeakMode ? "is-active" : ""
+              }`}
               onClick={() => setCantSpeakMode((v) => !v)}
             >
-              Patient can’t speak
+              {t("silentScreen.cant_speak_toggle")}
             </button>
           </div>
         </header>
 
         <div className="sds-live-body">
-          <div className={`sds-video-box ${pulseOn ? "is-pulsing" : ""}`}>
+          <div
+            className={`sds-video-box ${
+              pulseOn ? "is-pulsing" : ""
+            }`}
+          >
             <div className="sds-video-label">
-              Smart Doctor Call · Silent diagnosis mode
+              {t("silentScreen.video_label")}
             </div>
             <div className="sds-video-placeholder">
               <div className="sds-video-person sds-video-patient" />
@@ -165,74 +236,84 @@ function SilentDiagnosisScreen({ onBack }) {
             </div>
             <div className="sds-video-status">
               {pulseOn
-                ? "Video bursts: 10s on · 20s off"
-                : "Continuous video preview"}
+                ? t("silentScreen.video_status_pulse")
+                : t("silentScreen.video_status_continuous")}
             </div>
 
             {cantSpeakMode && (
               <div className="sds-gesture-inline">
-                <div className="sds-gesture-title">Silent gestures panel</div>
+                <div className="sds-gesture-title">
+                  {t("silentScreen.gesture_panel_title")}
+                </div>
                 <div className="sds-gesture-grid">
                   <button
                     type="button"
                     className="sds-gesture-btn"
                     onClick={handleYes}
                   >
-                    Yes 👍
+                    {t("silentScreen.gesture_yes_btn")}
                   </button>
                   <button
                     type="button"
                     className="sds-gesture-btn"
                     onClick={handleNo}
                   >
-                    No 👎
+                    {t("silentScreen.gesture_no_btn")}
                   </button>
                   <button
                     type="button"
                     className="sds-gesture-btn"
                     onClick={handlePainLocation}
                   >
-                    Show pain location
+                    {t("silentScreen.gesture_pain_location_btn")}
                   </button>
                   <button
                     type="button"
                     className="sds-gesture-btn"
                     onClick={handleBreathing}
                   >
-                    Breathe in / out
+                    {t("silentScreen.gesture_breath_btn")}
                   </button>
                   <button
                     type="button"
                     className="sds-gesture-btn"
                     onClick={handlePainScale}
                   >
-                    Pain scale (fingers)
+                    {t("silentScreen.gesture_pain_scale_btn")}
                   </button>
                 </div>
                 <p className="sds-gesture-note">
-                  Use simple gestures to continue the call when the patient
-                  cannot speak.
+                  {t("silentScreen.gesture_note")}
                 </p>
 
-                {/* عرض نتيجة الجستشر */}
                 <div className="sds-gesture-info">
                   {lastGesture ? (
                     <div>
-                      Last input: <strong>{lastGesture.type}</strong> at{" "}
-                      {lastGesture.at}
+                      {t("silentScreen.last_input")}{" "}
+                      <strong>{lastGesture.type}</strong>{" "}
+                      {t("silentScreen.at_time")} {lastGesture.at}
                     </div>
                   ) : (
-                    <div>No gestures recorded yet.</div>
+                    <div>
+                      {t("silentScreen.no_gestures_yet")}
+                    </div>
                   )}
                   {painLocation && (
-                    <div>Pain location: {painLocation}</div>
+                    <div>
+                      {t("silentScreen.pain_location_label")}{" "}
+                      {painLocation}
+                    </div>
                   )}
                   {painScale !== null && (
-                    <div>Pain scale: {painScale} / 10</div>
+                    <div>
+                      {t("silentScreen.pain_scale_label", {
+                        num: painScale,
+                      })}
+                    </div>
                   )}
                   {breathingActive && (
                     <div className="sds-breathing-banner">
-                      Breathe with me… In… Out… (10 seconds)
+                      {t("silentScreen.breathing_banner")}
                     </div>
                   )}
                 </div>
@@ -246,9 +327,11 @@ function SilentDiagnosisScreen({ onBack }) {
       <section className="sds-section sds-observation">
         <header className="sds-section-header">
           <div className="sds-section-title">
-            <span className="sds-pill sds-pill-core">Observation layer</span>
+            <span className="sds-pill sds-pill-core">
+              {t("silentScreen.observation_pill")}
+            </span>
             <span className="sds-section-sub">
-              Four quick checkpoints · tap once per item
+              {t("silentScreen.observation_sub")}
             </span>
           </div>
         </header>
@@ -258,9 +341,14 @@ function SilentDiagnosisScreen({ onBack }) {
             {observationItems.map((item) => {
               const value = observations[item.id];
               return (
-                <div key={item.id} className="sds-observation-inline">
+                <div
+                  key={item.id}
+                  className="sds-observation-inline"
+                >
                   <div className="sds-observation-inline-label">
-                    {item.label}
+                    {t(
+                      `silentScreen.observation_${item.labelKey}`
+                    )}
                   </div>
                   <div className="sds-observation-inline-actions">
                     <button
@@ -269,9 +357,11 @@ function SilentDiagnosisScreen({ onBack }) {
                           ? "sds-ob-chip is-yes is-selected"
                           : "sds-ob-chip is-yes"
                       }
-                      onClick={() => handleObservation(item.id, "yes")}
+                      onClick={() =>
+                        handleObservation(item.id, "yes")
+                      }
                     >
-                      ✓ Stable
+                      {t("silentScreen.observation_stable")}
                     </button>
                     <button
                       className={
@@ -279,9 +369,11 @@ function SilentDiagnosisScreen({ onBack }) {
                           ? "sds-ob-chip is-no is-selected"
                           : "sds-ob-chip is-no"
                       }
-                      onClick={() => handleObservation(item.id, "no")}
+                      onClick={() =>
+                        handleObservation(item.id, "no")
+                      }
                     >
-                      ✕ Concern
+                      {t("silentScreen.observation_concern")}
                     </button>
                   </div>
                 </div>
@@ -290,11 +382,13 @@ function SilentDiagnosisScreen({ onBack }) {
           </div>
 
           <div className="sds-log-panel">
-            <div className="sds-log-title">Recent checkpoints</div>
+            <div className="sds-log-title">
+              {t("silentScreen.log_title")}
+            </div>
             <ul className="sds-log-list">
               {log.length === 0 && (
                 <li className="sds-log-empty">
-                  No checkpoints logged yet.
+                  {t("silentScreen.log_empty")}
                 </li>
               )}
               {log.map((entry) => {
@@ -303,10 +397,19 @@ function SilentDiagnosisScreen({ onBack }) {
                 );
                 return (
                   <li key={entry.id}>
-                    <span className="sds-log-time">{entry.time}</span>
+                    <span className="sds-log-time">
+                      {entry.time}
+                    </span>
                     <span className="sds-log-text">
-                      {item ? item.label : entry.itemId} ·{" "}
-                      {entry.value === "yes" ? "Stable" : "Concern"}
+                      {item
+                        ? t(
+                            `silentScreen.observation_${item.labelKey}`
+                          )
+                        : entry.itemId}{" "}
+                      ·{" "}
+                      {entry.value === "yes"
+                        ? t("silentScreen.log_stable")
+                        : t("silentScreen.log_concern")}
                     </span>
                   </li>
                 );
@@ -321,14 +424,14 @@ function SilentDiagnosisScreen({ onBack }) {
         <header className="sds-section-header">
           <div className="sds-section-title">
             <span className="sds-pill sds-pill-decision">
-              Decision minute
+              {t("silentScreen.decision_pill")}
             </span>
             <span className="sds-section-sub">
-              Lock the call with one clear outcome
+              {t("silentScreen.decision_sub")}
             </span>
           </div>
           <div className="sds-countdown">
-            Last 60 seconds of the call
+            {t("silentScreen.decision_countdown")}
           </div>
         </header>
 
@@ -341,21 +444,25 @@ function SilentDiagnosisScreen({ onBack }) {
               }`}
               onClick={() => handleDecision(d.id)}
             >
-              <div className="sds-decision-label">{d.label}</div>
+              <div className="sds-decision-label">
+                {t(`silentScreen.${d.labelKey}`)}
+              </div>
               <div className="sds-decision-hint">
                 {d.id === "safe" &&
-                  "Stable observation · plan remote follow-up."}
+                  t("silentScreen.safe_hint")}
                 {d.id === "exam" &&
-                  "Concerning signs · schedule in-person assessment."}
+                  t("silentScreen.exam_hint")}
                 {d.id === "emergency" &&
-                  "High risk · trigger emergency protocol immediately."}
+                  t("silentScreen.emergency_hint")}
               </div>
             </button>
           ))}
         </div>
 
         <div className="sds-summary-box">
-          <div className="sds-summary-title">Session summary hint</div>
+          <div className="sds-summary-title">
+            {t("silentScreen.summary_title")}
+          </div>
           <p className="sds-summary-text">{summaryText()}</p>
         </div>
       </section>

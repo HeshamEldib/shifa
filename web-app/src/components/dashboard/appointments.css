@@ -1,13 +1,12 @@
-
-
 /* ===========================
    Patient Appointments (ap-*)
-   =========================== */
+   ========================== */
 
 .ap-shell {
   min-height: 100vh;
   padding: 18px 20px 26px;
-  background: radial-gradient(circle at 0 0, #020617 0, #020617 40%, #000000 100%);
+  /* كانت فيها background gradient – نشيلها عشان app-container يمسك الخلفية */
+  background: transparent;
   color: #e5e7eb;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
@@ -112,7 +111,7 @@
 
 .ap-chip.is-active {
   background: linear-gradient(90deg, #22d3ee, #3b82f6);
-  color: #020617;
+  color: #0b1120;
   font-weight: 600;
   transform: translateY(-1px);
 }
@@ -267,7 +266,7 @@
 
 .ap-btn-primary {
   background: linear-gradient(90deg, #22c55e, #4ade80);
-  color: #022c22;
+  color: #052e16;
   font-weight: 600;
   box-shadow: 0 10px 24px rgba(34, 197, 94, 0.3);
 }
@@ -402,41 +401,17 @@
   margin-top: 2px;
 }
 
-/* Responsive */
+/* forms row */
 
-@media (max-width: 900px) {
-  .ap-main {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .ap-inbox {
-    max-height: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .ap-shell {
-    padding: 14px 12px 22px;
-  }
-
-  .ap-main {
-    gap: 12px;
-  }
-
-  .ap-timeline-row {
-    gap: 10px;
-  }
-}
-
-/* المسافة بين الكارد الرئيسي والفورمات */
 .ap-forms-row {
-  margin: 16px 20px 0;      /* فوق بسيط ومن غير فراغ ضخم تحت */
+  margin: 16px 20px 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;                /* مسافة ثابتة بين كل فورم والتاني */
+  gap: 16px;
 }
 
-/* شكل كارت الفورم */
+/* form card */
+
 .ap-formCard {
   background: rgba(15, 23, 42, 0.95);
   border: 1px solid rgba(37, 99, 235, 0.6);
@@ -445,7 +420,6 @@
   max-width: 560px;
 }
 
-/* العنوان والوصف جوه الفورم */
 .ap-formCard h4 {
   margin: 0 0 4px;
   font-size: 14px;
@@ -457,14 +431,14 @@
   color: #9ca3af;
 }
 
-/* شبكة الحقول (الداخلي) */
+/* fields */
+
 .ap-formGrid {
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;   /* مسافة تحت الحقول قبل الأزرار */
+  margin-bottom: 10px;
 }
 
-/* الحقول نفسها */
 .ap-field {
   flex: 1;
 }
@@ -487,10 +461,108 @@
   color: #e5e7eb;
 }
 
-/* صف الأزرار في كل الفورم */
+/* modal actions */
+
 .ap-modal-actions {
   margin-top: 4px;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+}
+
+/* Responsive */
+
+/* تابلت / لابتوب أصغر */
+@media (max-width: 900px) {
+  .ap-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ap-inbox {
+    max-height: none;
+  }
+}
+
+/* موبايل عادي */
+@media (max-width: 640px) {
+  .ap-shell {
+    padding: 14px 12px 22px;
+  }
+
+  .ap-main {
+    gap: 12px;
+  }
+
+  .ap-timeline-row {
+    gap: 10px;
+  }
+
+  .ap-formGrid {
+    flex-direction: column;
+  }
+
+  .ap-header {
+    flex-wrap: wrap;
+  }
+}
+
+/* موبايل صغير جدًا (≤ 360px) */
+@media (max-width: 360px) {
+  .ap-shell {
+    padding: 10px 10px 18px;
+  }
+
+  .ap-inbox,
+  .ap-detail-card,
+  .ap-timeline {
+    padding: 10px 10px 8px;
+  }
+
+  .ap-title {
+    font-size: 18px;
+  }
+
+  .ap-sub {
+    font-size: 11px;
+  }
+
+  .ap-actions {
+    gap: 6px;
+  }
+
+  .ap-btn {
+    padding-inline: 10px;
+    font-size: 11px;
+  }
+
+  .ap-t-item {
+    min-width: 160px;
+  }
+}
+
+/* Force white text for buttons & cards */
+
+.ap-btn,
+.ap-btn span,
+.ap-btn strong {
+  color: #ffffff !important;
+}
+
+.ap-btn-primary {
+  color: #ffffff !important;
+}
+
+.ap-detail-card,
+.ap-detail-card * {
+  color: #ffffff !important;
+}
+
+.ap-card,
+.ap-card * {
+  color: #ffffff !important;
+}
+
+.ap-pill {
+  color: #ffffff !important;
+  border-color: rgba(129, 140, 248, 0.9);
 }

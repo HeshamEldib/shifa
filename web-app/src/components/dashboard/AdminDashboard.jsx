@@ -1,6 +1,7 @@
+// src/components/AdminDashboard.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./AdminDashboard.css";
-
 import {
   ResponsiveContainer,
   LineChart,
@@ -87,7 +88,6 @@ function Segmented({ value, onChange, items }) {
   );
 }
 
-// Seeded random (stable “behavior map” per mode)
 function seeded(seed) {
   let x = seed % 2147483647;
   if (x <= 0) x += 2147483646;
@@ -95,8 +95,14 @@ function seeded(seed) {
 }
 
 export default function AdminDashboard({ onLogout, onOpenSettings }) {
-  const [tab, setTab] = useState("overview"); // overview | patients | doctors | appointments | reports
-  const [timeMode, setTimeMode] = useState("now"); // past | now | future
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    localStorage.setItem("role", "Admin");
+  }, []);
+
+  const [tab, setTab] = useState("overview");
+  const [timeMode, setTimeMode] = useState("now");
 
   const [notifOpen, setNotifOpen] = useState(false);
 
@@ -207,6 +213,15 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
     },
   ]);
 
+  const [editingPatientId, setEditingPatientId] = useState(null);
+  const [editingPatientDraft, setEditingPatientDraft] = useState(null);
+
+  const [editingDoctorId, setEditingDoctorId] = useState(null);
+  const [editingDoctorDraft, setEditingDoctorDraft] = useState(null);
+
+  const [editingAppointmentId, setEditingAppointmentId] = useState(null);
+  const [editingAppointmentDraft, setEditingAppointmentDraft] = useState(null);
+
   const pendingApprovalsNow = useMemo(() => {
     const pendingAppts = appointments.filter(
       (a) => String(a.status).toLowerCase() === "pending"
@@ -253,7 +268,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
 
     return {
       past: {
-        label: "Last week",
+        label: t("admin.time_past"),
         stats: pastStats,
         change: { patients: +3, doctors: +1, appts: -8, approvals: +12 },
         pulse: { status: "Stable", liveUsers: 146, responseMs: 980, risk: 34 },
@@ -269,7 +284,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
         ],
       },
       now: {
-        label: "Now",
+        label: t("admin.time_now"),
         stats: nowStats,
         change: { patients: +8, doctors: +4, appts: +12, approvals: -6 },
         pulse: { status: "Stable", liveUsers: 214, responseMs: 820, risk: 22 },
@@ -285,7 +300,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
         ],
       },
       future: {
-        label: "Next week",
+        label: t("admin.time_future"),
         stats: futureStats,
         change: { patients: +11, doctors: +3, appts: +24, approvals: +18 },
         pulse: { status: "Watch", liveUsers: 312, responseMs: 1180, risk: 56 },
@@ -301,12 +316,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
         ],
       },
     };
-  }, [
-    patients.length,
-    doctors.length,
-    appointments.length,
-    pendingApprovalsNow,
-  ]);
+  }, [patients.length, doctors.length, appointments.length, pendingApprovalsNow, t]);
 
   const frame = timeFrames[timeMode];
 
@@ -407,9 +417,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
   const handleAddDoctor = (payload) => {
     const d = {
       id: makeId("D"),
-      name: payload.name.startsWith("Dr.")
-        ? payload.name
-        : `Dr. ${payload.name}`,
+      name: payload.name.startsWith("Dr.") ? payload.name : `Dr. ${payload.name}`,
       specialty: payload.specialty,
       status: "Active",
       createdAt: new Date().toISOString().slice(0, 10),
@@ -472,22 +480,17 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
       totalPatients: Math.max(10, s.totalPatients + 10),
       totalDoctors: Math.max(5, s.totalDoctors + 3),
       todayAppointments: Math.max(5, s.todayAppointments + 6),
-      pendingApprovals: Math.max(
-        5,
-        Math.max(8, s.pendingApprovals)
-      ),
+      pendingApprovals: Math.max(5, Math.max(8, s.pendingApprovals)),
     };
     return [
       {
         key: "totalPatients",
-        title: "Total Patients",
+        title: t("admin.card_total_patients"),
         value: s.totalPatients,
         delta: frame.change.patients,
         icon: "👥",
         fill: clamp(
-          Math.round(
-            (s.totalPatients / targets.totalPatients) * 100
-          ),
+          Math.round((s.totalPatients / targets.totalPatients) * 100),
           8,
           98
         ),
@@ -495,14 +498,12 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
       },
       {
         key: "totalDoctors",
-        title: "Total Doctors",
+        title: t("admin.card_total_doctors"),
         value: s.totalDoctors,
         delta: frame.change.doctors,
         icon: "🩺",
         fill: clamp(
-          Math.round(
-            (s.totalDoctors / targets.totalDoctors) * 100
-          ),
+          Math.round((s.totalDoctors / targets.totalDoctors) * 100),
           8,
           98
         ),
@@ -510,15 +511,13 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
       },
       {
         key: "todayAppointments",
-        title: "Today Appointments",
+        title: t("admin.card_today_appointments"),
         value: s.todayAppointments,
         delta: frame.change.appts,
         icon: "📅",
         fill: clamp(
           Math.round(
-            (s.todayAppointments /
-              targets.todayAppointments) *
-              100
+            (s.todayAppointments / targets.todayAppointments) * 100
           ),
           8,
           98
@@ -527,16 +526,13 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
       },
       {
         key: "pendingApprovals",
-        title: "Pending Approvals",
+        title: t("admin.card_pending_approvals"),
         value: s.pendingApprovals,
         delta: frame.change.approvals,
         icon: "⏳",
         fill: clamp(
           Math.round(
-            (Math.min(
-              s.pendingApprovals,
-              targets.pendingApprovals
-            ) /
+            (Math.min(s.pendingApprovals, targets.pendingApprovals) /
               targets.pendingApprovals) *
               100
           ),
@@ -546,10 +542,11 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
         tone: s.pendingApprovals > 6 ? "amber" : "green",
       },
     ];
-  }, [frame]);
+  }, [frame, t]);
 
   const risk = frame.pulse.risk;
-  const riskLabel = risk < 30 ? "Low" : risk < 60 ? "Medium" : "High";
+  const riskLabel =
+    risk < 30 ? t("admin.risk_low") : risk < 60 ? t("admin.risk_medium") : t("admin.risk_high");
 
   const notifications = useMemo(() => {
     const pend = appointments.filter(
@@ -565,24 +562,24 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
     return [
       {
         id: "n1",
-        title: "Pending appointments",
-        meta: `${pend} pending`,
+        title: t("admin.notif_pending_title"),
+        meta: t("admin.notif_pending_meta", { count: pend }),
         tone: pend ? "warn" : "ok",
       },
       {
         id: "n2",
-        title: "Doctor availability",
-        meta: `${inactive} inactive`,
+        title: t("admin.notif_doctor_title"),
+        meta: t("admin.notif_doctor_meta", { count: inactive }),
         tone: inactive ? "warn" : "ok",
       },
       {
         id: "n3",
-        title: "Urgent activity",
-        meta: `${urgent} urgent`,
+        title: t("admin.notif_urgent_title"),
+        meta: t("admin.notif_urgent_meta", { count: urgent }),
         tone: urgent ? "bad" : "ok",
       },
     ];
-  }, [appointments, doctors, activity]);
+  }, [appointments, doctors, activity, t]);
 
   const notifCount = useMemo(
     () => notifications.filter((n) => n.tone !== "ok").length,
@@ -593,9 +590,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
     const s = q.trim().toLowerCase();
     if (!s) return patients;
     return patients.filter((p) =>
-      (p.name + " " + p.email + " " + p.phone)
-        .toLowerCase()
-        .includes(s)
+      (p.name + " " + p.email + " " + p.phone).toLowerCase().includes(s)
     );
   }, [patients, q]);
 
@@ -603,9 +598,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
     const s = q.trim().toLowerCase();
     if (!s) return doctors;
     return doctors.filter((d) =>
-      (d.name + " " + d.specialty + " " + d.status)
-        .toLowerCase()
-        .includes(s)
+      (d.name + " " + d.specialty + " " + d.status).toLowerCase().includes(s)
     );
   }, [doctors, q]);
 
@@ -618,6 +611,77 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
         .includes(s)
     );
   }, [appointments, q]);
+
+  const startEditPatient = (p) => {
+    setEditingPatientId(p.id);
+    setEditingPatientDraft({ ...p });
+  };
+
+  const cancelEditPatient = () => {
+    setEditingPatientId(null);
+    setEditingPatientDraft(null);
+  };
+
+  const saveEditPatient = () => {
+    if (!editingPatientDraft) return;
+    setPatients((prev) =>
+      prev.map((p) => (p.id === editingPatientDraft.id ? editingPatientDraft : p))
+    );
+    setEditingPatientId(null);
+    setEditingPatientDraft(null);
+  };
+
+  const handleDeletePatient = (id) => {
+    setPatients((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const startEditDoctor = (d) => {
+    setEditingDoctorId(d.id);
+    setEditingDoctorDraft({ ...d });
+  };
+
+  const cancelEditDoctor = () => {
+    setEditingDoctorId(null);
+    setEditingDoctorDraft(null);
+  };
+
+  const saveEditDoctor = () => {
+    if (!editingDoctorDraft) return;
+    setDoctors((prev) =>
+      prev.map((d) => (d.id === editingDoctorDraft.id ? editingDoctorDraft : d))
+    );
+    setEditingDoctorId(null);
+    setEditingDoctorDraft(null);
+  };
+
+  const handleDeleteDoctor = (id) => {
+    setDoctors((prev) => prev.filter((d) => d.id !== id));
+  };
+
+  const startEditAppointment = (a) => {
+    setEditingAppointmentId(a.id);
+    setEditingAppointmentDraft({ ...a });
+  };
+
+  const cancelEditAppointment = () => {
+    setEditingAppointmentId(null);
+    setEditingAppointmentDraft(null);
+  };
+
+  const saveEditAppointment = () => {
+    if (!editingAppointmentDraft) return;
+    setAppointments((prev) =>
+      prev.map((a) =>
+        a.id === editingAppointmentDraft.id ? editingAppointmentDraft : a
+      )
+    );
+    setEditingAppointmentId(null);
+    setEditingAppointmentDraft(null);
+  };
+
+  const handleDeleteAppointment = (id) => {
+    setAppointments((prev) => prev.filter((a) => a.id !== id));
+  };
 
   return (
     <div className="cc-root">
@@ -640,7 +704,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
             }
             onClick={() => setTab("overview")}
           >
-            <span className="cc-navIcon">📡</span> Overview
+            <span className="cc-navIcon">📡</span> {t("admin.tab_overview")}
           </button>
           <button
             type="button"
@@ -649,7 +713,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
             }
             onClick={() => setTab("patients")}
           >
-            <span className="cc-navIcon">👥</span> Patients
+            <span className="cc-navIcon">👥</span> {t("admin.tab_patients")}
           </button>
           <button
             type="button"
@@ -658,18 +722,17 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
             }
             onClick={() => setTab("doctors")}
           >
-            <span className="cc-navIcon">🩺</span> Doctors
+            <span className="cc-navIcon">🩺</span> {t("admin.tab_doctors")}
           </button>
           <button
             type="button"
             className={
-              tab === "appointments"
-                ? "cc-navItem is-active"
-                : "cc-navItem"
+              tab === "appointments" ? "cc-navItem is-active" : "cc-navItem"
             }
             onClick={() => setTab("appointments")}
           >
-            <span className="cc-navIcon">📅</span> Appointments
+            <span className="cc-navIcon">📅</span>{" "}
+            {t("admin.tab_appointments")}
           </button>
           <button
             type="button"
@@ -678,15 +741,14 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
             }
             onClick={() => setTab("reports")}
           >
-            <span className="cc-navIcon">📈</span> Reports
+            <span className="cc-navIcon">📈</span> {t("admin.tab_reports")}
           </button>
-          {/* Settings تفتح SettingsPage العامة */}
           <button
             type="button"
             className="cc-navItem"
             onClick={onOpenSettings}
           >
-            <span className="cc-navIcon">⚙️</span> Settings
+            <span className="cc-navIcon">⚙️</span> {t("admin.settings")}
           </button>
         </nav>
 
@@ -696,10 +758,10 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
             className="cc-danger"
             onClick={onLogout}
           >
-            Logout
+            {t("admin.logout")}
           </button>
           <div className="cc-miniNote">
-            Time Warp: <b>{frame.label}</b>
+            {t("admin.time_label")}: <b>{frame.label}</b>
           </div>
         </div>
       </aside>
@@ -716,10 +778,10 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   setSearchOpen(true);
                 }}
                 onFocus={() => setSearchOpen(true)}
-                placeholder="Search patients, doctors, appointments..."
+                placeholder={t("admin.search_placeholder")}
               />
               <div className="cc-searchHint">
-                Try: “Rana”, “Dr. Ahmed”, “Pending”, “2026-02-13”
+                {t("admin.search_hint")}
               </div>
 
               {searchOpen && suggestions.length > 0 && (
@@ -750,9 +812,9 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                 value={timeMode}
                 onChange={setTimeMode}
                 items={[
-                  { value: "past", label: "Past" },
-                  { value: "now", label: "Now" },
-                  { value: "future", label: "Next" },
+                  { value: "past", label: t("admin.time_past") },
+                  { value: "now", label: t("admin.time_now") },
+                  { value: "future", label: t("admin.time_future") },
                 ]}
               />
             </div>
@@ -763,8 +825,8 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
               type="button"
               className="cc-bell"
               onClick={() => setNotifOpen((v) => !v)}
-              aria-label="Notifications"
-              title="Notifications"
+              aria-label={t("admin.notif_button")}
+              title={t("admin.notif_button")}
             >
               🔔
               {notifCount > 0 && (
@@ -775,7 +837,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
             {notifOpen && (
               <div className="cc-notif">
                 <div className="cc-notifHead">
-                  <div>Alerts</div>
+                  <div>{t("admin.notif_title")}</div>
                   <button
                     className="cc-iconBtn"
                     type="button"
@@ -811,7 +873,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                     setOpenApprove(true);
                   }}
                 >
-                  Review & Approve
+                  {t("admin.notif_review")}
                 </button>
               </div>
             )}
@@ -826,7 +888,6 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
           </div>
         </header>
 
-        {/* OVERVIEW */}
         {tab === "overview" && (
           <div className="cc-content">
             <section className="cc-grid4">
@@ -870,15 +931,17 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
               <article className="cc-card cc-pulse">
                 <div className="cc-cardHead">
                   <div>
-                    <div className="cc-cardTitle">System Pulse</div>
+                    <div className="cc-cardTitle">
+                      {t("admin.pulse_title")}
+                    </div>
                     <div className="cc-cardSub">
-                      Platform condition snapshot · {frame.label}
+                      {t("admin.pulse_sub", { label: frame.label })}
                     </div>
                   </div>
 
                   <div className="cc-osi">
                     <div className="cc-osiLabel">
-                      Operational Stability Index
+                      {t("admin.pulse_osi")}
                     </div>
                     <div
                       className="cc-osiRing"
@@ -904,35 +967,39 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   />
                   <div className="cc-pulseMeta">
                     <div className="cc-row">
-                      <span className="cc-muted">Status</span>
+                      <span className="cc-muted">
+                        {t("admin.pulse_status_label")}
+                      </span>
                       <span className="cc-strong">
-                        {frame.pulse.status} · Risk {riskLabel}
+                        {frame.pulse.status} · {t("admin.pulse_risk")}{" "}
+                        {riskLabel}
                       </span>
                     </div>
                     <div className="cc-row">
-                      <span className="cc-muted">Live users</span>
+                      <span className="cc-muted">
+                        {t("admin.pulse_live_users")}
+                      </span>
                       <span className="cc-strong">
                         {frame.pulse.liveUsers}
                       </span>
                     </div>
                     <div className="cc-row">
                       <span className="cc-muted">
-                        Response time
+                        {t("admin.pulse_response")}
                       </span>
                       <span className="cc-strong">
-                        {(frame.pulse.responseMs / 1000).toFixed(
-                          2
-                        )}
-                        s
+                        {(frame.pulse.responseMs / 1000).toFixed(2)}s
                       </span>
                     </div>
 
                     <div className="cc-risk">
                       <div className="cc-riskTop">
                         <span className="cc-muted">
-                          Platform Risk Level
+                          {t("admin.pulse_risk_level")}
                         </span>
-                        <span className="cc-strong">{risk}/100</span>
+                        <span className="cc-strong">
+                          {risk}/100
+                        </span>
                       </div>
                       <div className="cc-riskBar">
                         <div
@@ -953,10 +1020,10 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                 <div className="cc-heatWrap">
                   <div className="cc-heatHead">
                     <div className="cc-cardTitle">
-                      Live Behavior Map
+                      {t("admin.heat_title")}
                     </div>
                     <div className="cc-cardSub">
-                      Peak intensity (heat)
+                      {t("admin.heat_sub")}
                     </div>
                   </div>
                   <div className="cc-heat">
@@ -976,17 +1043,17 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   <div className="cc-cardHeadRow">
                     <div>
                       <div className="cc-cardTitle">
-                        Admin Insights
+                        {t("admin.insights_title")}
                       </div>
                       <div className="cc-cardSub">
-                        Decision-ready signals
+                        {t("admin.insights_sub")}
                       </div>
                     </div>
                     <span className="cc-chip">AI‑Like</span>
                   </div>
                   <ul className="cc-list">
-                    {frame.insights.map((t, idx) => (
-                      <li key={idx}>{t}</li>
+                    {frame.insights.map((txt, idx) => (
+                      <li key={idx}>{txt}</li>
                     ))}
                   </ul>
                 </article>
@@ -995,10 +1062,10 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   <div className="cc-cardHeadRow">
                     <div>
                       <div className="cc-cardTitle">
-                        Suggested Actions
+                        {t("admin.actions_title")}
                       </div>
                       <div className="cc-cardSub">
-                        What to do next
+                        {t("admin.actions_sub")}
                       </div>
                     </div>
                     <button
@@ -1006,7 +1073,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                       type="button"
                       onClick={() => setOpenApprove(true)}
                     >
-                      Run approvals
+                      {t("admin.actions_run_approvals")}
                     </button>
                   </div>
 
@@ -1016,9 +1083,9 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                       type="button"
                       onClick={() => setOpenAddDoctor(true)}
                     >
-                      🩺 Add Doctor
+                      🩺 {t("admin.actions_add_doctor")}
                       <span className="cc-actSub">
-                        Increase capacity
+                        {t("admin.actions_add_doctor_sub")}
                       </span>
                     </button>
 
@@ -1027,9 +1094,9 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                       type="button"
                       onClick={() => setOpenAddPatient(true)}
                     >
-                      👤 Add Patient
+                      👤 {t("admin.actions_add_patient")}
                       <span className="cc-actSub">
-                        Register quickly
+                        {t("admin.actions_add_patient_sub")}
                       </span>
                     </button>
 
@@ -1038,9 +1105,9 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                       type="button"
                       onClick={() => setTab("appointments")}
                     >
-                      📅 Review Appointments
+                      📅 {t("admin.actions_review_appts")}
                       <span className="cc-actSub">
-                        Resolve pending
+                        {t("admin.actions_review_appts_sub")}
                       </span>
                     </button>
 
@@ -1049,9 +1116,9 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                       type="button"
                       onClick={() => setTab("reports")}
                     >
-                      📈 Open Reports
+                      📈 {t("admin.actions_open_reports")}
                       <span className="cc-actSub">
-                        Trends + export
+                        {t("admin.actions_open_reports_sub")}
                       </span>
                     </button>
                   </div>
@@ -1063,10 +1130,10 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
               <div className="cc-cardHeadRow">
                 <div>
                   <div className="cc-cardTitle">
-                    Activity Timeline
+                    {t("admin.activity_title")}
                   </div>
                   <div className="cc-cardSub">
-                    Click any row to open the relevant section
+                    {t("admin.activity_sub")}
                   </div>
                 </div>
                 <button
@@ -1074,7 +1141,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   type="button"
                   onClick={() => setTab("appointments")}
                 >
-                  Go to management →
+                  {t("admin.activity_go_management")}
                 </button>
               </div>
 
@@ -1082,10 +1149,10 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                 <table className="cc-table">
                   <thead>
                     <tr>
-                      <th>Activity</th>
-                      <th>User</th>
-                      <th>Status</th>
-                      <th>Time</th>
+                      <th>{t("admin.col_activity")}</th>
+                      <th>{t("admin.col_user")}</th>
+                      <th>{t("admin.col_status")}</th>
+                      <th>{t("admin.col_time")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1112,15 +1179,16 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
           </div>
         )}
 
-        {/* PATIENTS */}
         {tab === "patients" && (
           <div className="cc-content">
             <section className="cc-card">
               <div className="cc-cardHeadRow">
                 <div>
-                  <div className="cc-cardTitle">Patients</div>
+                  <div className="cc-cardTitle">
+                    {t("admin.patients_title")}
+                  </div>
                   <div className="cc-cardSub">
-                    Filtered by the global search bar
+                    {t("admin.patients_sub")}
                   </div>
                 </div>
                 <button
@@ -1128,7 +1196,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   type="button"
                   onClick={() => setOpenAddPatient(true)}
                 >
-                  + Add patient
+                  {t("admin.patients_add")}
                 </button>
               </div>
 
@@ -1137,27 +1205,116 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Name</th>
+                      <th>{t("admin.col_name")}</th>
                       <th>Email</th>
-                      <th>Phone</th>
-                      <th>Created</th>
+                      <th>{t("admin.col_phone")}</th>
+                      <th>{t("admin.col_created")}</th>
+                      <th>{t("admin.col_actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPatients.map((p) => (
-                      <tr key={p.id} className="cc-tr">
-                        <td className="cc-mono">{p.id}</td>
-                        <td>{p.name}</td>
-                        <td className="cc-mono">{p.email}</td>
-                        <td className="cc-mono">{p.phone}</td>
-                        <td className="cc-mono">{p.createdAt}</td>
-                      </tr>
-                    ))}
+                    {filteredPatients.map((p) => {
+                      const isEditing = editingPatientId === p.id;
+                      const draft = isEditing ? editingPatientDraft : p;
+
+                      return (
+                        <tr key={p.id} className="cc-tr">
+                          <td className="cc-mono">{p.id}</td>
+                          <td>
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.name}
+                                onChange={(e) =>
+                                  setEditingPatientDraft((prev) => ({
+                                    ...prev,
+                                    name: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              p.name
+                            )}
+                          </td>
+                          <td className="cc-mono">
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.email}
+                                onChange={(e) =>
+                                  setEditingPatientDraft((prev) => ({
+                                    ...prev,
+                                    email: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              p.email
+                            )}
+                          </td>
+                          <td className="cc-mono">
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.phone}
+                                onChange={(e) =>
+                                  setEditingPatientDraft((prev) => ({
+                                    ...prev,
+                                    phone: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              p.phone
+                            )}
+                          </td>
+                          <td className="cc-mono">{p.createdAt}</td>
+                          <td>
+                            {isEditing ? (
+                              <div style={{ display: "flex", gap: 4 }}>
+                                <button
+                                  type="button"
+                                  className="cc-link"
+                                  onClick={saveEditPatient}
+                                >
+                                  {t("admin.save")}
+                                </button>
+                                <button
+                                  type="button"
+                                  className="cc-link cc-link-muted"
+                                  onClick={cancelEditPatient}
+                                >
+                                  {t("admin.cancel")}
+                                </button>
+                              </div>
+                            ) : (
+                              <div style={{ display: "flex", gap: 4 }}>
+                                                            <button
+                                type="button"
+                                className="cc-link"
+                                onClick={() => startEditPatient(p)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                className="cc-link cc-link-danger"
+                                onClick={() => handleDeletePatient(p.id)}
+                              >
+                                Delete
+                              </button>
+
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
                 {filteredPatients.length === 0 && (
                   <div className="cc-empty">
-                    No patients match your search.
+                    {t("admin.empty_patients")}
                   </div>
                 )}
               </div>
@@ -1165,15 +1322,16 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
           </div>
         )}
 
-        {/* DOCTORS */}
         {tab === "doctors" && (
           <div className="cc-content">
             <section className="cc-card">
               <div className="cc-cardHeadRow">
                 <div>
-                  <div className="cc-cardTitle">Doctors</div>
+                  <div className="cc-cardTitle">
+                    {t("admin.doctors_title")}
+                  </div>
                   <div className="cc-cardSub">
-                    Manage availability & specialties
+                    {t("admin.doctors_sub")}
                   </div>
                 </div>
                 <button
@@ -1181,7 +1339,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   type="button"
                   onClick={() => setOpenAddDoctor(true)}
                 >
-                  + Add doctor
+                  {t("admin.doctors_add")}
                 </button>
               </div>
 
@@ -1190,29 +1348,119 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Name</th>
-                      <th>Specialty</th>
-                      <th>Status</th>
-                      <th>Created</th>
+                      <th>{t("admin.col_name")}</th>
+                      <th>{t("admin.col_specialty")}</th>
+                      <th>{t("admin.col_status")}</th>
+                      <th>{t("admin.col_created")}</th>
+                      <th>{t("admin.col_actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredDoctors.map((d) => (
-                      <tr key={d.id} className="cc-tr">
-                        <td className="cc-mono">{d.id}</td>
-                        <td>{d.name}</td>
-                        <td>{d.specialty}</td>
-                        <td>
-                          <StatusPill status={d.status} />
-                        </td>
-                        <td className="cc-mono">{d.createdAt}</td>
-                      </tr>
-                    ))}
+                    {filteredDoctors.map((d) => {
+                      const isEditing = editingDoctorId === d.id;
+                      const draft = isEditing ? editingDoctorDraft : d;
+
+                      return (
+                        <tr key={d.id} className="cc-tr">
+                          <td className="cc-mono">{d.id}</td>
+                          <td>
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.name}
+                                onChange={(e) =>
+                                  setEditingDoctorDraft((prev) => ({
+                                    ...prev,
+                                    name: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              d.name
+                            )}
+                          </td>
+                          <td>
+                            {isEditing ? (
+                              <input
+                                className="cc-input-inline"
+                                value={draft.specialty}
+                                onChange={(e) =>
+                                  setEditingDoctorDraft((prev) => ({
+                                    ...prev,
+                                    specialty: e.target.value,
+                                  }))
+                                }
+                              />
+                            ) : (
+                              d.specialty
+                            )}
+                          </td>
+                          <td>
+                            {isEditing ? (
+                              <select
+                                className="cc-input-inline"
+                                value={draft.status}
+                                onChange={(e) =>
+                                  setEditingDoctorDraft((prev) => ({
+                                    ...prev,
+                                    status: e.target.value,
+                                  }))
+                                }
+                              >
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                              </select>
+                            ) : (
+                              <StatusPill status={d.status} />
+                            )}
+                          </td>
+                          <td className="cc-mono">{d.createdAt}</td>
+                          <td>
+                              {isEditing ? (
+                                <div style={{ display: "flex", gap: 4 }}>
+                                  <button
+                                    type="button"
+                                    className="cc-link"
+                                    onClick={saveEditDoctor}
+                                  >
+                                    {t("admin.save")}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="cc-link cc-link-muted"
+                                    onClick={cancelEditDoctor}
+                                  >
+                                    {t("admin.cancel")}
+                                  </button>
+                                </div>
+                              ) : (
+                                <div style={{ display: "flex", gap: 4 }}>
+                                  <button
+                                    type="button"
+                                    className="cc-link"
+                                    onClick={() => startEditDoctor(d)}
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="cc-link cc-link-danger"
+                                    onClick={() => handleDeleteDoctor(d.id)}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
                 {filteredDoctors.length === 0 && (
                   <div className="cc-empty">
-                    No doctors match your search.
+                    {t("admin.empty_doctors")}
                   </div>
                 )}
               </div>
@@ -1220,17 +1468,16 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
           </div>
         )}
 
-        {/* APPOINTMENTS */}
         {tab === "appointments" && (
           <div className="cc-content">
             <section className="cc-card">
               <div className="cc-cardHeadRow">
                 <div>
                   <div className="cc-cardTitle">
-                    Appointments Management
+                    {t("admin.appts_title")}
                   </div>
                   <div className="cc-cardSub">
-                    Update statuses directly (demo)
+                    {t("admin.appts_sub")}
                   </div>
                 </div>
                 <button
@@ -1238,7 +1485,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   type="button"
                   onClick={() => setOpenApprove(true)}
                 >
-                  Bulk approve
+                  {t("admin.appts_bulk")}
                 </button>
               </div>
 
@@ -1247,46 +1494,162 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Patient</th>
-                      <th>Doctor</th>
-                      <th>Time</th>
-                      <th>Status</th>
-                      <th>Action</th>
+                      <th>{t("admin.col_patient")}</th>
+                      <th>{t("admin.col_doctor")}</th>
+                      <th>{t("admin.col_time")}</th>
+                      <th>{t("admin.col_status")}</th>
+                      <th>{t("admin.col_actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredAppointments.map((a) => (
-                      <tr key={a.id} className="cc-tr">
-                        <td className="cc-mono">{a.id}</td>
-                        <td>{a.patient}</td>
-                        <td>{a.doctor}</td>
-                        <td className="cc-mono">{a.time}</td>
-                        <td>
-                          <StatusPill status={a.status} />
-                        </td>
-                        <td>
-                          <select
-                            className="cc-select"
-                            value={a.status}
-                            onChange={(e) =>
-                              handleChangeAppointmentStatus(
-                                a.id,
-                                e.target.value
-                              )
-                            }
-                          >
-                            <option>Pending</option>
-                            <option>Confirmed</option>
-                            <option>Cancelled</option>
-                          </select>
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredAppointments.map((a) => {
+  const isEditing = editingAppointmentId === a.id;
+  const draft = isEditing ? editingAppointmentDraft : a;
+  const s = String(a.status || "").toLowerCase();
+
+  return (
+    <tr
+      key={a.id}
+      className={
+        "cc-tr " +
+        (s === "cancelled"
+          ? "cc-row-bad"
+          : s === "pending"
+          ? "cc-row-warn"
+          : s === "confirmed"
+          ? "cc-row-ok"
+          : "")
+      }
+    >
+      <td className="cc-mono">{a.id}</td>
+      <td>
+        {isEditing ? (
+          <input
+            className="cc-input-inline"
+            value={draft.patient}
+            onChange={(e) =>
+              setEditingAppointmentDraft((prev) => ({
+                ...prev,
+                patient: e.target.value,
+              }))
+            }
+          />
+        ) : (
+          a.patient
+        )}
+      </td>
+      <td>
+        {isEditing ? (
+          <input
+            className="cc-input-inline"
+            value={draft.doctor}
+            onChange={(e) =>
+              setEditingAppointmentDraft((prev) => ({
+                ...prev,
+                doctor: e.target.value,
+              }))
+            }
+          />
+        ) : (
+          a.doctor
+        )}
+      </td>
+      <td className="cc-mono">
+        {isEditing ? (
+          <input
+            className="cc-input-inline"
+            value={draft.time}
+            onChange={(e) =>
+              setEditingAppointmentDraft((prev) => ({
+                ...prev,
+                time: e.target.value,
+              }))
+            }
+          />
+        ) : (
+          a.time
+        )}
+      </td>
+      <td>
+        {isEditing ? (
+          <select
+            className="cc-input-inline"
+            value={draft.status}
+            onChange={(e) =>
+              setEditingAppointmentDraft((prev) => ({
+                ...prev,
+                status: e.target.value,
+              }))
+            }
+          >
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Cancelled</option>
+          </select>
+        ) : (
+          <StatusPill status={a.status} />
+        )}
+      </td>
+      <td>
+        {isEditing ? (
+          <div style={{ display: "flex", gap: 4 }}>
+            <button
+              type="button"
+              className="cc-link"
+              onClick={saveEditAppointment}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="cc-link cc-link-muted"
+              onClick={cancelEditAppointment}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: 4 }}>
+            <button
+              type="button"
+              className="cc-link"
+              onClick={() => startEditAppointment(a)}
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              className="cc-link cc-link-danger"
+              onClick={() => handleDeleteAppointment(a.id)}
+            >
+              Delete
+            </button>
+            <select
+              className="cc-select"
+              value={a.status}
+              onChange={(e) =>
+                handleChangeAppointmentStatus(
+                  a.id,
+                  e.target.value
+                )
+              }
+            >
+              <option>Pending</option>
+              <option>Confirmed</option>
+              <option>Cancelled</option>
+            </select>
+          </div>
+        )}
+      </td>
+    </tr>
+  );
+})}
+
                   </tbody>
                 </table>
                 {filteredAppointments.length === 0 && (
                   <div className="cc-empty">
-                    No appointments match your search.
+                    {t("admin.empty_appts")}
                   </div>
                 )}
               </div>
@@ -1294,7 +1657,6 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
           </div>
         )}
 
-        {/* REPORTS */}
         {tab === "reports" && (
           <ReportsPanel
             timeMode={timeMode}
@@ -1305,10 +1667,9 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
         )}
       </main>
 
-      {/* MODALS */}
       <Modal
         open={openAddPatient}
-        title="Add new patient"
+        title={t("admin.modal_add_patient_title")}
         onClose={() => setOpenAddPatient(false)}
       >
         <AddPatientForm
@@ -1319,7 +1680,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
 
       <Modal
         open={openAddDoctor}
-        title="Add new doctor"
+        title={t("admin.modal_add_doctor_title")}
         onClose={() => setOpenAddDoctor(false)}
       >
         <AddDoctorForm
@@ -1330,16 +1691,16 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
 
       <Modal
         open={openApprove}
-        title="Review pending approvals"
+        title={t("admin.modal_approve_title")}
         onClose={() => setOpenApprove(false)}
       >
         <div className="cc-approve">
           <div className="cc-approveBox">
             <div className="cc-approveTitle">
-              What will be approved?
+              {t("admin.modal_approve_what")}
             </div>
             <div className="cc-approveLine">
-              Pending appointments:{" "}
+              {t("admin.modal_approve_pending")}{" "}
               <b>
                 {
                   appointments.filter(
@@ -1350,7 +1711,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
               </b>
             </div>
             <div className="cc-approveLine">
-              Inactive doctors:{" "}
+              {t("admin.modal_approve_inactive")}{" "}
               <b>
                 {
                   doctors.filter(
@@ -1361,7 +1722,7 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
               </b>
             </div>
             <div className="cc-approveNote">
-              Demo bulk action for “control room” feel.
+              {t("admin.modal_approve_note")}
             </div>
           </div>
 
@@ -1371,14 +1732,14 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
               type="button"
               onClick={() => setOpenApprove(false)}
             >
-              Cancel
+              {t("admin.modal_cancel")}
             </button>
             <button
               className="cc-btn"
               type="button"
               onClick={approveAllPending}
             >
-              Approve all
+              {t("admin.modal_approve_all")}
             </button>
           </div>
         </div>
@@ -1387,12 +1748,10 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
   );
 }
 
-/* ===========================
-   REPORTS (Area + Line)
-   =========================== */
 function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
-  const [range, setRange] = React.useState("last7"); // last7 | last30 | custom
-  const [focus, setFocus] = React.useState("summary"); // summary | pending
+  const { t } = useTranslation();
+  const [range, setRange] = React.useState("last7");
+  const [focus, setFocus] = React.useState("summary");
 
   const total = Math.max(1, appointments.length);
   const cancelled = appointments.filter(
@@ -1417,8 +1776,7 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
       { day: "Fri", appointments: 21, pending: 6 },
     ];
 
-    const k =
-      timeMode === "past" ? 0.85 : timeMode === "future" ? 1.22 : 1.0;
+    const k = timeMode === "past" ? 0.85 : timeMode === "future" ? 1.22 : 1.0;
     const bump = timeMode === "future" ? 2 : timeMode === "past" ? -1 : 0;
 
     return base.map((d) => ({
@@ -1426,7 +1784,9 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
       appointments: Math.max(0, Math.round(d.appointments * k)),
       pending: Math.max(
         0,
-        Math.round(d.pending + bump * (timeMode === "future" ? 1.15 : 1))
+        Math.round(
+          d.pending + bump * (timeMode === "future" ? 1.15 : 1)
+        )
       ),
     }));
   }, [timeMode]);
@@ -1473,8 +1833,12 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
       <section className="cc-card">
         <div className="cc-cardHeadRow">
           <div>
-            <div className="cc-cardTitle">Reports</div>
-            <div className="cc-cardSub">KPIs & Trends · Drilldown · Export</div>
+            <div className="cc-cardTitle">
+              {t("admin.reports_title")}
+            </div>
+            <div className="cc-cardSub">
+              {t("admin.reports_sub")}
+            </div>
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
             <select
@@ -1482,64 +1846,85 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
               value={range}
               onChange={(e) => setRange(e.target.value)}
             >
-              <option value="last7">Last 7 days</option>
-              <option value="last30">Last 30 days</option>
-              <option value="custom">Custom demo</option>
+              <option value="last7">
+                {t("admin.reports_range_7")}
+              </option>
+              <option value="last30">
+                {t("admin.reports_range_30")}
+              </option>
+              <option value="custom">
+                {t("admin.reports_range_custom")}
+              </option>
             </select>
             <button
               className="cc-btn ghost"
               type="button"
               onClick={exportCSV}
             >
-              Export CSV
+              {t("admin.reports_export")}
             </button>
           </div>
         </div>
 
         <div className="cc-grid4" style={{ marginTop: 12 }}>
           <article className="cc-card cc-stat cc-tone-blue" style={{ padding: 12 }}>
-            <div className="cc-muted">Total appointments</div>
+            <div className="cc-muted">
+              {t("admin.reports_kpi_total")}
+            </div>
             <div className="cc-statValue">{total}</div>
             <button
               className="cc-link"
               type="button"
               onClick={() => setFocus("summary")}
             >
-              Summary
+              {t("admin.reports_kpi_summary")}
             </button>
           </article>
 
           <article className="cc-card cc-stat cc-tone-amber" style={{ padding: 12 }}>
-            <div className="cc-muted">Pending</div>
+            <div className="cc-muted">
+              {t("admin.reports_kpi_pending")}
+            </div>
             <div className="cc-statValue">{pending}</div>
             <button
               className="cc-link"
               type="button"
               onClick={() => setFocus("pending")}
             >
-              Drilldown
+              {t("admin.reports_kpi_drilldown")}
             </button>
           </article>
 
           <article className="cc-card cc-stat cc-tone-green" style={{ padding: 12 }}>
-            <div className="cc-muted">Confirmed</div>
+            <div className="cc-muted">
+              {t("admin.reports_kpi_confirmed")}
+            </div>
             <div className="cc-statValue">{confirmed}</div>
-            <div className="cc-cardSub">Throughput</div>
+            <div className="cc-cardSub">
+              {t("admin.reports_kpi_confirmed_sub")}
+            </div>
           </article>
 
           <article className="cc-card cc-stat cc-tone-violet" style={{ padding: 12 }}>
-            <div className="cc-muted">No-show / cancellation rate</div>
+            <div className="cc-muted">
+              {t("admin.reports_kpi_no_show")}
+            </div>
             <div className="cc-statValue">{noShowRate}%</div>
-            <div className="cc-cardSub">Cancelled total demo</div>
+            <div className="cc-cardSub">
+              {t("admin.reports_kpi_no_show_sub")}
+            </div>
           </article>
         </div>
       </section>
 
-      {/* Charts row */}
       <section className="cc-grid2">
         <article className="cc-card">
-          <div className="cc-cardTitle">Appointments Trend</div>
-          <div className="cc-cardSub">7-day trend demo · {frame.label}</div>
+          <div className="cc-cardTitle">
+            {t("admin.reports_trend_title")}
+          </div>
+          <div className="cc-cardSub">
+            {t("admin.reports_trend_sub", { label: frame.label })}
+          </div>
           <div style={{ width: "100%", height: 280, marginTop: 10 }}>
             <ResponsiveContainer>
               <AreaChart data={trend}>
@@ -1570,8 +1955,12 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
         </article>
 
         <article className="cc-card">
-          <div className="cc-cardTitle">Pending Load</div>
-          <div className="cc-cardSub">Pending per day demo · {frame.label}</div>
+          <div className="cc-cardTitle">
+            {t("admin.reports_pending_title")}
+          </div>
+          <div className="cc-cardSub">
+            {t("admin.reports_pending_sub", { label: frame.label })}
+          </div>
           <div style={{ width: "100%", height: 280, marginTop: 10 }}>
             <ResponsiveContainer>
               <LineChart data={trend}>
@@ -1602,13 +1991,16 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
         </article>
       </section>
 
-      {/* Pending drilldown */}
       {focus === "pending" && (
         <section className="cc-card">
           <div className="cc-cardHeadRow">
             <div>
-              <div className="cc-cardTitle">Pending appointments · Drilldown</div>
-              <div className="cc-cardSub">Resolve them in management</div>
+              <div className="cc-cardTitle">
+                {t("admin.reports_pending_drill")}
+              </div>
+              <div className="cc-cardSub">
+                {t("admin.reports_pending_drill_sub")}
+              </div>
             </div>
             <div>
               <button
@@ -1616,7 +2008,7 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
                 type="button"
                 onClick={onGoAppointments}
               >
-                Go to management
+                {t("admin.reports_go_mgmt")}
               </button>
             </div>
           </div>
@@ -1626,10 +2018,10 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Patient</th>
-                  <th>Doctor</th>
-                  <th>Time</th>
-                  <th>Status</th>
+                  <th>{t("admin.col_patient")}</th>
+                  <th>{t("admin.col_doctor")}</th>
+                  <th>{t("admin.col_time")}</th>
+                  <th>{t("admin.col_status")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -1655,33 +2047,42 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
         </section>
       )}
 
-      {/* Summary view */}
       {focus === "summary" && (
         <section className="cc-card">
           <div className="cc-cardHeadRow">
             <div>
-              <div className="cc-cardTitle">Summary</div>
+              <div className="cc-cardTitle">
+                {t("admin.reports_summary_title")}
+              </div>
               <div className="cc-cardSub">
-                Quick overview of appointment statistics.
+                {t("admin.reports_summary_sub")}
               </div>
             </div>
           </div>
 
           <div className="cc-grid4" style={{ marginTop: 12 }}>
             <div>
-              <div className="cc-muted">Total appointments</div>
+              <div className="cc-muted">
+                {t("admin.reports_kpi_total")}
+              </div>
               <div className="cc-statValue">{total}</div>
             </div>
             <div>
-              <div className="cc-muted">Confirmed</div>
+              <div className="cc-muted">
+                {t("admin.reports_kpi_confirmed")}
+              </div>
               <div className="cc-statValue">{confirmed}</div>
             </div>
             <div>
-              <div className="cc-muted">Pending</div>
+              <div className="cc-muted">
+                {t("admin.reports_kpi_pending")}
+              </div>
               <div className="cc-statValue">{pending}</div>
             </div>
             <div>
-              <div className="cc-muted">Cancelled / No-show</div>
+              <div className="cc-muted">
+                {t("admin.reports_kpi_cancelled")}
+              </div>
               <div className="cc-statValue">{cancelled}</div>
             </div>
           </div>
@@ -1691,11 +2092,8 @@ function ReportsPanel({ timeMode, frame, appointments, onGoAppointments }) {
   );
 }
 
-/* ===========================
-   Forms
-   =========================== */
-
 function AddPatientForm({ onSubmit, onCancel }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -1715,12 +2113,14 @@ function AddPatientForm({ onSubmit, onCancel }) {
         });
       }}
     >
-      <label className="cc-label">Name</label>
+      <label className="cc-label">
+        {t("admin.form_name")}
+      </label>
       <input
         className="cc-input"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="e.g. Sara Mohamed"
+        placeholder={t("admin.form_name_ph")}
       />
 
       <label className="cc-label">Email</label>
@@ -1728,15 +2128,17 @@ function AddPatientForm({ onSubmit, onCancel }) {
         className="cc-input"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="e.g. sara@mail.com"
+        placeholder={t("admin.form_email_ph")}
       />
 
-      <label className="cc-label">Phone</label>
+      <label className="cc-label">
+        {t("admin.form_phone")}
+      </label>
       <input
         className="cc-input"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
-        placeholder="e.g. 0100..."
+        placeholder={t("admin.form_phone_ph")}
       />
 
       <div className="cc-rowBtns">
@@ -1745,10 +2147,10 @@ function AddPatientForm({ onSubmit, onCancel }) {
           type="button"
           onClick={onCancel}
         >
-          Cancel
+          {t("admin.modal_cancel")}
         </button>
         <button className="cc-btn" type="submit" disabled={!can}>
-          Add patient
+          {t("admin.patients_add")}
         </button>
       </div>
     </form>
@@ -1756,6 +2158,7 @@ function AddPatientForm({ onSubmit, onCancel }) {
 }
 
 function AddDoctorForm({ onSubmit, onCancel }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState("");
 
@@ -1773,20 +2176,24 @@ function AddDoctorForm({ onSubmit, onCancel }) {
         });
       }}
     >
-      <label className="cc-label">Name</label>
+      <label className="cc-label">
+        {t("admin.form_name")}
+      </label>
       <input
         className="cc-input"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="e.g. Dr. Ahmed Hassan"
+        placeholder={t("admin.form_doctor_name_ph")}
       />
 
-      <label className="cc-label">Specialty</label>
+      <label className="cc-label">
+        {t("admin.form_specialty")}
+      </label>
       <input
         className="cc-input"
         value={specialty}
         onChange={(e) => setSpecialty(e.target.value)}
-        placeholder="e.g. Cardiology"
+        placeholder={t("admin.form_specialty_ph")}
       />
 
       <div className="cc-rowBtns">
@@ -1795,10 +2202,10 @@ function AddDoctorForm({ onSubmit, onCancel }) {
           type="button"
           onClick={onCancel}
         >
-          Cancel
+          {t("admin.modal_cancel")}
         </button>
         <button className="cc-btn" type="submit" disabled={!can}>
-          Add doctor
+          {t("admin.doctors_add")}
         </button>
       </div>
     </form>

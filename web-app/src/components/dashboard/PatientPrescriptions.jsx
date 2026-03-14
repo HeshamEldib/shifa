@@ -1,32 +1,49 @@
 // src/components/PatientPrescriptions.jsx
 import React, { useMemo, useState } from "react";
 import "./PatientPrescriptions.css";
+import { useTranslation } from "react-i18next";
 
-function fakeAiExplain(medicine) {
+function fakeAiExplain(medicine, t) {
   const name = (medicine?.name || "").toLowerCase();
   if (name.includes("paracetamol")) {
-    return "Pain/fever relief. Avoid taking more than the recommended total daily dose.";
+    return t("patientPrescriptions.ai_paracetamol");
   }
   if (name.includes("ors")) {
-    return "Oral rehydration salts help replace fluids and electrolytes during diarrhea/vomiting.";
+    return t("patientPrescriptions.ai_ors");
   }
-  return "Use as prescribed. If you feel side effects, contact your doctor/pharmacist.";
+  return t("patientPrescriptions.ai_default");
 }
 
 export default function PatientPrescriptions({ patient, prescriptions, onBack }) {
-  const [selectedId, setSelectedId] = useState(prescriptions?.[0]?.id || null);
-  const selected = useMemo(
-    () => prescriptions.find((p) => p.id === selectedId) || prescriptions[0] || null,
-    [prescriptions, selectedId]
+  const { t } = useTranslation();
+
+  // لو مفيش روشتات خالص
+  const hasPrescriptions = Array.isArray(prescriptions) && prescriptions.length > 0;
+
+  const [selectedId, setSelectedId] = useState(
+    hasPrescriptions ? prescriptions[0].id : null
   );
 
-  // ===== Adherence state =====
-  const [takenCount, setTakenCount] = useState(0);
-  const meds = selected?.medicines || [];
-  const totalDosesDemo = Math.max(meds.length * 3, 1);
-  const adherencePct = Math.min(100, Math.round((takenCount / totalDosesDemo) * 100));
+  const selected = useMemo(() => {
+    if (!hasPrescriptions) return null;
+    return (
+      prescriptions.find((p) => p.id === selectedId) ||
+      prescriptions[0] ||
+      null
+    );
+  }, [hasPrescriptions, prescriptions, selectedId]);
 
-  // ===== Panels state (بدل alerts) =====
+  const meds = selected?.medicines || [];
+
+  // adherence demo (يقدر الباك بعدين يبعت قيم جاهزة لو حابب)
+  const [takenCount, setTakenCount] = useState(0);
+  const totalDosesDemo = Math.max(meds.length * 3, 1);
+  const adherencePct = Math.min(
+    100,
+    Math.round((takenCount / totalDosesDemo) * 100)
+  );
+
+  // panels state
   const [showReminderPanel, setShowReminderPanel] = useState(false);
   const [reminderChannel, setReminderChannel] = useState("app");
   const [reminderTime, setReminderTime] = useState("08:00");
@@ -44,29 +61,41 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
     setShowQrPanel(false);
   };
 
-  const handleDownloadPdf = () => {
-    // بدل alert، نظهر ملخص تحت الهيدر
+  // جاهز للباك: مجرد trigger، الباك يعمل generate PDF ويرجع link لو حابب
+  const handleDownloadPdf = async () => {
     if (!selected) return;
-    setDownloadInfo(
-      `PDF ready for prescription ${selected.id} (${new Date(
-        selected.createdAt
-      ).toLocaleDateString()}). This will later trigger a real file download.`
-    );
+    try {
+      // مثال فقط – انت تشبّكه بالـ endpoint الفعلي عندك
+      // const res = await fetch(`/api/patient/prescriptions/${selected.id}/pdf`, { method: "POST" });
+      // const data = await res.json();
+
+      setDownloadInfo(
+        t("patientPrescriptions.pdf_ready", {
+          id: selected.id,
+          date: selected.createdAt
+            ? new Date(selected.createdAt).toLocaleDateString()
+            : "",
+        })
+      );
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleReminderSave = (e) => {
     e.preventDefault();
-    // هنا نعتبر إننا خزّنّا إعدادات الريمايندر في النظام
+    // هنا الباك يقدر ياخد reminderChannel + reminderTime لو حابب
     setShowReminderPanel(false);
   };
 
   const handleRefillSave = (e) => {
     e.preventDefault();
+    // هنا الباك يقدر ياخد refillNotes ويخزنها
     setShowRefillPanel(false);
   };
 
   const handleGenerateQr = () => {
-    // نفتح Panel يعرض QR info (حاليًا نص، لاحقًا QR حقيقي)
+    // جاهز إنك تشبكه بـ endpoint يرجّع QR image / data
     setShowQrPanel(true);
   };
 
@@ -80,42 +109,52 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
   return (
     <div className="pp-shell">
       <button className="pp-back" onClick={onBack} type="button">
-        ← Back
+        ← {t("patientPrescriptions.back")}
       </button>
 
       <div className="pp-title-row">
-        <h2 className="pp-title">Patient Medication Hub</h2>
+        <h2 className="pp-title">{t("patientPrescriptions.title")}</h2>
         <div className="pp-sub">
-          Patient: {patient?.name} · ID {patient?.id}
+          {t("patientPrescriptions.patient_label", {
+            name: patient?.name || "—",
+            id: patient?.id || "—",
+          })}
         </div>
       </div>
 
       {downloadInfo && (
-        <div className="pp-download-info">
-          {downloadInfo}
-        </div>
+        <div className="pp-download-info">{downloadInfo}</div>
       )}
 
       <div className="pp-main">
         {/* Left: timeline/list */}
         <div className="pp-left">
-          <div className="pp-left-title">💊 Prescription timeline</div>
+          <div className="pp-left-title">
+            💊 {t("patientPrescriptions.timeline_title")}
+          </div>
           <div className="pp-list">
-            {prescriptions.length === 0 ? (
+            {!hasPrescriptions ? (
               <div className="pp-empty">
-                No prescriptions yet. Ask your doctor to issue one.
+                {t("patientPrescriptions.no_prescriptions")}
               </div>
             ) : (
               prescriptions.map((p) => (
                 <button
                   key={p.id}
                   type="button"
-                  className={p.id === selected?.id ? "pp-item is-active" : "pp-item"}
+                  className={
+                    selected && p.id === selected.id
+                      ? "pp-item is-active"
+                      : "pp-item"
+                  }
                   onClick={() => handleChangePrescription(p.id)}
                 >
                   <div className="pp-item-id">{p.id}</div>
                   <div className="pp-item-meta">
-                    {new Date(p.createdAt).toLocaleString()} · {p.status}
+                    {p.createdAt
+                      ? new Date(p.createdAt).toLocaleString()
+                      : "—"}{" "}
+                    · {p.status || "—"}
                   </div>
                 </button>
               ))
@@ -128,7 +167,9 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
           {/* Header + actions */}
           <div className="pp-right-head">
             <div>
-              <div className="pp-right-label">Selected prescription</div>
+              <div className="pp-right-label">
+                {t("patientPrescriptions.selected_prescription")}
+              </div>
               <div className="pp-right-id">{selected?.id || "—"}</div>
             </div>
 
@@ -138,7 +179,7 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
                 className="pp-chip-btn"
                 onClick={handleDownloadPdf}
               >
-                📄 Download as PDF
+                📄 {t("patientPrescriptions.download_pdf")}
               </button>
               <button
                 type="button"
@@ -148,7 +189,7 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
                   setShowReminderPanel(true);
                 }}
               >
-                🔔 Reminder integration
+                🔔 {t("patientPrescriptions.reminder_integration")}
               </button>
             </div>
           </div>
@@ -156,9 +197,15 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
           {/* QR + Refill */}
           <div className="pp-row-2">
             <div className="pp-card">
-              <div className="pp-card-title">📱 QR for pharmacy</div>
+              <div className="pp-card-title">
+                📱 {t("patientPrescriptions.qr_title")}
+              </div>
               <div className="pp-qr-box">QR (demo)</div>
-              <div className="pp-qr-meta">ID: {selected?.id || "—"}</div>
+              <div className="pp-qr-meta">
+                {t("patientPrescriptions.qr_id", {
+                  id: selected?.id || "—",
+                })}
+              </div>
               <button
                 type="button"
                 className="pp-chip-btn"
@@ -168,14 +215,16 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
                   handleGenerateQr();
                 }}
               >
-                Show QR details
+                {t("patientPrescriptions.show_qr_details")}
               </button>
             </div>
 
             <div className="pp-card">
-              <div className="pp-card-title">📦 Smart refill tracker</div>
+              <div className="pp-card-title">
+                📦 {t("patientPrescriptions.refill_title")}
+              </div>
               <div style={{ fontSize: 13, color: "#9ca3af" }}>
-                Track remaining doses and refill dates per medicine.
+                {t("patientPrescriptions.refill_desc")}
               </div>
               <div style={{ height: 10 }} />
               <button
@@ -186,7 +235,7 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
                   setShowRefillPanel(true);
                 }}
               >
-                Open tracker
+                {t("patientPrescriptions.open_tracker")}
               </button>
             </div>
           </div>
@@ -195,19 +244,27 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
           <div className="pp-row-3">
             <div className="pp-card">
               <div className="pp-card-strong-title">
-                🧠 Medicines & AI explanation
+                🧠 {t("patientPrescriptions.meds_ai_title")}
               </div>
               {meds.length === 0 ? (
-                <div className="pp-empty">No medicines in this prescription.</div>
+                <div className="pp-empty">
+                  {t("patientPrescriptions.no_medicines")}
+                </div>
               ) : (
                 meds.map((m, idx) => (
                   <div key={idx} className="pp-med-item">
                     <div className="pp-med-head">
                       {m.name}{" "}
-                      <span className="pp-med-dose">— {m.dose || "—"}</span>
+                      <span className="pp-med-dose">
+                        — {m.dose || "—"}
+                      </span>
                     </div>
-                    <div className="pp-med-note">{m.note || "—"}</div>
-                    <div className="pp-med-ai">{fakeAiExplain(m)}</div>
+                    <div className="pp-med-note">
+                      {m.note || "—"}
+                    </div>
+                    <div className="pp-med-ai">
+                      {fakeAiExplain(m, t)}
+                    </div>
                   </div>
                 ))
               )}
@@ -218,10 +275,14 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
           <div className="pp-row-4">
             <div className="pp-card">
               <div className="pp-card-strong-title">
-                📊 Adherence progress
+                📊 {t("patientPrescriptions.adherence_title")}
               </div>
               <div className="pp-adherence-text">
-                {takenCount} / {totalDosesDemo} doses tracked · {adherencePct}%
+                {t("patientPrescriptions.adherence_text", {
+                  taken: takenCount,
+                  total: totalDosesDemo,
+                  pct: adherencePct,
+                })}
               </div>
               <div className="pp-adherence-bar-wrap">
                 <div
@@ -234,50 +295,79 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
                   type="button"
                   className="pp-adherence-btn"
                   onClick={() =>
-                    setTakenCount((c) => Math.min(totalDosesDemo, c + 1))
+                    setTakenCount((c) =>
+                      Math.min(totalDosesDemo, c + 1)
+                    )
                   }
                 >
-                  Mark dose taken
+                  {t("patientPrescriptions.mark_taken")}
                 </button>
                 <button
                   type="button"
                   className="pp-adherence-btn"
                   onClick={() => setTakenCount(0)}
                 >
-                  Reset
+                  {t("patientPrescriptions.reset")}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* ===== Inline panels تحت الهب ===== */}
+          {/* Panels */}
           <div className="pp-panels">
             {showReminderPanel && (
               <div className="pp-panelCard">
-                <h4>Reminder integration</h4>
+                <h4>
+                  {t(
+                    "patientPrescriptions.reminder_panel_title"
+                  )}
+                </h4>
                 <p>
-                  Choose how and when you would like to receive reminders
-                  for this prescription.
+                  {t(
+                    "patientPrescriptions.reminder_panel_desc"
+                  )}
                 </p>
                 <form onSubmit={handleReminderSave}>
                   <div className="pp-panel-grid">
                     <div className="pp-field">
-                      <label>Channel</label>
+                      <label>
+                        {t("patientPrescriptions.channel")}
+                      </label>
                       <select
                         value={reminderChannel}
-                        onChange={(e) => setReminderChannel(e.target.value)}
+                        onChange={(e) =>
+                          setReminderChannel(e.target.value)
+                        }
                       >
-                        <option value="app">In‑app only</option>
-                        <option value="sms">SMS</option>
-                        <option value="whatsapp">WhatsApp</option>
+                        <option value="app">
+                          {t(
+                            "patientPrescriptions.channel_app"
+                          )}
+                        </option>
+                        <option value="sms">
+                          {t(
+                            "patientPrescriptions.channel_sms"
+                          )}
+                        </option>
+                        <option value="whatsapp">
+                          {t(
+                            "patientPrescriptions.channel_whatsapp"
+                          )}
+                        </option>
                       </select>
                     </div>
                     <div className="pp-field">
-                      <label>First reminder time</label>
+                      <label>
+                        {t(
+                          "patientPrescriptions.first_reminder_time"
+                        )}
+                      </label>
                       <input
                         type="time"
                         value={reminderTime}
-                        onChange={(e) => setReminderTime(e.target.value)}
+                        onChange={(e) =>
+                          setReminderTime(e.target.value)
+                        }
                       />
                     </div>
                   </div>
@@ -285,12 +375,19 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
                     <button
                       type="button"
                       className="pp-adherence-btn"
-                      onClick={() => setShowReminderPanel(false)}
+                      onClick={() =>
+                        setShowReminderPanel(false)
+                      }
                     >
-                      Close
+                      {t("patientPrescriptions.close")}
                     </button>
-                    <button type="submit" className="pp-adherence-btn">
-                      Save reminders
+                    <button
+                      type="submit"
+                      className="pp-adherence-btn"
+                    >
+                      {t(
+                        "patientPrescriptions.save_reminders"
+                      )}
                     </button>
                   </div>
                 </form>
@@ -299,31 +396,49 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
 
             {showRefillPanel && (
               <div className="pp-panelCard">
-                <h4>Smart refill tracker</h4>
+                <h4>
+                  {t(
+                    "patientPrescriptions.refill_panel_title"
+                  )}
+                </h4>
                 <p>
-                  Add a note about when you expect to run out of your
-                  medicines or when to refill.
+                  {t(
+                    "patientPrescriptions.refill_panel_desc"
+                  )}
                 </p>
                 <form onSubmit={handleRefillSave}>
                   <div className="pp-field">
-                    <label>Refill notes</label>
+                    <label>
+                      {t("patientPrescriptions.refill_notes")}
+                    </label>
                     <textarea
                       rows={3}
                       value={refillNotes}
-                      onChange={(e) => setRefillNotes(e.target.value)}
-                      placeholder="e.g. Refill Paracetamol around 1 March."
+                      onChange={(e) =>
+                        setRefillNotes(e.target.value)
+                      }
+                      placeholder={t(
+                        "patientPrescriptions.refill_placeholder"
+                      )}
                     />
                   </div>
                   <div className="pp-panel-actions">
                     <button
                       type="button"
                       className="pp-adherence-btn"
-                      onClick={() => setShowRefillPanel(false)}
+                      onClick={() =>
+                        setShowRefillPanel(false)
+                      }
                     >
-                      Close
+                      {t("patientPrescriptions.close")}
                     </button>
-                    <button type="submit" className="pp-adherence-btn">
-                      Save tracker note
+                    <button
+                      type="submit"
+                      className="pp-adherence-btn"
+                    >
+                      {t(
+                        "patientPrescriptions.save_refill_note"
+                      )}
                     </button>
                   </div>
                 </form>
@@ -332,15 +447,19 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
 
             {showQrPanel && (
               <div className="pp-panelCard">
-                <h4>QR for pharmacy</h4>
+                <h4>
+                  {t("patientPrescriptions.qr_panel_title")}
+                </h4>
                 <p>
-                  This QR code represents prescription ID{" "}
-                  <strong>{selected?.id || "—"}</strong>. In the real
-                  system, the pharmacy will scan it to fetch the
-                  prescription details.
+                  {t("patientPrescriptions.qr_panel_desc", {
+                    id: selected?.id || "—",
+                  })}
                 </p>
-                <div className="pp-qr-box" style={{ marginTop: 8 }}>
-                  QR preview
+                <div
+                  className="pp-qr-box"
+                  style={{ marginTop: 8 }}
+                >
+                  {t("patientPrescriptions.qr_preview")}
                 </div>
                 <div className="pp-panel-actions">
                   <button
@@ -348,7 +467,7 @@ export default function PatientPrescriptions({ patient, prescriptions, onBack })
                     className="pp-adherence-btn"
                     onClick={() => setShowQrPanel(false)}
                   >
-                    Close
+                    {t("patientPrescriptions.close")}
                   </button>
                 </div>
               </div>

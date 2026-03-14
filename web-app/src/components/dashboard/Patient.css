@@ -1,8 +1,6 @@
-
-
 /* =============== أساسيات =============== */
 :root{
-  --bg0:#020617;          /* خلفية أساسية أغمق */
+  --bg0:#020617;
   --txt:#EAF0FF;
   --muted: rgba(234,240,255,.72);
   --muted2: rgba(234,240,255,.55);
@@ -40,7 +38,7 @@ body{
   min-height:100vh;
   position:relative;
   overflow-x:hidden;
-  --gradIntensity: .78;   /* أغمق من قبل */
+  --gradIntensity: .78;
 }
 
 .pj-root::before{
@@ -54,7 +52,7 @@ body{
   animation: pjGrad 16s ease-in-out infinite;
 }
 
-/* صباح / نهار / ليل أغمق */
+/* صباح / نهار / ليل */
 .theme-morning::before{
   background-image:
     radial-gradient(circle at 0% 10%, rgba(250,204,21,0.7), transparent 58%),
@@ -79,8 +77,7 @@ body{
 
 /* =============== Top Nav + More =============== */
 .pj-nav-header{
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 60;
   background: rgba(15,23,42,0.9);
   border-bottom: 1px solid rgba(234,240,255,.14);
@@ -143,7 +140,7 @@ body{
   padding-right: 20px;
 }
 
-/* منيو More (تظهر على hover أو focus-within) */
+/* منيو More */
 .pj-moreMenu{
   position: absolute;
   right: 0;
@@ -186,7 +183,7 @@ body{
 /* =============== mini nav اللي تحت =============== */
 .pj-nav{
   position:sticky;
-  top: 52px;
+  top: 0;
   z-index:50;
   background: rgba(15,23,42,0.75);
   border-bottom: 1px solid rgba(234,240,255,.10);
@@ -259,7 +256,7 @@ body{
   padding-top: 2px;
 }
 
-/* =============== Tooltips للأيقونات =============== */
+/* زر الأيقونة الدائري */
 .pj-icon{
   position:relative;
   border:none;
@@ -269,6 +266,10 @@ body{
   height: 40px;
   border-radius: 999px;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: 0 6px 18px rgba(0,0,0,.55);
   transition: transform .16s ease, background .16s ease;
 }
 .pj-icon:hover{
@@ -279,29 +280,16 @@ body{
   outline: 2px solid rgba(34,211,238,.55);
   outline-offset: 3px;
 }
-
-.pj-glyph{ font-size: 18px; display:inline-block; }
-
-.pj-tooltip{
-  position:absolute;
-  left: 50%;
-  top: calc(100% + 10px);
-  transform: translateX(-50%);
-  background: rgba(15,23,42,.98);
-  border: 1px solid rgba(234,240,255,.14);
-  padding: 8px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  color: var(--txt);
-  white-space: nowrap;
-  opacity:0;
-  pointer-events:none;
-  transition: opacity .12s ease;
+.pj-icon.pj-blue{
+  background: radial-gradient(circle at 30% 0, rgba(96,165,250,.85), rgba(15,23,42,.95));
 }
-.pj-icon:hover .pj-tooltip,
-.pj-icon:focus .pj-tooltip{
-  opacity:1;
-  pointer-events:auto;
+.pj-icon.pj-aqua{
+  background: radial-gradient(circle at 30% 0, rgba(45,212,191,.85), rgba(15,23,42,.95));
+}
+.pj-glyph{
+  font-size: 19px;
+  line-height: 1;
+  display:inline-block;
 }
 
 /* =============== Today timeline =============== */
@@ -479,12 +467,19 @@ body{
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   color: var(--txt);
-  font-size: 20px;
   cursor:pointer;
   box-shadow: var(--shadow);
-  transition: transform .15s ease;
+  transition: transform .15s ease, background .15s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 22px;
+  line-height: 1;
 }
-.pj-fab:hover{ transform: translateY(-2px); }
+.pj-fab:hover{
+  transform: translateY(-2px);
+  background: rgba(15,23,42,1);
+}
 
 /* =============== Right Panel =============== */
 .pj-backdrop{
@@ -633,9 +628,38 @@ body{
 .pj-footerHint{ opacity: .9; }
 
 /* =============== موبايل =============== */
+@media (max-width: 768px){
+  .pj-navInner{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pj-navLinks{
+    width: 100%;
+    justify-content: flex-start;
+    row-gap: 6px;
+  }
+  .pj-heroInner,
+  .pj-main{
+    padding-inline: 14px;
+  }
+  .pj-heroTop{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 @media (max-width: 560px){
   .pj-h1{ font-size: 24px; }
   .pj-row{ flex-direction:column; gap:4px; }
   .pj-rowTime{ min-width: auto; }
-  .pj-nav{ top: 58px; }
+  .pj-navTabs{
+    gap: 6px;
+  }
+  .pj-navTabs a{
+    padding-inline: 8px;
+  }
+  .pj-fab{
+    right: 14px;
+    bottom: 14px;
+  }
 }

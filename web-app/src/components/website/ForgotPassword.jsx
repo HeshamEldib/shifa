@@ -1,11 +1,15 @@
+// src/components/website/ForgotPassword.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./ForgotPass.css";
 
 function isValidEmail(v) {
   return /^\S+@\S+\.\S+$/.test(String(v || "").trim());
 }
 
-function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
+function ForgotPassword({ isLoaded, role = "patient", onDone }) {
+  const { t } = useTranslation();
+
   const [email, setEmail] = useState("");
   const [phase, setPhase] = useState("typing"); // typing | sending | done
   const [hint, setHint] = useState("you@");
@@ -17,44 +21,34 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
 
   const roleLine = useMemo(() => {
     const map = {
-      patient: "Let’s get you back—quietly and safely.",
-      doctor: "We’ll secure your access so you can get back to care.",
-      center: "We’ll secure access for your organization.",
+      patient: t("forgot.role_patient"),
+      doctor: t("forgot.role_doctor"),
+      center: t("forgot.role_center"),
     };
-    return map[role] || "Let’s secure your access.";
-  }, [role]);
+    return map[role] || t("forgot.role_default");
+  }, [role, t]);
 
-  // focus on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // Escape appears after 10s (hidden safety exit) في مرحلة الكتابة بس
+  // بعد 10 ثواني من الكتابة يظهر زر "مش دلوقتي"
   useEffect(() => {
     if (phase !== "typing") return;
-    const t = setTimeout(() => setShowEscape(true), 10000);
-    return () => clearTimeout(t);
+    const tmr = setTimeout(() => setShowEscape(true), 10000);
+    return () => clearTimeout(tmr);
   }, [phase]);
 
-  // Esc key = back (accessibility)
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") onBackClick?.();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onBackClick]);
-
-  // animated placeholder hint
+  // تدوير الـ placeholder
   useEffect(() => {
     if (phase !== "typing") return;
     const samples = ["you@", "name@", "account@", "email@"];
     let i = 0;
-    const t = setInterval(() => {
+    const tmr = setInterval(() => {
       i = (i + 1) % samples.length;
       setHint(samples[i]);
     }, 1400);
-    return () => clearInterval(t);
+    return () => clearInterval(tmr);
   }, [phase]);
 
   function scheduleAutoSend(nextEmail) {
@@ -72,7 +66,7 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
 
     setPhase("sending");
 
-    // TODO: replace with real API call
+    // هنا مكان الـ API الحقيقي
     await new Promise((r) => setTimeout(r, 900));
 
     setPhase("done");
@@ -84,45 +78,46 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
     scheduleAutoSend(v);
   };
 
-  // بعد ما نوصل لمرحلة done: ندي المستخدم دقيقة، لو ما عملش حاجة نرجعه إحنا
+  // بعد ما تخلص: hint + رجوع تلقائي لو onDone متوفر
   useEffect(() => {
     if (phase !== "done") {
       setShowEscHint(false);
       return;
     }
 
-    // بعد شوية صغيرين نطلع همسة Esc
     const hintTimer = setTimeout(() => {
       setShowEscHint(true);
-    }, 4000); // بعد 4 ثواني مثلاً
+    }, 4000);
 
-    // بعد دقيقة نرجّع المستخدم تلقائيًا
     const autoBackTimer = setTimeout(() => {
-      onBackClick?.();
-    }, 30000); // 60 ثانية
+      if (typeof onDone === "function") onDone();
+    }, 30000);
 
     return () => {
       clearTimeout(hintTimer);
       clearTimeout(autoBackTimer);
     };
-  }, [phase, onBackClick]);
+  }, [phase, onDone]);
 
   return (
     <main className={`ne-page ${isLoaded ? "fade-in-up" : ""}`}>
       <div className="ne-bg" />
 
-      {/* Hidden-ish escape (typing only, after 10s) */}
-      {phase === "typing" && showEscape && (
-        <button type="button" className="ne-escape" onClick={onBackClick}>
-          ← Not now
+      {phase === "typing" && showEscape && onDone && (
+        <button
+          type="button"
+          className="ne-escape"
+          onClick={onDone}
+        >
+          ← {t("forgot.not_now")}
         </button>
       )}
 
       <section className="ne-center" aria-label="Account recovery">
         {phase === "typing" && (
           <div className="ne-card">
-            <div className="ne-title">Let’s get you back.</div>
-            <div className="ne-sub">Where should we send the access?</div>
+            <div className="ne-title">{t("forgot.title_typing")}</div>
+            <div className="ne-sub">{t("forgot.sub_typing")}</div>
             <div className="ne-role">{roleLine}</div>
 
             <input
@@ -137,7 +132,7 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
             />
 
             <div className="ne-mini">
-              Just type your email and pause for a moment. We’ll handle the rest.
+              {t("forgot.mini_hint")}
             </div>
           </div>
         )}
@@ -145,22 +140,22 @@ function ForgotPassword({ isLoaded, onBackClick, role = "patient" }) {
         {phase === "sending" && (
           <div className="ne-focus">
             <div className="ne-breath" aria-hidden="true" />
-            <div className="ne-title2">Hold on…</div>
-            <div className="ne-sub2">Securing your access.</div>
+            <div className="ne-title2">{t("forgot.title_sending")}</div>
+            <div className="ne-sub2">{t("forgot.sub_sending")}</div>
           </div>
         )}
 
         {phase === "done" && (
           <div className="ne-focus">
-            <div className="ne-title2">You’re safe.</div>
-            <div className="ne-sub2">Check your inbox.</div>
+            <div className="ne-title2">{t("forgot.title_done")}</div>
+            <div className="ne-sub2">{t("forgot.sub_done")}</div>
             <div className="ne-sub3">
-              If an account exists for that email, a link was sent.
+              {t("forgot.sub3_done")}
             </div>
 
             {showEscHint && (
               <div className="ne-whisper" aria-hidden="true">
-                Press Esc to go back now. We’ll take you back automatically in .5 minute.
+                {t("forgot.esc_hint")}
               </div>
             )}
           </div>
