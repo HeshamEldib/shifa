@@ -1,13 +1,17 @@
-/* ===== No Escape Recovery Space (final) ===== */
+/* ===== ForgotPass.css - Shifaa No Escape Recovery Space ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-.ne-page{
-  min-height:100vh;
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  overflow:hidden;
+/* ===== No Escape Recovery Space (Shifaa Final) ===== */
+.ne-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, sans-serif;
+  padding: 100px 20px;
 
   background:
     radial-gradient(circle at 15% 10%, rgba(59,130,246,0.38), transparent 55%),
@@ -15,80 +19,127 @@
     radial-gradient(circle at 50% 50%, rgba(2,6,23,0.65), rgba(2,6,23,1));
 }
 
-/* مش محتاجين طبقة خلفية إضافية */
-.ne-bg{
-  position:absolute;
-  inset:0;
+.ne-page.rtl {
+  direction: rtl;
+}
+
+.ne-page.ltr {
+  direction: ltr;
+}
+
+.ne-escape {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  border: none;
   background: transparent;
-  z-index:-1;
-}
-
-/* escape appears late + tiny */
-.ne-escape{
-  position:absolute;
-  top:18px;
-  left:18px;
-  border:none;
-  background:transparent;
   color: rgba(226,232,240,0.55);
-  font-size:0.86rem;
-  cursor:pointer;
-  padding:0;
+  font-size: 0.86rem;
+  cursor: pointer;
+  padding: 0;
   transition: color 140ms ease;
+  z-index: 100;
 }
-.ne-escape:hover{ color: rgba(226,232,240,0.85); }
 
-.ne-center{
-  width:min(560px, 92vw);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.ne-escape:hover { 
+  color: rgba(226,232,240,0.85); 
+}
+
+.ne-bg {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  z-index: -1;
+}
+
+.ne-center {
+  width: min(560px, 92vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* الكارت */
-.ne-card{
-  width:100%;
-  border-radius:24px;
-  padding:22px 22px 18px;
+.ne-card {
+  width: 100%;
+  border-radius: 24px;
+  padding: 22px 22px 18px;
   background: rgba(15,23,42,0.85);
   border: 1px solid rgba(148,163,184,0.35);
   backdrop-filter: blur(22px);
   box-shadow: 0 26px 70px rgba(0,0,0,0.75);
+  position: relative;
 }
 
-.ne-title{
-  font-size:1.7rem;
-  font-weight:900;
-  color:#e5e7eb;
-  letter-spacing:-0.2px;
-}
-.ne-sub{
-  margin-top:6px;
-  color:#cbd5e1;
-  font-size:1rem;
-  line-height:1.5;
-}
-.ne-role{
-  margin-top:8px;
-  color: rgba(148,163,184,0.9);
-  font-size:0.9rem;
+.ne-title {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #e5e7eb;
+  letter-spacing: -0.2px;
+  text-align: center;
+  margin-bottom: 6px;
 }
 
-.ne-input{
-  margin-top:16px;
-  width:100%;
-  padding:14px 16px;
-  border-radius:16px;
-  border:1px solid rgba(148,163,184,0.55);
+.ne-sub {
+  margin-top: 6px;
+  color: #cbd5e1;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0.88;
+}
+
+/* Email Display */
+.ne-email-display {
+  margin: 12px 0 20px 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(34,197,94,0.15);
+  border: 1px solid rgba(34,197,94,0.35);
+  color: #22c55e;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  opacity: 0.88;
+}
+
+/* Form */
+.ne-form { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 18px; 
+  margin-top: 8px;
+}
+
+.ne-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ne-field label {
+  color: #e5e7eb;
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0.88;
+}
+
+.ne-input {
+  margin-top: 4px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(148,163,184,0.55);
   background: rgba(2,6,23,0.7);
-  color:#e5e7eb;
-  font-size:1rem;
-  outline:none;
-  transition: box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
+  color: #e5e7eb;
+  font-size: 1rem;
+  outline: none;
+  transition: all 160ms ease;
   box-shadow: 0 0 0 0 rgba(56,189,248,0);
+  font-family: inherit;
 }
 
-.ne-input:focus{
+.ne-input:focus {
   border-color: rgba(56,189,248,0.9);
   background: rgba(2,6,23,0.9);
   box-shadow:
@@ -96,94 +147,235 @@
     0 0 28px rgba(56,189,248,0.20);
 }
 
-/* keep everything biased toward input: dim the rest subtly */
-.ne-card .ne-sub,
-.ne-card .ne-role,
-.ne-card .ne-mini{
-  opacity:0.88;
+.ne-input::placeholder {
+  color: rgba(148,163,184,0.6);
 }
 
-.ne-mini{
-  margin-top:10px;
-  color:#94a3b8;
-  font-size:0.82rem;
+.ne-code {
+  letter-spacing: 12px;
+  text-align: center;
+  font-family: 'SF Mono', monospace;
+  font-weight: 700;
+  font-size: 1.3rem;
+  padding-top: 12px;
 }
 
-/* Focus mode screens */
-.ne-focus{
-  text-align:center;
-  width:100%;
-  padding:26px 18px;
+/* Password - ✅ محدّث */
+.ne-password-wrap { 
+  position: relative; 
+  margin-top: 4px;
 }
 
-.ne-title2{
-  font-size:1.8rem;
-  font-weight:900;
-  color:#e5e7eb;
-  margin-top:12px;
-}
-.ne-sub2{
-  margin-top:6px;
-  color:#cbd5e1;
-  font-size:1rem;
-}
-.ne-sub3{
-  margin-top:10px;
-  color: rgba(148,163,184,0.85);
-  font-size:0.88rem;
+.ne-eye {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(148,163,184,0.7);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 160ms ease;
 }
 
-/* breathing dot */
-.ne-breath{
-  width:14px;
-  height:14px;
-  margin:0 auto;
-  border-radius:999px;
-  background: linear-gradient(90deg,#2563eb,#22c55e);
-  box-shadow: 0 0 24px rgba(56,189,248,0.35);
-  animation: neBreath 1.3s ease-in-out infinite;
-}
-@keyframes neBreath{
-  0%{ transform: scale(0.9); opacity:0.6; }
-  50%{ transform: scale(1.25); opacity:1; }
-  100%{ transform: scale(0.9); opacity:0.6; }
+.ne-eye:hover {
+  color: #38bdf8;
+  background: rgba(56,189,248,0.1);
 }
 
-.ne-whisper{
-  margin-top:14px;
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  background: rgba(2,6,23,0.55);
-  border: 1px solid rgba(148,163,184,0.28);
-  color: rgba(226,232,240,0.75);
-  font-size:0.82rem;
-  letter-spacing:0.1px;
-  animation: neWhisperIn 220ms ease-out;
+/* ✅ الاتجاه حسب اللغة */
+.ne-eye-right { 
+  right: 14px; 
 }
 
-@keyframes neWhisperIn{
-  from { transform: translateY(4px); opacity:0; }
-  to   { transform: translateY(0); opacity:1; }
+.ne-eye-left { 
+  left: 14px; 
+}
+
+/* Buttons */
+.ne-btn {
+  margin-top: 8px;
+  padding: 16px;
+  background: linear-gradient(135deg, #2563eb, #22c55e);
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+}
+
+.ne-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(37,99,235,0.4);
+}
+
+.ne-btn.ready {
+  animation: nePulse 1.6s ease-in-out infinite;
+}
+
+.ne-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ne-back {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  text-decoration: underline;
+  padding: 16px 0;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.92rem;
+  opacity: 0.88;
+}
+
+/* Messages & Errors */
+.ne-message {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(34,197,94,0.15);
+  border: 1px solid rgba(34,197,94,0.35);
+  color: #22c55e;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 12px 0;
+}
+
+.ne-error {
+  color: #f87171;
+  font-size: 0.82rem;
+  margin-top: 4px;
+}
+
+.has-error .ne-input {
+  border-color: rgba(248,113,113,0.6);
+  box-shadow: 0 0 0 3px rgba(248,113,113,0.2);
+}
+
+/* MAGIC SUCCESS */
+.ne-magic-container {
+  text-align: center;
+  padding: 40px 20px;
+  animation: neSuccessScale 0.6s ease-out;
+  position: relative;
+}
+
+.ne-magic-checkmark {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 900;
+  color: white;
+  animation: neShifaaBounce 1.2s ease-out;
+}
+
+.shifaa-glow {
+  background: linear-gradient(135deg, #2563eb, #22c55e);
+  box-shadow: 
+    0 0 35px rgba(37,99,235,0.7),
+    0 0 60px rgba(34,197,94,0.4),
+    inset 0 0 18px rgba(255,255,255,0.15);
+}
+
+.ne-success-title {
+  color: #22c55e;
+  font-size: 1.7rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+  text-shadow: 0 0 18px rgba(34,197,94,0.4);
+}
+
+.ne-success-sub {
+  color: #cbd5e1;
+  font-size: 1rem;
+  opacity: 0.88;
+}
+
+/* Particles */
+.ne-particle {
+  position: absolute;
+  background: linear-gradient(135deg, #2563eb, #22c55e);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: neParticleFloat 2s ease-out forwards;
+}
+
+/* Magic Portal */
+.ne-magic-portal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 380px;
+  height: 380px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: conic-gradient(from 0deg, #2563eb, #22c55e, #2563eb, #22c55e);
+  animation: nePortalExpand 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  filter: drop-shadow(0 0 45px rgba(37,99,235,0.5));
+}
+
+/* Animations */
+@keyframes nePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.6); }
+  50% { box-shadow: 0 0 0 16px rgba(37,99,235,0); }
+}
+
+@keyframes neShifaaBounce {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  50% { transform: scale(1.15) rotate(15deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes neSuccessScale {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes neParticleFloat {
+  to {
+    opacity: 0;
+    transform: translateY(-180px) scale(0);
+  }
+}
+
+@keyframes nePortalExpand {
+  0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: translate(-50%, -50%) scale(1.4) rotate(180deg); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.8) rotate(360deg); opacity: 0; }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-  .ne-page{
-    padding:16px;
-  }
+  .ne-page { padding: 60px 16px; }
+  .ne-card { padding: 20px 18px 16px; border-radius: 20px; }
+  .ne-title { font-size: 1.45rem; }
+  .ne-magic-checkmark { width: 76px; height: 76px; font-size: 30px; }
+  .ne-magic-portal { width: 320px; height: 320px; }
+}
 
-  .ne-card{
-    padding:18px 16px 14px;
-    border-radius:20px;
-  }
-
-  .ne-title{
-    font-size:1.4rem;
-  }
-
-  .ne-input{
-    padding:12px 14px;
-    font-size:0.95rem;
-  }
+@media (max-width: 480px) {
+  .ne-page { padding: 50px 12px; }
+  .ne-card { padding: 18px 16px 14px; }
+  .ne-input { padding: 12px 14px; font-size: 0.95rem; }
 }

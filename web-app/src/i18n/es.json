@@ -189,21 +189,34 @@
   "agree_required": "Debes aceptar los términos y la política de privacidad."
 }
 ,
-  "forgot": {
-    "role_patient": "Te devolvemos el acceso, de forma tranquila y segura.",
-    "role_doctor": "Aseguraremos tu acceso para que puedas volver a cuidar.",
-    "role_center": "Aseguraremos el acceso para tu organización.",
-    "role_default": "Vamos a asegurar tu acceso.",
-    "not_now": "Ahora no",
-    "title_typing": "Vamos a devolverte el acceso.",
-    "sub_typing": "¿A dónde debemos enviar el acceso?",
-    "mini_hint": "Solo escribe tu correo y haz una pausa un momento. Nosotros nos encargamos del resto.",
-    "title_sending": "Un momento…",
-    "sub_sending": "Asegurando tu acceso.",
-    "title_done": "Estás a salvo.",
-    "sub_done": "Revisa tu bandeja de entrada.",
-    "esc_hint": "Pulsa Esc para volver ahora. Te devolveremos automáticamente en 0,5 minutos."
-  },
+  "forgot": 
+{
+  "title_email": "¿Olvidaste tu contraseña?",
+  "subtitle_email": "Ingresa tu correo electrónico",
+  "send_code": "Enviar código",
+  "sending": "Enviando...",
+  "invalid_email": "Correo electrónico inválido",
+  "code_sent": "Código enviado a tu email",
+  
+  "title_code": "Verificar código",
+  "code_label": "Código de verificación",
+  "invalid_code": "Se requieren 6 dígitos",
+  "verifying": "Verificando...",
+  "continue": "Continuar",
+  
+  "title_reset": "Nueva contraseña",
+  "new_password": "Nueva contraseña",
+  "confirm_password": "Confirmar contraseña",
+  "reset_password": "Restablecer contraseña",
+  "saving": "Guardando...",
+  "password_short": "Mínimo 6 caracteres",
+  "passwords_not_match": "Las contraseñas no coinciden",
+  
+  "success_title": "¡Éxito!",
+  "success_sub": "Contraseña restablecida correctamente"
+}
+
+,
 "patient": {
   "nav_home": "Inicio",
   "nav_appointments": "Mis citas",

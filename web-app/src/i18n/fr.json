@@ -192,21 +192,34 @@
 }
 ,
 
-  "forgot": {
-    "role_patient": "On va vous reconnecter — calmement et en toute sécurité.",
-    "role_doctor": "Nous sécurisons votre accès pour que vous puissiez reprendre vos soins.",
-    "role_center": "Nous allons sécuriser l’accès de votre organisation.",
-    "role_default": "Sécurisons votre accès.",
-    "not_now": "Plus tard",
-    "title_typing": "On va vous récupérer.",
-    "sub_typing": "Où devons‑nous envoyer l’accès ?",
-    "mini_hint": "Tapez simplement votre e‑mail puis faites une pause. Nous nous occupons du reste.",
-    "title_sending": "Un instant…",
-    "sub_sending": "Sécurisation de votre accès.",
-    "title_done": "C’est bon.",
-    "sub_done": "Vérifiez votre boîte mail.",
-    "esc_hint": "Appuyez sur Échap pour revenir maintenant. Nous vous ramènerons automatiquement dans 0,5 minute."
-  },
+  "forgot":
+{
+  "title_email": "Mot de passe oublié ?",
+  "subtitle_email": "Entrez votre adresse e-mail",
+  "send_code": "Envoyer le code",
+  "sending": "Envoi en cours...",
+  "invalid_email": "Adresse e-mail invalide",
+  "code_sent": "Code envoyé à votre email",
+  
+  "title_code": "Vérifier le code",
+  "code_label": "Code de vérification",
+  "invalid_code": "6 chiffres requis",
+  "verifying": "Vérification...",
+  "continue": "Continuer",
+  
+  "title_reset": "Nouveau mot de passe",
+  "new_password": "Nouveau mot de passe",
+  "confirm_password": "Confirmer le mot de passe",
+  "reset_password": "Réinitialiser le mot de passe",
+  "saving": "Enregistrement...",
+  "password_short": "6 caractères minimum",
+  "passwords_not_match": "Les mots de passe ne correspondent pas",
+  
+  "success_title": "Succès !",
+  "success_sub": "Mot de passe réinitialisé avec succès"
+}
+
+,
 "patient": {
   "nav_home": "Accueil",
   "nav_appointments": "Mes rendez‑vous",

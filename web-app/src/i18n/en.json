@@ -193,21 +193,34 @@
 }
 ,
 
-  "forgot": {
-    "role_patient": "Let’s get you back—quietly and safely.",
-    "role_doctor": "We’ll secure your access so you can get back to care.",
-    "role_center": "We’ll secure access for your organization.",
-    "role_default": "Let’s secure your access.",
-    "not_now": "Not now",
-    "title_typing": "Let’s get you back.",
-    "sub_typing": "Where should we send the access?",
-    "mini_hint": "Just type your email and pause for a moment. We’ll handle the rest.",
-    "title_sending": "Hold on…",
-    "sub_sending": "Securing your access.",
-    "title_done": "You’re safe.",
-    "sub_done": "Check your inbox.",
-    "esc_hint": "Press Esc to go back now. We’ll take you back automatically in 0.5 minute."
-  },
+  "forgot": 
+{
+  "title_email": "نسيت كلمة المرور؟",
+  "subtitle_email": "أدخل بريدك الإلكتروني",
+  "send_code": "إرسال الكود",
+  "sending": "جاري الإرسال...",
+  "invalid_email": "بريد إلكتروني غير صحيح",
+  "code_sent": "تم إرسال الكود إلى بريدك الإلكتروني",
+  
+  "title_code": "تأكيد الكود",
+  "code_label": "كود التحقق",
+  "invalid_code": "يجب إدخال 6 أرقام",
+  "verifying": "جاري التحقق...",
+  "continue": "متابعة",
+  
+  "title_reset": "كلمة مرور جديدة",
+  "new_password": "كلمة المرور الجديدة",
+  "confirm_password": "تأكيد كلمة المرور",
+  "reset_password": "إعادة تعيين كلمة المرور",
+  "saving": "جاري الحفظ...",
+  "password_short": "يجب أن تكون 6 أحرف على الأقل",
+  "passwords_not_match": "كلمات المرور غير متطابقة",
+  
+  "success_title": "تم بنجاح!",
+  "success_sub": "تمت إعادة تعيين كلمة المرور بنجاح"
+}
+
+,
   "about": {
   "back": "Back",
   "header_title": "About Shifaa",

@@ -1,4 +1,4 @@
-/* ====== Split Screen Signup (Shifaa – dark glass) ====== */
+/* ====== Split Screen Signup (Shifaa – Patient Only – Dark Glass) ====== */
 
 /* الخلفية المقسومة */
 .su-split-bg {
@@ -145,12 +145,6 @@
   backdrop-filter: blur(22px);
 }
 
-/* تغميق الخلفية العامة */
-.su-right-bg,
-.su-left-bg {
-  background: #020317;
-}
-
 /* Social buttons */
 .su-social {
   display: flex;
@@ -224,102 +218,6 @@
   color: #94a3b8;
 }
 
-/* Account type cards */
-.su-h2 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin: 12px 0 8px;
-}
-
-.su-role-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
-.su-role-card {
-  width: 100%;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(30, 64, 175, 0.4);
-  background: rgba(15, 23, 42, 0.98);
-  cursor: pointer;
-  transition:
-    border-color 140ms ease,
-    box-shadow 140ms ease,
-    transform 140ms ease,
-    background 140ms ease;
-}
-
-.su-role-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.9);
-}
-
-.su-role-card.is-active {
-  border-color: rgba(59, 130, 246, 0.9);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.45);
-  background: radial-gradient(circle at 0 0, rgba(59,130,246,0.35), rgba(15,23,42,0.98));
-}
-
-.su-role-card.is-active::after {
-  content: "✓";
-  margin-left: auto;
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: #22c55e;
-}
-
-.su-role-ic {
-  font-size: 1.2rem;
-}
-
-.su-role-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-/* Progress bar */
-.su-progress {
-  margin-top: 14px;
-}
-
-.su-progress-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-
-.su-step-text {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #e5e7eb;
-}
-
-.su-step-hint {
-  font-size: 0.8rem;
-  color: #9ca3af;
-}
-
-.su-progress-bar {
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  overflow: hidden;
-  border: 1px solid rgba(30, 64, 175, 0.9);
-}
-
-.su-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #22c55e);
-  width: 0%;
-  transition: width 260ms ease;
-}
-
 /* Form fields */
 .su-form {
   margin-top: 12px;
@@ -331,7 +229,7 @@
 .su-step {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
 }
 
 .su-field label {
@@ -357,6 +255,7 @@
   outline: none;
   background: rgba(15, 23, 42, 0.95);
   color: #e5e7eb;
+  font-size: 0.9rem;
   transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
 }
 
@@ -380,7 +279,7 @@
 /* Password + eye + statuses */
 .su-password-input {
   width: 100%;
-  padding-inline-end: 80px; /* مساحة لزر العين + علامة الصحة/الخطأ */
+  padding-inline-end: 80px;
 }
 
 .su-eye {
@@ -393,7 +292,6 @@
   font-size: 0.82rem;
   color: #9ca3af;
   padding: 0 4px;
-  white-space: nowrap;
 }
 
 /* LTR: العين على اليمين */
@@ -417,15 +315,8 @@
   font-weight: 900;
 }
 
-/* LTR: جوه من ناحية اليمين */
-.su-status.ltr {
-  right: 58px;
-}
-
-/* RTL: جوه من ناحية الشمال */
-.su-status.rtl {
-  left: 58px;
-}
+.su-status.ltr { right: 58px; }
+.su-status.rtl { left: 58px; }
 
 .su-good { color: #22c55e; }
 .su-bad  { color: #f97373; }
@@ -471,68 +362,51 @@
   font-weight: 700;
 }
 
-/* Checkbox + الأمن */
-.su-check {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  font-size: 0.84rem;
-  margin-top: 4px;
-  color: #e5e7eb;
+/* Backend Error */
+.su-backend-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #fecaca;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  animation: shake 0.5s ease-in-out;
 }
 
-.su-check input {
-  margin-top: 2px;
-  accent-color: #22c55e;
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
 }
 
-.su-inline-link {
-  border: none;
-  background: transparent;
-  color: #7dd3fc;
-  cursor: pointer;
-  padding: 0;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.su-inline-link:hover { color: #bae6fd; }
-
+/* الأمان */
 .su-lock {
   margin-top: 6px;
   font-size: 0.82rem;
-  color: #9ca3af;
+  color: #9ca3b8;
+  text-align: center;
 }
 
-/* أزرار التنقل + pulse جاهزية */
+/* أزرار التنقل */
 .su-nav {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.su-ghost {
-  border-radius: 999px;
-  padding: 10px 12px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: transparent;
-  color: #e5e7eb;
-  cursor: pointer;
-}
-
-.su-ghost:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  justify-content: center;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 163, 184, 0.3);
+  margin-top: 20px;
 }
 
 .su-next {
+  flex: 1;
+  max-width: 220px;
   border-radius: 999px;
-  padding: 10px 18px;
+  padding: 12px 24px;
   border: none;
   background: linear-gradient(90deg, #2563eb, #22c55e);
   color: #f9fafb;
   font-weight: 800;
+  font-size: 0.92rem;
   cursor: pointer;
   transition:
     transform 140ms ease,
@@ -562,19 +436,25 @@
 
 /* Footer */
 .su-footer {
-  margin-top: 8px;
+  margin-top: 16px;
   font-size: 0.84rem;
   color: #94a3b8;
+  text-align: center;
 }
 
-/* Patient note */
-.su-patient-note {
-  font-size: 0.86rem;
-  color: #e5e7eb;
-  background: rgba(56, 189, 248, 0.12);
-  border-radius: 12px;
-  padding: 10px 12px;
-  border: 1px solid rgba(56, 189, 248, 0.6);
+.su-inline-link {
+  border: none;
+  background: transparent;
+  color: #7dd3fc;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.su-inline-link:hover { 
+  color: #bae6fd; 
 }
 
 /* Success overlay */
@@ -593,25 +473,49 @@
   width: min(420px, 92vw);
   background: radial-gradient(circle at top, rgba(15,23,42,0.98), rgba(15,23,42,1));
   border-radius: 18px;
-  padding: 18px;
+  padding: 28px;
   text-align: center;
   box-shadow: 0 20px 60px rgba(2, 6, 23, 0.9);
   color: #e5e7eb;
+  border: 1px solid rgba(248, 250, 252, 0.22);
 }
 
 .su-success-check {
-  width: 54px;
-  height: 54px;
+  width: 64px;
+  height: 64px;
   border-radius: 999px;
-  margin: 0 auto 10px;
+  margin: 0 auto 16px;
   background: rgba(34, 197, 94, 0.18);
-  border: 1px solid rgba(34, 197, 94, 0.5);
+  border: 2px solid rgba(34, 197, 94, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   color: #4ade80;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+}
+
+/* RTL Support كامل */
+html[dir="rtl"], main.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] .su-left,
+html[dir="rtl"] .su-right,
+html[dir="rtl"] .su-left-title,
+html[dir="rtl"] .su-left-sub {
+  text-align: right;
+}
+
+html[dir="rtl"] input,
+html[dir="rtl"] select {
+  text-align: right;
+}
+
+/* إخفاء العناصر اللي مش محتاجينها */
+.su-role, .su-progress {
+  display: none !important;
 }
 
 /* Responsive */
@@ -623,6 +527,7 @@
   .su-page {
     grid-template-columns: 1fr;
     padding-inline: 16px;
+    gap: 24px;
   }
 
   .su-right {
@@ -631,6 +536,11 @@
 
   .su-left {
     padding-top: 0;
+    text-align: center;
+  }
+
+  .su-left-points {
+    align-items: center;
   }
 }
 
@@ -641,43 +551,47 @@
   }
 
   .su-form-shell {
-    padding: 16px 14px;
+    padding: 20px 16px;
     border-radius: 18px;
     max-width: 100%;
+    margin: 0 auto;
   }
 
   .su-left-title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
 
   .su-left-sub {
-    font-size: 0.88rem;
+    font-size: 0.92rem;
   }
 
   .su-field input,
   .su-field select {
-    font-size: 0.85rem;
-    padding: 10px 10px;
+    font-size: 0.88rem;
+    padding: 12px 12px;
   }
 
-  .su-h2 {
-    font-size: 0.9rem;
+  .su-nav {
+    flex-direction: column;
+  }
+
+  .su-next {
+    max-width: 100%;
   }
 }
 
-/* جزء من ستايل شاشة تانية (موجود مسبقًا) */
-.sds-topbar {
-  display: flex;
-  justify-content: flex-start;
-  padding: 8px 20px 0;
+/* Animation للـ fade-in */
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
 }
 
-.sds-back-btn {
-  background: transparent;
-  border: 1px solid rgba(148,163,184,0.6);
-  color: #e5e7eb;
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 13px;
-  cursor: pointer;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

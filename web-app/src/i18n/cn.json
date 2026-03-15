@@ -189,21 +189,34 @@
   "agree_required": "必须同意服务条款和隐私政策。"
 }
 ,
-  "forgot": {
-    "role_patient": "我们会安静而安全地帮你找回访问权限。",
-    "role_doctor": "我们会保护你的访问，让你尽快回到照护工作中。",
-    "role_center": "我们会为你的机构重新保障访问。",
-    "role_default": "让我们来保护你的访问。",
-    "not_now": "暂不",
-    "title_typing": "帮你找回访问。",
-    "sub_typing": "我们该把访问链接发送到哪里？",
-    "mini_hint": "只需输入你的邮箱，然后稍等片刻，其余交给我们。",
-    "title_sending": "请稍等…",
-    "sub_sending": "正在保护你的访问。",
-    "title_done": "你已安全。",
-    "sub_done": "请检查你的邮箱。",
-    "esc_hint": "按 Esc 立即返回。我们会在 0.5 分钟后自动带你返回。"
-  },
+  "forgot":
+{
+  "title_email": "忘记密码？",
+  "subtitle_email": "请输入您的电子邮件地址",
+  "send_code": "发送验证码",
+  "sending": "发送中...",
+  "invalid_email": "电子邮件地址无效",
+  "code_sent": "验证码已发送至您的邮箱",
+  
+  "title_code": "验证验证码",
+  "code_label": "验证码",
+  "invalid_code": "需要6位数字",
+  "verifying": "验证中...",
+  "continue": "继续",
+  
+  "title_reset": "新密码",
+  "new_password": "新密码",
+  "confirm_password": "确认密码",
+  "reset_password": "重置密码",
+  "saving": "保存中...",
+  "password_short": "密码至少6个字符",
+  "passwords_not_match": "两次输入密码不一致",
+  
+  "success_title": "成功！",
+  "success_sub": "密码重置完成"
+}
+
+,
 
   "patient": {
   "nav_home": "首页",

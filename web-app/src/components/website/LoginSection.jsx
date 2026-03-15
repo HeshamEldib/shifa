@@ -1,5 +1,5 @@
-// src/components/website/LoginSection.jsx
-import React, { useState } from "react";
+// src/components/website/LoginSection.jsx - مع Auto-fill
+import React, { useState, useRef, useEffect } from "react";  
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import heroImg from "../../assets/hero-illustration.png";
@@ -19,6 +19,25 @@ function LoginSection({
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  //  الـ ref الجديد للإيميل
+  const emailRef = useRef(null);
+
+  //  Auto-fill من Forgot Password URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailFromForgot = urlParams.get('email');
+    
+    if (emailFromForgot && emailRef.current) {
+      setEmail(emailFromForgot);
+      emailRef.current.value = emailFromForgot;
+      // Focus على password input بعد شوية
+      setTimeout(() => {
+        const passwordInput = document.getElementById('password');
+        passwordInput?.focus();
+      }, 300);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,6 +118,7 @@ function LoginSection({
             <div className="form-group">
               <label htmlFor="email">{t("login.email")}</label>
               <input
+                ref={emailRef}  
                 id="email"
                 type="email"
                 placeholder="name@example.com"
