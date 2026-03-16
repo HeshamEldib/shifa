@@ -30,6 +30,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy
+            .AllowOrigin("http://localhost:3000")
             .AllowAnyOrigin()  // يسمح لأي مصدر بالاتصال (غيّر هذا لاحقاً عند النشر)
             .AllowAnyMethod()  // يسمح بكل أنواع الطلبات (GET, POST, PUT, DELETE)
             .AllowAnyHeader()); // يسمح بكل الهيدرز
