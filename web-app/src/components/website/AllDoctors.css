@@ -1,0 +1,228 @@
+/* src/components/website/AllDoctors.css */
+/* إحنا بنعتمد على المتغيرات والستايل الأساسي اللي عملناه في AllServices 
+   بس هنضيف هنا التأثيرات الـ VIP الخاصة بالدكاترة */
+
+.premium-doctors-page {
+  min-height: 100vh;
+  background-color: #07031a;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* 1. Cinematic Noise Texture */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.25;
+  /* كود Noise Texture باستخدام SVG Data URI */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* 2. Focus Mode (Eye Focus Blur) 👁️ */
+/* لما الشبكة تكون في وضع التركيز (كارت واحد معمول عليه Hover) */
+.crystal-grid.is-focus-mode .doctor-card:not(.active-focus) {
+  opacity: 0.4;
+  filter: blur(4px) grayscale(50%);
+  transform: scale(0.98);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.doctor-card.active-focus {
+  z-index: 10;
+  transform: translateY(-12px) scale(1.03) !important;
+  border-color: rgba(34, 211, 238, 0.4);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(34, 211, 238, 0.15);
+}
+
+/* الاقتباس المخفي للـ Doctor */
+.hidden-quote {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.5s ease;
+  z-index: 0;
+}
+.doctor-card:hover .hidden-quote {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 3. الهيدر بتاع الكارت (الصورة والإتاحة) */
+.doctor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Avatar & Micro Eye Tracking 🎯 */
+.avatar-wrapper {
+  position: relative;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  padding: 3px;
+  background: var(--glass-bg);
+}
+
+.trust-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--cyan-glow), var(--purple-glow), transparent 60%);
+  animation: spinRing 4s linear infinite;
+  z-index: 1;
+}
+
+.doctor-avatar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 2;
+  border: 2px solid #0f172a;
+  /* تأثير تتبع الماوس باستخدام المتغيرات */
+  transform: translate(var(--avatar-x, 0px), var(--avatar-y, 0px));
+  transition: transform 0.1s ease-out; /* ناعم وسريع */
+}
+
+@keyframes spinRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 4. نبض الإتاحة (Heartbeat Sync) 🫀 */
+.smart-availability {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #10b981;
+  animation: heartbeatPulse 2s infinite;
+}
+.avail-text {
+  font-size: 0.8rem;
+  color: #34d399;
+  font-weight: 600;
+}
+
+@keyframes heartbeatPulse {
+  0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* معلومات الدكتور */
+.doctor-info {
+  flex-grow: 1;
+  position: relative;
+  z-index: 2;
+}
+.doctor-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.doctor-specialty {
+  color: var(--cyan-glow);
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+/* Trust Stats */
+.trust-stats {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 15px;
+  flex-wrap: wrap;
+}
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  background: rgba(255,255,255,0.02);
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+.stat-item.gold-stat {
+  color: #f5d365;
+  background: rgba(245, 211, 101, 0.05);
+}
+.stat-icon {
+  opacity: 0.7;
+}
+
+/* 5. أزرار الـ Unfold (عرض الملف + حجز) */
+.multi-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-outline-premium {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+.btn-outline-premium:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #cbd5e1;
+  color: #fff;
+}
+
+.multi-buttons .book-btn-premium {
+  flex: 1.5;
+  border-radius: 10px;
+}
+
+/* ========================================= */
+/* الموبايل والتجاوب */
+/* ========================================= */
+@media (max-width: 768px) {
+  /* نلغي الـ Blur في الموبايل عشان مش عملي مع التاتش */
+  .crystal-grid.is-focus-mode .doctor-card:not(.active-focus) {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .doctor-card.active-focus {
+    transform: none !important;
+  }
+  
+  /* إظهار الأزرار دائماً على الموبايل */
+  .unfold-action {
+    max-height: 100px;
+    opacity: 1;
+    margin-top: 20px;
+  }
+}

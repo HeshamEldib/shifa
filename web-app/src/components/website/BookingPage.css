@@ -1,0 +1,209 @@
+/* src/components/website/BookingPage.css */
+
+.premium-booking-page {
+  min-height: 100vh;
+  background-color: #050a15; /* أزرق غامق جداً للأمان */
+  color: #fff;
+  position: relative;
+  font-family: 'Cairo', sans-serif;
+  padding-bottom: 80px;
+  overflow-x: hidden;
+}
+
+/* هالة الأمان */
+.security-aura {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+.aura-glow {
+  position: absolute; border-radius: 50%; filter: blur(150px); opacity: 0.3;
+}
+.blue-glow { width: 500px; height: 500px; background: #2563eb; top: -10%; left: -10%; }
+.cyan-glow { width: 600px; height: 600px; background: #06b6d4; bottom: -20%; right: -10%; animation: floatAura 15s infinite alternate; }
+.noise-overlay {
+  position: absolute; inset: 0; opacity: 0.2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.booking-container { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+
+.checkout-grid { display: grid; grid-template-columns: 1fr 420px; gap: 40px; margin-top: 30px; }
+
+/* ========================================= */
+/* وسيلة الدفع (Payment Form) */
+/* ========================================= */
+.section-header { margin-bottom: 30px; }
+.title-with-icon { display: flex; align-items: center; gap: 10px; font-size: 1.8rem; margin-bottom: 5px; color: #fff;}
+.secure-icon.pulse { color: #06b6d4; animation: securePulse 2s infinite; }
+.subtitle { color: #94a3b8; font-size: 0.95rem; }
+
+@keyframes securePulse {
+  0% { filter: drop-shadow(0 0 0 rgba(6, 182, 212, 0.7)); }
+  50% { filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.4)); }
+  100% { filter: drop-shadow(0 0 0 rgba(6, 182, 212, 0)); }
+}
+
+.payment-methods { display: flex; gap: 15px; margin-bottom: 35px; }
+.method-card {
+  flex: 1; padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; color: #94a3b8;
+  transition: all 0.3s ease; font-weight: 600;
+}
+.method-card.active { background: rgba(6, 182, 212, 0.1); border-color: #06b6d4; color: #fff; box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
+
+/* كارت الفيزا التفاعلي (3D Magic) */
+.interactive-card-wrapper { perspective: 1000px; margin-bottom: 40px; }
+.credit-card-3d {
+  width: 100%; max-width: 400px; height: 230px; margin: 0 auto; position: relative;
+  transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.credit-card-3d.flipped { transform: rotateY(180deg); }
+
+.card-front, .card-back {
+  position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px; padding: 25px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+  backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3); overflow: hidden;
+}
+.card-front::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 60%); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+.card-front:hover::before { opacity: 1; }
+
+.card-back { transform: rotateY(180deg); padding: 0; background: linear-gradient(135deg, #1e293b, #0f172a); }
+
+/* تفاصيل الكارت الأمامي */
+.card-chip { width: 45px; height: 35px; background: linear-gradient(135deg, #f5d365, #d4af37); border-radius: 6px; margin-bottom: 30px; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
+.card-logo { position: absolute; top: 25px; left: 25px; font-size: 1.5rem; font-weight: 900; font-style: italic; opacity: 0.8; }
+.card-number-display { font-size: 1.6rem; letter-spacing: 2px; font-family: 'Courier New', Courier, monospace; margin-bottom: 25px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.card-details-display { display: flex; justify-content: space-between; text-transform: uppercase; }
+.card-details-display .label { display: block; font-size: 0.65rem; color: #94a3b8; margin-bottom: 4px; }
+.card-details-display .value { font-size: 0.95rem; font-weight: 600; letter-spacing: 1px; }
+
+/* تفاصيل الكارت الخلفي */
+.magnetic-strip { width: 100%; height: 45px; background: #000; margin-top: 25px; }
+.cvv-display { padding: 0 20px; margin-top: 20px; text-align: right; }
+.cvv-display .label { font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 5px; }
+.cvv-box { background: #fff; color: #000; height: 35px; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 15px; font-family: monospace; font-size: 1.1rem; font-style: italic; }
+.security-text { font-size: 0.6rem; color: #64748b; text-align: center; margin-top: 15px; padding: 0 20px; }
+
+/* Floating Form Inputs */
+.floating-form { display: flex; flex-direction: column; gap: 25px; }
+.form-row { display: flex; gap: 20px; }
+.input-group { position: relative; width: 100%; }
+
+.input-group input {
+  width: 100%; padding: 16px 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; color: #fff; font-size: 1rem; font-family: inherit; transition: all 0.3s ease; outline: none;
+}
+.input-group label {
+  position: absolute; right: 15px; top: 16px; color: #64748b; font-size: 1rem; pointer-events: none; transition: all 0.3s ease;
+}
+.input-glow-line { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: #06b6d4; transform: scaleX(0); transition: transform 0.4s ease; border-radius: 0 0 10px 10px; }
+
+.input-group input:focus, .input-group input:not(:placeholder-shown) {
+  background: rgba(255,255,255,0.06); border-color: rgba(6, 182, 212, 0.4);
+}
+.input-group input:focus ~ label, .input-group input:not(:placeholder-shown) ~ label {
+  top: -10px; right: 10px; font-size: 0.8rem; background: #050a15; padding: 0 5px; color: #06b6d4;
+}
+.input-group input:focus ~ .input-glow-line { transform: scaleX(1); }
+
+/* ========================================= */
+/* الفاتورة الزجاجية (Glass Receipt) */
+/* ========================================= */
+.glass-receipt {
+  position: sticky; top: 100px;
+  background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px; padding: 35px; box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.receipt-header h3 { font-size: 1.3rem; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+
+.receipt-doctor { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+.receipt-doctor img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
+.receipt-doctor h4 { font-size: 1.1rem; margin-bottom: 4px; }
+.receipt-doctor span { color: #06b6d4; font-size: 0.85rem; }
+
+.receipt-details { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; margin-bottom: 25px; }
+.detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.detail-row:last-child { margin-bottom: 0; }
+.icon-label { display: flex; align-items: center; gap: 8px; color: #94a3b8; font-size: 0.95rem; }
+.highlight-val { font-weight: 700; color: #fff; }
+
+.receipt-divider { height: 1px; width: 100%; border-bottom: 2px dashed rgba(255,255,255,0.15); margin: 25px 0; position: relative; }
+/* حركات قطع الورق في الجناب */
+.receipt-divider::before, .receipt-divider::after { content: ""; position: absolute; top: -10px; width: 20px; height: 20px; background: #050a15; border-radius: 50%; }
+.receipt-divider::before { left: -45px; border-right: 1px solid rgba(255,255,255,0.08); }
+.receipt-divider::after { right: -45px; border-left: 1px solid rgba(255,255,255,0.08); }
+
+.receipt-finance .finance-row { display: flex; justify-content: space-between; color: #cbd5e1; font-size: 0.95rem; margin-bottom: 12px; }
+.finance-total { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 1.2rem; font-weight: 800; }
+.total-price { background: linear-gradient(90deg, #06b6d4, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.trust-badges { display: flex; justify-content: center; gap: 15px; margin: 30px 0; }
+.trust-badges span { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #64748b; }
+.trust-badges svg { color: #10b981; }
+/* Telehealth Badge */
+.telehealth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  width: 100%;
+  justify-content: center;
+}
+
+/* Wallet Section */
+.wallet-notice {
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  color: #ddd6fe;
+  line-height: 1.6;
+}
+.wallet-notice .notice-icon { color: #a78bfa; flex-shrink: 0; }
+
+
+/* ========================================= */
+/* زرار الدفع السحري (Morphing Button) */
+/* ========================================= */
+.magic-pay-btn {
+  width: 100%; height: 60px; border-radius: 14px; background: linear-gradient(90deg, #06b6d4, #2563eb);
+  color: #fff; font-size: 1.1rem; font-weight: 700; font-family: inherit; border: none; cursor: pointer;
+  display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4); overflow: hidden; position: relative;
+}
+.magic-pay-btn::before { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transform: skewX(-20deg); transition: 0.5s; }
+.magic-pay-btn:hover:not(.loading):not(.success) { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(6, 182, 212, 0.6); }
+.magic-pay-btn:hover:not(.loading):not(.success)::before { left: 150%; }
+
+/* حالة التحميل */
+.magic-pay-btn.loading { width: 60px; border-radius: 50%; margin: 0 auto; background: transparent; border: 2px solid rgba(6, 182, 212, 0.3); box-shadow: none; pointer-events: none; }
+.btn-spinner { width: 30px; height: 30px; border: 3px solid transparent; border-top-color: #06b6d4; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* حالة النجاح */
+.magic-pay-btn.success { background: #10b981; box-shadow: 0 0 30px rgba(16, 185, 129, 0.6); cursor: default; }
+
+.cash-notice { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 20px; border-radius: 12px; display: flex; gap: 15px; align-items: flex-start; color: #a7f3d0; line-height: 1.6; }
+.notice-icon { color: #10b981; flex-shrink: 0; }
+
+/* أنيميشن */
+.fade-in-up { animation: fadeInUp 0.8s ease forwards; opacity: 0; transform: translateY(30px); }
+.delay { animation-delay: 0.2s; }
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+/* الموبايل */
+@media (max-width: 900px) {
+  .checkout-grid { grid-template-columns: 1fr; }
+  .glass-receipt { position: static; margin-top: 20px; }
+  .form-row { flex-direction: column; gap: 25px; }
+}

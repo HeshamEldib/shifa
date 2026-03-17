@@ -1,408 +1,254 @@
-// src/components/HomeSection.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Home.css";
-import { ArrowRight, Hospital, BriefcaseMedical, Pill, Menu, X } from "lucide-react";
-import heroImg from "../../assets/hero-illustration.png";
-import { useTranslation } from "react-i18next";
+import { 
+  ArrowLeft, Menu, X, Activity, Search, Smile, Eye, Shield, User, Play, Facebook, Instagram, Linkedin
+} from "lucide-react";
 
 function HomeSection({
-  isLoaded,
-  onLoginClick,
-  onContactClick,
-  onAboutClick,
-  onSignupClick,
-  onGoPatient,
-  onGoAppointments,
-  onGoPatientPrescriptions,
-  role,
+  onLoginClick, onContactClick, onAboutClick, onSignupClick,
+  onGoAllServices, onGoAllDoctors, onServiceClick, onDoctorClick, role,
 }) {
-  const { t } = useTranslation();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isVideoMuted, setIsVideoMuted] = useState(false); 
+  const videoRef = useRef(null);
 
-  const isLoggedIn =
-    role === "Patient" || role === "Doctor" || role === "Admin";
+  const isLoggedIn = role === "Patient" || role === "Doctor" || role === "Admin";
 
-  const handleCardClick = (type) => {
-    if (!isLoggedIn) {
-      onLoginClick();
-      return;
+  // Video Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVideoMuted(false); 
+            if (videoRef.current) videoRef.current.play().catch(() => {});
+          } else {
+            setIsVideoMuted(true); 
+          }
+        });
+      },
+      { threshold: 0.3 } 
+    );
+    if (videoRef.current) observer.observe(videoRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Cards Animation
+  useEffect(() => {
+    const showCards = () => {
+      const cards = document.querySelectorAll('.bento-service-card');
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.classList.add('animate-in');
+        }, index * 250);
+      });
+    };
+    const timer = setTimeout(showCards, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const unlockAudio = () => { 
+    if (videoRef.current && isVideoMuted) {
+      videoRef.current.muted = false;
+      videoRef.current.play().catch(()=>{});
+      setIsVideoMuted(false);
     }
-
-    if (type === "consultation") onGoPatient();
-    if (type === "booking") onGoAppointments();
-    if (type === "prescriptions") onGoPatientPrescriptions();
   };
 
-  const handleNavLinkClick = (callback) => {
-    if (callback) callback();
-    setIsMobileNavOpen(false);
+  const handleServiceClick = (serviceId) => { 
+    if (!isLoggedIn) { onLoginClick(); return; } 
+    if (onServiceClick) onServiceClick(serviceId); 
   };
+  
+  const handleDoctorCardClick = (doctorId) => { if (onDoctorClick) onDoctorClick(doctorId); };
+  const handleNavLinkClick = (callback) => { if (callback) callback(); setIsMobileNavOpen(false); };
+
+  const services = [
+    { id: 1, name: "فحص القلب الشامل", doctor: "د. أحمد محمد", price: "250ج", icon: <Activity size={44} /> },
+    { id: 2, name: "تحليل دم كامل", doctor: "د. فاطمة علي", price: "180ج", icon: <Search size={40} /> },
+    { id: 3, name: "تنظيف أسنان", doctor: "د. محمد سالم", price: "200ج", icon: <Smile size={40} /> },
+    { id: 4, name: "فحص عيون", doctor: "د. سارة حسن", price: "220ج", icon: <Eye size={42} /> },
+    { id: 5, name: "فحص جلدية", doctor: "د. خالد عبدالله", price: "190ج", icon: <Shield size={40} /> },
+    { id: 6, name: "فحص أطفال", doctor: "د. نورا أحمد", price: "160ج", icon: <User size={42} /> },
+  ];
+
+  const doctors = [
+    { id: 1, name: "د. أحمد محمد", specialty: "قلب وأوعية دموية", icon: <Activity size={32} /> },
+    { id: 2, name: "د. فاطمة علي", specialty: "تحاليل مخبرية", icon: <Search size={32} /> },
+    { id: 3, name: "د. محمد سالم", specialty: "طب أسنان", icon: <Smile size={32} /> },
+  ];
 
   return (
-    <>
-      {/* الخلفية */}
-      <div className="background-wrapper">
-        <div
-          className="bg-image"
-          style={{ backgroundImage: `url(${heroImg})` }}
-        />
-        <div className="bg-overlay"></div>
-        <div className="glow-orb orb-1"></div>
-        <div className="glow-orb orb-2"></div>
+    <div className="premium-dark-app" dir="rtl" onClick={unlockAudio}>
+      
+      {/* Backgrounds */}
+      <div className="aurora-bg">
+        <div className="aurora aurora-1"></div>
+        <div className="aurora aurora-2"></div>
+        <div className="tech-grid"></div>
       </div>
 
-      {/* الهيدر */}
-      <nav className={`navbar ${isLoaded ? "fade-in-down" : ""}`}>
-        <div className="navbar-left">
-          <div className="logo-container">
-            <svg
-              width="52"
-              height="52"
-              viewBox="0 0 100 100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="team-logo-svg"
-            >
-              <path
-                d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50"
-                stroke="url(#logo-gradient)"
-                strokeWidth="8"
-                strokeLinecap="round"
-              />
-              <path
-                d="M20 50 L35 50 L45 30 L55 70 L65 50 L80 50"
-                stroke="white"
-                strokeWidth="7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="pulse-path"
-              />
-              <text
-                x="50"
-                y="57"
-                textAnchor="middle"
-                fontSize="36"
-                fontWeight="700"
-                fill="#e5f4ff"
-                className="logo-s-letter"
-              >
-                S
-              </text>
-              <defs>
-                <linearGradient id="logo-gradient" x1="0" y1="0" x2="100" y2="100">
-                  <stop offset="0%" stopColor="#22d3ee" />
-                  <stop offset="100%" stopColor="#7c3aed" />
-                </linearGradient>
-              </defs>
-            </svg>
-
-            <span className="logo-text-main">Shifaa</span>
+      {/* Navbar */}
+      <div className="navbar-wrapper">
+        <nav className="capsule-navbar">
+          <div className="navbar-brand">
+            <div className="logo-icon-neon">S</div>
+            <span className="logo-text">شــفاء</span>
           </div>
-        </div>
+          <div className="nav-links desktop-only">
+            <a href="#home" className="nav-item active">الرئيسية</a>
+            <button className="nav-item" onClick={() => handleNavLinkClick(onAboutClick)}>من نحن</button>
+            <button className="nav-item" onClick={() => handleNavLinkClick(onContactClick)}>تواصل معنا</button>
+          </div>
+          <div className="nav-actions desktop-only">
+            <button className="btn-text" onClick={onLoginClick}>تسجيل دخول </button>
+            <button className="btn-glow" onClick={onSignupClick}>حساب جديد</button>
+          </div>
+          <button className="mobile-menu-toggle mobile-only" onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}>
+            {isMobileNavOpen ? <X size={24} color="#fff" /> : <Menu size={24} color="#fff" />}
+          </button>
+        </nav>
+      </div>
 
-        {/* روابط الديسكتوب */}
-        <div className="nav-links desktop-only">
-          <a href="#home" className="nav-item">
-            {t("navbar.home")}
-          </a>
-          <button
-            type="button"
-            className="nav-item"
-            onClick={onAboutClick}
-          >
-            {t("navbar.about")}
-          </button>
-          <button
-            type="button"
-            className="nav-item"
-            onClick={onContactClick}
-          >
-            {t("navbar.contact")}
-          </button>
-        </div>
-
-        <div className="nav-buttons desktop-only">
-          <button className="btn-secondary" onClick={onLoginClick}>
-            {t("navbar.login")}
-          </button>
-          <button className="btn-primary" onClick={onSignupClick}>
-            {t("navbar.signup")}
-          </button>
-        </div>
-
-        {/* زرار الموبايل */}
-        <button
-          type="button"
-          className="mobile-menu-toggle mobile-only"
-          onClick={() => setIsMobileNavOpen((prev) => !prev)}
-          aria-label="Toggle navigation"
-        >
-          {isMobileNavOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-
-        {/* منيو الموبايل */}
-        <div
-          className={`mobile-nav-panel mobile-only ${
-            isMobileNavOpen ? "open" : ""
-          }`}
-        >
-          <a
-            href="#home"
-            className="mobile-nav-item"
-            onClick={() => setIsMobileNavOpen(false)}
-          >
-            {t("navbar.home")}
-          </a>
-          <button
-            type="button"
-            className="mobile-nav-item"
-            onClick={() => handleNavLinkClick(onAboutClick)}
-          >
-            {t("navbar.about")}
-          </button>
-          <button
-            type="button"
-            className="mobile-nav-item"
-            onClick={() => handleNavLinkClick(onContactClick)}
-          >
-            {t("navbar.contact")}
-          </button>
-
-          <div className="mobile-nav-divider" />
-
-          <button
-            type="button"
-            className="mobile-nav-btn secondary"
-            onClick={() => handleNavLinkClick(onLoginClick)}
-          >
-            {t("navbar.login")}
-          </button>
-          <button
-            type="button"
-            className="mobile-nav-btn primary"
-            onClick={() => handleNavLinkClick(onSignupClick)}
-          >
-            {t("navbar.signup")}
-          </button>
-        </div>
-      </nav>
-
-      {/* الهيرو */}
-      <main id="home" className="hero-section">
-        <div className="hero-content">
-          <div className={`text-wrapper ${isLoaded ? "fade-in-up" : ""}`}>
-            <div className="badge">
-              <span>{t("home.badge")}</span>
+      {/* Hero */}
+      <main id="home" className="hero-centered-section">
+        <div className="container">
+          <div className="hero-text-centered">
+            <div className="status-badge">
+              <span className="status-dot"></span>
+              النظام الأذكى لإدارة العيادات
             </div>
-
-            <h1 className="hero-title">
-              {t("home.title_line1")}
-              <br />
-              <span className="gradient-text">{t("home.title_line2")}</span>
+            <h1 className="hero-title-massive">
+              مستقبل الرعاية الصحية،<br />
+              <span className="text-gradient">بين يديك الآن</span>
             </h1>
-
-            <p className="hero-desc">
-              {t("home.subtitle")}
+            <p className="hero-desc-centered">
+              ارتقِ بتجربتك الطبية مع منصة شفاء. حجز مواعيد، إدارة ملفات طبية، وتواصل مباشر مع نخبة الأطباء.
             </p>
-
-            <div className="hero-buttons">
-              <button className="btn-primary btn-lg" onClick={onLoginClick}>
-                {t("home.cta_get_started")}{" "}
-                <ArrowRight size={18} style={{ marginLeft: "8px" }} />
+            <div className="hero-buttons-centered">
+              <button className="btn-glow large" onClick={onSignupClick}>
+                ابدأ الاستخدام مجاناً <ArrowLeft size={18} />
               </button>
-
-              <button
-                className="btn-secondary btn-lg"
-                onClick={onAboutClick}
-              >
-                {t("home.cta_learn_more")}
+              <button className="btn-outline large" onClick={() => {
+                  document.querySelector('.services-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}>
+                <Play size={18} /> تصفح الخدمات
               </button>
-            </div>
-
-            <div className="hero-badges">
-              <span className="hero-badge-chip">
-                {t("home.badge_support")}
-              </span>
-              <span className="hero-badge-chip">
-                {t("home.badge_doctors")}
-              </span>
-              <span className="hero-badge-chip">
-                {t("home.badge_secure")}
-              </span>
             </div>
           </div>
 
-          {/* الكروت */}
-          <div className={`cards-grid ${isLoaded ? "fade-in-up-delay" : ""}`}>
-            <div
-              className="feature-card"
-              onClick={() => handleCardClick("consultation")}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="icon-wrapper color-cyan">
-                <Hospital size={28} />
-              </div>
-              <h3>{t("home.card_consultation_title")}</h3>
-              <p>{t("home.card_consultation_text")}</p>
-            </div>
-
-            <div
-              className="feature-card feature-card-center"
-              onClick={() => handleCardClick("booking")}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="icon-wrapper color-purple">
-                <BriefcaseMedical size={28} />
-              </div>
-              <h3>{t("home.card_booking_title")}</h3>
-              <p>{t("home.card_booking_text")}</p>
-
-              <div className="scroll-indicator">
-                <span className="scroll-text">{t("home.scroll")}</span>
-                <span className="scroll-arrow">▾</span>
-              </div>
-            </div>
-
-            <div
-              className="feature-card"
-              onClick={() => handleCardClick("prescriptions")}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="icon-wrapper color-blue">
-                <Pill size={28} />
-              </div>
-              <h3>{t("home.card_prescriptions_title")}</h3>
-              <p>{t("home.card_prescriptions_text")}</p>
-            </div>
+          {/* فيديو كامل العرض */}
+          <div className="full-width-video">
+            <video
+              ref={videoRef}
+              src="/background-video.mp4"
+              autoPlay
+              loop
+              muted={isVideoMuted}
+              playsInline
+              className="hero-video-full"
+            />
           </div>
         </div>
       </main>
 
-      {/* الفوتر */}
-      <footer className="footer-ecg">
-        <div className="footer-divider-line"></div>
-
-        <div className="footer-inner">
-          <div className="footer-column">
-            <div className="footer-ecg-logo">
-              {/* تقدر هنا تحط نفس الـ SVG بتاع اللوجو لو حابب */}
-              <span className="footer-ecg-text">Shifaa</span>
+      {/* Services - Bento Grid */}
+      <section className="services-section">
+        <div className="section-heading-center">
+          <h2 className="title">خدماتنا الطبية</h2>
+          <p className="subtitle">رعاية صحية شاملة مصممة خصيصاً لتلبية احتياجاتك</p>
+        </div>
+        
+        <div className="bento-services-grid">
+          {services.map((service, index) => (
+            <div 
+              key={service.id} 
+              className={`bento-service-card bento-card-${index + 1}`}
+              onClick={() => handleServiceClick(service.id)}
+            >
+              <div className="service-icon-glow">{service.icon}</div>
+              <div className="service-price-badge">{service.price}</div>
+              <div className="service-content">
+                <h3 className="service-title">{service.name}</h3>
+                <p className="service-doctor">{service.doctor}</p>
+              </div>
             </div>
+          ))}
+        </div>
+      </section>
 
-            <p className="footer-desc">
-              {t("home.footer_desc")}
-            </p>
-          </div>
-
-          <div className="footer-column">
-            <h4 className="footer-heading">{t("home.footer_quick_links")}</h4>
-            <ul className="footer-links">
-              <li>
-                <a href="#home">{t("navbar.home")}</a>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="footer-link-button"
-                  onClick={onAboutClick}
-                >
-                  {t("navbar.about")}
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="footer-link-button"
-                  onClick={onContactClick}
-                >
-                  {t("navbar.contact")}
-                </button>
-              </li>
-              <li>
-                <a href="#home">{t("home.footer_services")}</a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="footer-column">
-            <h4 className="footer-heading">{t("home.footer_contact_title")}</h4>
-            <ul className="footer-links">
-              <li>
-                <span>{t("home.footer_contact_email")}</span>
-              </li>
-              <li>
-                <span>{t("home.footer_contact_phone")}</span>
-              </li>
-              <li>
-                <span>{t("home.footer_contact_location")}</span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="footer-column">
-            <h4 className="footer-heading">{t("home.footer_stay_updated")}</h4>
-            <p className="footer-desc-small">
-              {t("home.footer_newsletter_text")}
-            </p>
-            <div className="footer-newsletter">
-              <input
-                type="email"
-                placeholder={t("home.footer_newsletter_placeholder")}
-                className="footer-input"
-              />
-              <button className="footer-button">
-                {t("home.footer_newsletter_button")}
-              </button>
+      {/* Doctors */}
+      <section className="doctors-section">
+        <div className="container">
+          <div className="section-heading flex-between">
+            <div>
+              <h2 className="title">نخبة الأطباء</h2>
+              <p className="subtitle">أفضل المتخصصين لمتابعة حالتك</p>
             </div>
+            <button className="btn-text-link desktop-only" onClick={onGoAllDoctors}>
+              عرض الجميع <ArrowLeft size={16} />
+            </button>
+          </div>
+          <div className="doctors-slider">
+            {doctors.map((doctor) => (
+              <div key={doctor.id} className="doctor-card-pro" onClick={() => handleDoctorCardClick(doctor.id)}>
+                <div className="doc-avatar-pro">{doctor.icon}</div>
+                <div className="doc-info">
+                  <h3 className="doc-name">{doctor.name}</h3>
+                  <p className="doc-spec">{doctor.specialty}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <div className="footer-follow">
-              <span className="footer-follow-label">
-                {t("home.footer_follow_us")}
-              </span>
-              <div className="footer-follow-icons">
-                <a href="#facebook" className="footer-social-badge">
-                  FB
-                </a>
-                <a href="#instagram" className="footer-social-badge">
-                  IG
-                </a>
-                <a href="#linkedin" className="footer-social-badge">
-                  IN
-                </a>
+      {/* Footer */}
+      <div className="container">
+        <footer className="giant-footer-card">
+          <div className="footer-grid">
+            <div className="footer-brand-col">
+              <div className="logo-icon-neon large">S</div>
+              <span className="logo-text large">شــفاء</span>
+              <p className="footer-desc-chic">الرعاية الصحية الأفضل، بين يديك في أي وقت وأي مكان.</p>
+            </div>
+            <div className="footer-links-col">
+              <h4>روابط سريعة</h4>
+              <button onClick={onAboutClick}>من نحن</button>
+              <button onClick={onContactClick}>تواصل معنا</button>
+              <button onClick={onGoAllServices}>الخدمات</button>
+            </div>
+            <div className="footer-links-col">
+              <h4>بيانات التواصل</h4>
+              <span>info@shifaa.com</span>
+              <span>+20 123 456 7890</span>
+              <span>القاهرة، مصر</span>
+            </div>
+            <div className="footer-newsletter-col">
+              <h4>النشرة البريدية</h4>
+              <p className="newsletter-desc">اشترك ليصلك أحدث المقالات الطبية.</p>
+              <div className="elegant-input-group">
+                <input type="email" placeholder="بريدك الإلكتروني" />
+                <button className="btn-glow small">اشتراك</button>
+              </div>
+              <div className="social-chic-links-pro">
+                <a href="#fb"><Facebook size={22}/></a>
+                <a href="#ig"><Instagram size={22}/></a>
+                <a href="#in"><Linkedin size={22}/></a>
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="footer-ecg-bottom">
-          <div className="footer-ecg-links">
-            <a href="#home">{t("navbar.home")}</a>
-            <button
-              type="button"
-              className="footer-link-button"
-              onClick={onAboutClick}
-            >
-              {t("navbar.about")}
-            </button>
-            <button
-              type="button"
-              className="footer-link-button"
-              onClick={onContactClick}
-            >
-              {t("navbar.contact")}
-            </button>
+          <div className="footer-bottom-chic">
+            <p>© 2026 شفاء - جميع الحقوق محفوظة</p>
+            <div className="legal-links">
+              <a href="#privacy">سياسة الخصوصية</a>
+              <a href="#terms">شروط الاستخدام</a>
+            </div>
           </div>
+        </footer>
+      </div>
 
-          <div className="footer-ecg-right">
-            <span>{t("home.footer_copy")}</span>
-            <span className="footer-ecg-dot">•</span>
-            <a href="#privacy">{t("home.footer_privacy")}</a>
-            <span className="footer-ecg-dot">•</span>
-            <a href="#terms">{t("home.footer_terms")}</a>
-          </div>
-        </div>
-      </footer>
-    </>
+    </div>
   );
 }
 

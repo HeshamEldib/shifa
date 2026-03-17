@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./i18n";
 import "./index.css";
@@ -8,7 +8,7 @@ import "./index.css";
 import PageTitle from "./components/PageTitle.jsx";
 import FloatingLanguageSwitcher from "./components/FloatingLanguageSwitcher.jsx";
 
-// website
+// website (الواجهة الخارجية)
 import HomeSection from "./components/website/HomeSection.jsx";
 import LoginSection from "./components/website/LoginSection.jsx";
 import ContactSection from "./components/website/ContactSection.jsx";
@@ -16,7 +16,13 @@ import AboutSection from "./components/website/AboutSection.jsx";
 import SignUpSection from "./components/website/SignUpSection.jsx";
 import ForgotPassword from "./components/website/ForgotPassword.jsx";
 
-// dashboard
+// الصفحات الجديدة
+import AllServices from "./components/website/AllServices.jsx";
+import AllDoctors from "./components/website/AllDoctors.jsx";
+import DoctorDetails from "./components/website/DoctorDetails.jsx";
+import BookingPage from "./components/website/BookingPage.jsx";
+
+// dashboard (لوحات التحكم)
 import PatientHome from "./components/dashboard/PatientHome.jsx";
 import PatientAppointments from "./components/dashboard/PatientAppointments.jsx";
 import DoctorDashboard from "./components/dashboard/DoctorDashboard.jsx";
@@ -37,25 +43,15 @@ const shifaaFaviconSvg = `
       <stop offset="100%" stop-color="#0b043f" />
     </linearGradient>
   </defs>
-
   <rect x="0" y="0" width="256" height="256" rx="56" fill="url(#bg)" />
-
   <path
-    d="M 40 140
-       L 80 140
-       L 98 110
-       L 118 170
-       L 138 120
-       L 158 160
-       L 176 140
-       L 216 140"
+    d="M 40 140 L 80 140 L 98 110 L 118 170 L 138 120 L 158 160 L 176 140 L 216 140"
     fill="none"
     stroke="#FFFFFF"
     stroke-width="16"
     stroke-linecap="round"
     stroke-linejoin="round"
   />
-
   <circle cx="216" cy="140" r="10" fill="#FFFFFF" />
 </svg>
 `;
@@ -86,8 +82,7 @@ function MainApp() {
 
   // اتجاه الصفحة حسب اللغة
   useEffect(() => {
-    const dir =
-      i18n.language && i18n.language.startsWith("ar") ? "rtl" : "ltr";
+    const dir = i18n.language && i18n.language.startsWith("ar") ? "rtl" : "ltr";
     document.documentElement.dir = dir;
     document.body.dir = dir;
   }, [i18n.language]);
@@ -105,16 +100,12 @@ function MainApp() {
     }
     link.href = url;
 
-    return () => {
-      URL.revokeObjectURL(url);
-    };
+    return () => URL.revokeObjectURL(url);
   }, []);
 
   const issuePrescription = (medicines) => {
     const rx = {
-      id: `SHIFAA-RX-${new Date().getFullYear()}-${Math.floor(
-        100000 + Math.random() * 900000
-      )}`,
+      id: `SHIFAA-RX-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`,
       createdAt: new Date().toISOString(),
       patientId: activePatient.id,
       patientName: activePatient.name,
@@ -129,14 +120,18 @@ function MainApp() {
     return prescriptions.filter((p) => p.patientId === activePatient.id);
   }, [prescriptions, activePatient.id]);
 
-  const currentRole = localStorage.getItem("role") || "Patient";
+  const currentRole = localStorage.getItem("role"); 
+  const isLoggedIn = !!currentRole; 
 
   return (
     <>
       <FloatingLanguageSwitcher />
 
       <Routes>
-        {/* Website داخل app-container */}
+        {/* ============================== */}
+        {/* 1. المسارات العامة (متاحة للجميع) */}
+        {/* ============================== */}
+        
         <Route
           path="/"
           element={
@@ -148,13 +143,46 @@ function MainApp() {
                 onContactClick={() => navigate("/contact")}
                 onAboutClick={() => navigate("/about")}
                 onSignupClick={() => navigate("/signup")}
-                role={currentRole}
+                role={currentRole || "Guest"} 
+                onGoAllServices={() => navigate("/services")}
+                onGoAllDoctors={() => navigate("/doctors")}
+                onServiceClick={(id) => navigate(`/booking/${id}`)}
+                onDoctorClick={(id) => navigate(`/doctor/${id}`)}
                 onGoPatient={() => navigate("/patient")}
                 onGoAppointments={() => navigate("/appointments")}
-                onGoPatientPrescriptions={() =>
-                  navigate("/patient-prescriptions")
-                }
+                onGoPatientPrescriptions={() => navigate("/patient-prescriptions")}
               />
+            </div>
+          }
+        />
+
+        <Route
+          path="/services"
+          element={
+            <div className="app-container">
+              <PageTitle title="جميع الخدمات" />
+              <AllServices />
+            </div>
+          }
+        />
+
+        <Route
+          path="/doctors"
+          element={
+            <div className="app-container">
+              <PageTitle title="أطباؤنا المتميزون" />
+              <AllDoctors />
+            </div>
+          }
+        />
+
+        {/* مسار تفاصيل الطبيب (الـ CV) */}
+        <Route
+          path="/doctor/:doctorId"
+          element={
+            <div className="app-container">
+              <PageTitle title="تفاصيل الطبيب" />
+              <DoctorDetails />
             </div>
           }
         />
@@ -171,18 +199,38 @@ function MainApp() {
                 onForgotClick={() => navigate("/forgot")}
                 onLoginSuccess={(data) => {
                   const r = data?.role || "Patient";
-
                   localStorage.setItem("role", r);
-                  if (data?.token) {
-                    localStorage.setItem("token", data.token);
-                  }
-                  if (data?.userId) {
-                    localStorage.setItem("userId", data.userId);
-                  }
+                  if (data?.token) localStorage.setItem("token", data.token);
+                  if (data?.userId) localStorage.setItem("userId", data.userId);
 
                   if (r === "Patient") navigate("/patient");
                   else if (r === "Doctor") navigate("/doctor");
                   else if (r === "Admin") navigate("/admin");
+                }}
+              />
+            </div>
+          }
+        />
+
+        <Route
+          path="/signup"
+          element={
+            <div className="app-container">
+              <PageTitle title={t("pages.signup")} />
+              <SignUpSection
+                isLoaded={isLoaded}
+                onBackClick={() => navigate("/")}
+                onLoginClick={() => navigate("/login")}
+                onSignupSuccess={({ role, token, userId }) => {
+                  const r = role || "Patient";
+                  localStorage.setItem("role", r);
+                  if (token) localStorage.setItem("token", token);
+                  if (userId) localStorage.setItem("userId", userId);
+
+                  if (r === "Patient") navigate("/patient");
+                  else if (r === "Doctor") navigate("/doctor");
+                  else if (r === "Admin") navigate("/admin");
+                  else navigate("/patient");
                 }}
               />
             </div>
@@ -219,32 +267,6 @@ function MainApp() {
         />
 
         <Route
-          path="/signup"
-          element={
-            <div className="app-container">
-              <PageTitle title={t("pages.signup")} />
-              <SignUpSection
-                isLoaded={isLoaded}
-                onBackClick={() => navigate("/")}
-                onLoginClick={() => navigate("/login")}
-                onSignupSuccess={({ role, token, userId }) => {
-                  const r = role || "Patient";
-                  localStorage.setItem("role", r);
-                  if (token) localStorage.setItem("token", token);
-                  if (userId) localStorage.setItem("userId", userId);
-
-                  if (r === "Patient") navigate("/patient");
-                  else if (r === "Doctor") navigate("/doctor");
-                  else if (r === "Admin") navigate("/admin");
-                  else navigate("/patient");
-                }}
-              />
-            </div>
-          }
-        />
-
-        {/* Forgot خارج app-container */}
-        <Route
           path="/forgot"
           element={
             <>
@@ -257,14 +279,35 @@ function MainApp() {
           }
         />
 
-        {/* Patient */}
+        {/* ============================== */}
+        {/* 2. المسارات المحمية (تتطلب تسجيل دخول) */}
+        {/* ============================== */}
+
+        {/* مسار بوابة الدفع والحجز */}
+        <Route
+          path="/booking/:serviceId"
+          element={
+            isLoggedIn ? (
+              <div className="app-container">
+                <PageTitle title="تأكيد الحجز" />
+                <BookingPage />
+              </div>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
         <Route
           path="/patient"
           element={
             <div className="app-container">
               <PageTitle title={t("pages.patient_dashboard")} />
               <PatientHome
-                onLogout={() => navigate("/")}
+                onLogout={() => {
+                  localStorage.clear();
+                  navigate("/");
+                }}
                 onOpenAppointments={() => navigate("/appointments")}
                 onOpenPrescriptions={() => navigate("/patient-prescriptions")}
                 onOpenSettings={() => navigate("/settings")}
@@ -298,14 +341,16 @@ function MainApp() {
           }
         />
 
-        {/* Doctor */}
         <Route
           path="/doctor"
           element={
             <div className="app-container">
               <PageTitle title={t("pages.doctor_dashboard")} />
               <DoctorDashboard
-                onLogout={() => navigate("/")}
+                onLogout={() => {
+                  localStorage.clear();
+                  navigate("/");
+                }}
                 onOpenSettings={() => navigate("/settings")}
                 onOpenSilent={() => navigate("/silent")}
                 onOpenPrescription={() => navigate("/prescription")}
@@ -367,27 +412,28 @@ function MainApp() {
           }
         />
 
-        {/* Admin */}
         <Route
           path="/admin"
           element={
             <div className="app-container">
               <PageTitle title={t("pages.admin_dashboard")} />
               <AdminDashboard
-                onLogout={() => navigate("/")}
+                onLogout={() => {
+                  localStorage.clear();
+                  navigate("/");
+                }}
                 onOpenSettings={() => navigate("/settings")}
               />
             </div>
           }
         />
 
-        {/* Settings */}
         <Route
           path="/settings"
           element={
             <div className="app-container">
               <PageTitle title={t("pages.settings")} />
-              <SettingsPage role={currentRole} onBack={() => navigate(-1)} />
+              <SettingsPage role={currentRole || "Patient"} onBack={() => navigate(-1)} />
             </div>
           }
         />
