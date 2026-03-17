@@ -129,6 +129,7 @@ function HomeSection({
               <button className="btn-glow large" onClick={onSignupClick}>
                 ابدأ الاستخدام مجاناً <ArrowLeft size={18} />
               </button>
+
               <button className="btn-outline large" onClick={() => {
                   document.querySelector('.services-section')?.scrollIntoView({ behavior: 'smooth' });
                 }}>
@@ -174,6 +175,16 @@ function HomeSection({
               </div>
             </div>
           ))}
+        </div>
+
+        {/* زر جديد تحت الكروت */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
+          <button 
+            className="btn-glow large" 
+            onClick={onGoAllServices}
+          >
+            تصفح كل الخدمات <ArrowLeft size={18} />
+          </button>
         </div>
       </section>
 
