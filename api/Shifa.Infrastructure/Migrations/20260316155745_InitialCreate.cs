@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shifa.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate_Final : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -82,11 +82,13 @@ namespace Shifa.Infrastructure.Migrations
                 columns: table => new
                 {
                     UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Age = table.Column<int>(type: "int", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RoleID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -142,6 +144,34 @@ namespace Shifa.Infrastructure.Migrations
                     table.PrimaryKey("PK_DoctorAvailabilities", x => x.AvailabilityID);
                     table.ForeignKey(
                         name: "FK_DoctorAvailabilities_Users_DoctorID",
+                        column: x => x.DoctorID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DoctorServices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DurationMinutes = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorServices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DoctorServices_Services_ServiceID",
+                        column: x => x.ServiceID,
+                        principalTable: "Services",
+                        principalColumn: "ServiceID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DoctorServices_Users_DoctorID",
                         column: x => x.DoctorID,
                         principalTable: "Users",
                         principalColumn: "UserID",
@@ -252,7 +282,9 @@ namespace Shifa.Infrastructure.Migrations
                     AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AppointmentStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    Reason = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -313,6 +345,9 @@ namespace Shifa.Infrastructure.Migrations
                 {
                     InvoiceID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AppointmentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     InvoiceStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
@@ -452,6 +487,17 @@ namespace Shifa.Infrastructure.Migrations
                 column: "DoctorID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DoctorServices_DoctorID_ServiceID",
+                table: "DoctorServices",
+                columns: new[] { "DoctorID", "ServiceID" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorServices_ServiceID",
+                table: "DoctorServices",
+                column: "ServiceID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DoctorTimeOffs_DoctorID",
                 table: "DoctorTimeOffs",
                 column: "DoctorID");
@@ -549,6 +595,9 @@ namespace Shifa.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "DoctorAvailabilities");
+
+            migrationBuilder.DropTable(
+                name: "DoctorServices");
 
             migrationBuilder.DropTable(
                 name: "DoctorTimeOffs");

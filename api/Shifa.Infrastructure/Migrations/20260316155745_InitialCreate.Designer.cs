@@ -12,8 +12,8 @@ using Shifa.Infrastructure.Data;
 namespace Shifa.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260129151457_AddDoctorServicesTable")]
-    partial class AddDoctorServicesTable
+    [Migration("20260316155745_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -593,6 +593,13 @@ namespace Shifa.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -601,24 +608,23 @@ namespace Shifa.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Gender")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("Phone")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -723,7 +729,7 @@ namespace Shifa.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Shifa.Core.Entities.Service", "Service")
-                        .WithMany()
+                        .WithMany("DoctorServices")
                         .HasForeignKey("ServiceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -903,6 +909,11 @@ namespace Shifa.Infrastructure.Migrations
             modelBuilder.Entity("Shifa.Core.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Shifa.Core.Entities.Service", b =>
+                {
+                    b.Navigation("DoctorServices");
                 });
 #pragma warning restore 612, 618
         }

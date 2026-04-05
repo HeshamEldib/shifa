@@ -4,11 +4,8 @@ namespace Shifa.API.Dtos.Auth
 {
     public class RegisterStaffDto
     {
-        [Required]
-        public string FirstName { get; set; } = string.Empty;
-
-        [Required]
-        public string LastName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "الاسم بالكامل مطلوب")]
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]
@@ -19,7 +16,17 @@ namespace Shifa.API.Dtos.Auth
         public string Password { get; set; } = string.Empty;
 
         [Required]
-        public string PhoneNumber { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+
+        [Required]
+        public string Gender { get; set; } = string.Empty;
+
+        [Required]
+        public string Country { get; set; } = string.Empty;
+
+        [Required]
+        [Range(1, 120)]
+        public int Age { get; set; } = 1;
 
         [Required]
         // هنا نسمح بتحديد الدور (2=Doctor, 3=Receptionist, 1=Admin)

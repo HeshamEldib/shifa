@@ -4,12 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Eye, EyeOff } from "lucide-react";
 import heroImg from "../../assets/hero-illustration.png";
 import "./SignUp.css";
-
-const ROLES = [
-  { key: "patient", label: "signup.role_patient", icon: "👤" },
-  { key: "doctor", label: "signup.role_doctor", icon: "👨‍⚕️" },
-  { key: "center", label: "signup.role_center", icon: "🏥" },
-];
+import { authService } from "../../services/authService";
 
 function passwordStrength(pw) {
   if (!pw) return { label: "Weak", score: 0 };
@@ -27,8 +22,6 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.resolvedLanguage === "ar";
 
-  const [role, setRole] = useState("patient");
-  const [step, setStep] = useState(1);
   const [showPw, setShowPw] = useState(false);
   const [socialLoading, setSocialLoading] = useState(null);
   const [submitState, setSubmitState] = useState("idle");
@@ -41,10 +34,6 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
     gender: "",
     age: "",
     country: "Egypt",
-    specialization: "",
-    medicalId: "",
-    centerName: "",
-    licenseNumber: "",
     agree: false,
   });
 
@@ -85,81 +74,41 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
         defaultValue: "Password must be at least 8 characters.",
       });
 
-    if (step >= 2) {
-      if (!form.phone.trim())
-        e.phone = t("signup.phone_required", {
-          defaultValue: "Phone number is required.",
-        });
-      if (!form.gender)
-        e.gender = t("signup.gender_required", {
-          defaultValue: "Gender is required.",
-        });
-      if (!form.age)
-        e.age = t("signup.age_required", {
-          defaultValue: "Age is required.",
-        });
-      else if (Number(form.age) < 1 || Number(form.age) > 120)
-        e.age = t("signup.age_invalid", {
-          defaultValue: "Enter a valid age.",
-        });
-      if (!form.country)
-        e.country = t("signup.country_required", {
-          defaultValue: "Country is required.",
-        });
-    }
-
-    if (step >= 3) {
-      if (role === "doctor") {
-        if (!form.specialization.trim())
-          e.specialization = t("signup.specialization_required", {
-            defaultValue: "Specialization is required.",
-          });
-        if (!form.medicalId.trim())
-          e.medicalId = t("signup.medical_id_required", {
-            defaultValue: "Medical ID is required.",
-          });
-      }
-      if (role === "center") {
-        if (!form.centerName.trim())
-          e.centerName = t("signup.center_name_required", {
-            defaultValue: "Center name is required.",
-          });
-        if (!form.licenseNumber.trim())
-          e.licenseNumber = t("signup.license_required", {
-            defaultValue: "License number is required.",
-          });
-      }
-      if (!form.agree)
-        e.agree = t("signup.agree_required", {
-          defaultValue: "You must agree to Terms & Privacy Policy.",
-        });
-    }
+    if (!form.phone.trim())
+      e.phone = t("signup.phone_required", {
+        defaultValue: "Phone number is required.",
+      });
+      
+    if (!form.gender)
+      e.gender = t("signup.gender_required", {
+        defaultValue: "Gender is required.",
+      });
+      
+    if (!form.age)
+      e.age = t("signup.age_required", {
+        defaultValue: "Age is required.",
+      });
+    else if (Number(form.age) < 1 || Number(form.age) > 120)
+      e.age = t("signup.age_invalid", {
+        defaultValue: "Enter a valid age.",
+      });
+      
+    if (!form.country)
+      e.country = t("signup.country_required", {
+        defaultValue: "Country is required.",
+      });
+      
+    if (!form.agree)
+      e.agree = t("signup.agree_required", {
+        defaultValue: "You must agree to Terms & Privacy Policy.",
+      });
 
     return e;
-  }, [form, role, step, t]);
+  }, [form, t]);
 
-  const stepCount = 3;
-  const progressPct = Math.round((step / stepCount) * 100);
-
-  const canGoNext = () => {
-    if (step === 1) return !errors.fullName && !errors.email && !errors.password;
-    if (step === 2)
-      return !errors.phone && !errors.gender && !errors.age && !errors.country;
-    return true;
+  const canSubmit = () => {
+    return !Object.keys(errors).length;
   };
-
-  const goNext = () => {
-    setTouched((p) => ({
-      ...p,
-      ...(step === 1
-        ? { fullName: true, email: true, password: true }
-        : {}),
-    }));
-    if (!canGoNext()) return;
-    setStep((s) => Math.min(stepCount, s + 1));
-  };
-
-  const goPrev = () => setStep((s) => Math.max(1, s - 1));
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -172,27 +121,23 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
       gender: true,
       age: true,
       country: true,
-      specialization: true,
-      medicalId: true,
-      centerName: true,
-      licenseNumber: true,
       agree: true,
     }));
-    if (Object.keys(errors).length) return;
+    
+    if (!canSubmit()) return;
 
     setSubmitState("loading");
 
-    let finalRole = "Patient";
-    if (role === "doctor") finalRole = "Doctor";
-    else if (role === "center") finalRole = "Admin";
-
     try {
-      setTimeout(() => {
-        setSubmitState("success");
-        if (typeof onSignupSuccess === "function") {
-          onSignupSuccess({ role: finalRole });
-        }
-      }, 900);
+      console.log("data =>", form);
+      const data = await authService.register(form, "Patient");
+
+      
+      setSubmitState("success");
+      
+      if (typeof onSignupSuccess === "function") {
+        onSignupSuccess({ role: "Patient", token: data.token, userId: data.userId });
+      }
     } catch (err) {
       setSubmitState("idle");
     }
@@ -202,7 +147,8 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
     setSocialLoading(provider);
     setTimeout(() => {
       setSocialLoading(null);
-      alert(`Social signup with ${provider} is not connected yet.`);
+      // TODO: Integrate with your backend OAuth
+      console.log(`Social signup with ${provider} clicked`);
     }, 700);
   };
 
@@ -228,13 +174,6 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
       );
     return null;
   };
-
-  const stepHint =
-    step === 1
-      ? t("signup.step1_hint")
-      : step === 2
-      ? t("signup.step2_hint")
-      : t("signup.step3_hint");
 
   return (
     <>
@@ -286,7 +225,7 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
                 type="button"
                 className="su-social-btn su-social-google"
                 onClick={() => handleSocialClick("google")}
-                disabled={!!socialLoading}
+                disabled={!!socialLoading || submitState === "loading"}
               >
                 <span className="su-social-ic">G</span>
                 <span>
@@ -299,7 +238,7 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
                 type="button"
                 className="su-social-btn su-social-apple"
                 onClick={() => handleSocialClick("apple")}
-                disabled={!!socialLoading}
+                disabled={!!socialLoading || submitState === "loading"}
               >
                 <span className="su-social-ic"></span>
                 <span>
@@ -315,474 +254,218 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
               </div>
             </div>
 
-            <div className="su-role">
-              <h2 className="su-h2">{t("signup.choose_type")}</h2>
-              <div
-                className="su-role-grid"
-                role="radiogroup"
-                aria-label="Account type"
-              >
-                {ROLES.map((r) => (
-                  <button
-                    key={r.key}
-                    type="button"
-                    role="radio"
-                    aria-checked={role === r.key}
-                    className={`su-role-card ${
-                      role === r.key ? "is-active" : ""
-                    }`}
-                    onClick={() => setRole(r.key)}
-                  >
-                    <span className="su-role-ic">{r.icon}</span>
-                    <span className="su-role-label">{t(r.label)}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="su-progress">
-              <div className="su-progress-top">
-                <span className="su-step-text">
-                  {t("signup.step_of", { step, total: stepCount })}
-                </span>
-                <span className="su-step-hint">{stepHint}</span>
-              </div>
-              <div className="su-progress-bar">
-                <div
-                  className="su-progress-fill"
-                  style={{ width: `${progressPct}%` }}
-                />
-              </div>
-            </div>
-
             <form className="su-form" onSubmit={onSubmit} noValidate>
-              {step === 1 && (
-                <div className="su-step">
-                  <div
-                    className={`su-field ${
-                      showError("fullName") ? "has-error" : ""
-                    }`}
-                  >
-                    <label>{t("signup.full_name_label")}</label>
-                    <div className="su-input-wrap">
-                      <input
-                        value={form.fullName}
-                        onChange={(e) => setField("fullName", e.target.value)}
-                        onBlur={() =>
-                          setTouched((p) => ({ ...p, fullName: true }))
-                        }
-                        placeholder={t("signup.full_name_placeholder")}
-                        autoComplete="name"
-                      />
-                      {renderFieldStatus("fullName")}
-                    </div>
-                    {showError("fullName") && (
-                      <small className="su-err">{errors.fullName}</small>
-                    )}
-                  </div>
-
-                  <div
-                    className={`su-field ${
-                      showError("email") ? "has-error" : ""
-                    }`}
-                  >
-                    <label>{t("signup.email_label")}</label>
-                    <div className="su-input-wrap">
-                      <input
-                        value={form.email}
-                        onChange={(e) => setField("email", e.target.value)}
-                        onBlur={() =>
-                          setTouched((p) => ({ ...p, email: true }))
-                        }
-                        placeholder={t("signup.email_placeholder")}
-                        autoComplete="email"
-                        inputMode="email"
-                      />
-                      {renderFieldStatus("email")}
-                    </div>
-                    {showError("email") && (
-                      <small className="su-err">{errors.email}</small>
-                    )}
-                  </div>
-
-                  <div
-                    className={`su-field ${
-                      showError("password") ? "has-error" : ""
-                    }`}
-                  >
-                    <label>{t("signup.password_label")}</label>
-                    <div
-                      className={`su-input-wrap su-password-wrap ${
-                        isArabic ? "rtl" : "ltr"
-                      }`}
-                    >
-                      <input
-                        value={form.password}
-                        onChange={(e) =>
-                          setField("password", e.target.value)
-                        }
-                        onBlur={() =>
-                          setTouched((p) => ({ ...p, password: true }))
-                        }
-                        placeholder={t("signup.password_placeholder")}
-                        type={showPw ? "text" : "password"}
-                        autoComplete="new-password"
-                        className="su-password-input"
-                      />
-                      <button
-                        type="button"
-                        className="su-eye"
-                        onClick={() => setShowPw((v) => !v)}
-                        aria-label={
-                          showPw
-                            ? t("signup.hide_password")
-                            : t("signup.show_password")
-                        }
-                      >
-                        {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
-                      {renderFieldStatus("password")}
-                    </div>
-
-                    <div className="su-strength">
-                      <div className={`su-strength-bar s${pw.score}`}>
-                        <span />
-                      </div>
-                      <span className="su-strength-text">{pw.label}</span>
-                    </div>
-
-                    {showError("password") && (
-                      <small className="su-err">{errors.password}</small>
-                    )}
-                  </div>
+              <div className={`su-field ${showError("fullName") ? "has-error" : ""}`}>
+                <label>{t("signup.full_name_label")}</label>
+                <div className="su-input-wrap">
+                  <input
+                    value={form.fullName}
+                    onChange={(e) => setField("fullName", e.target.value)}
+                    onBlur={() =>
+                      setTouched((p) => ({ ...p, fullName: true }))
+                    }
+                    placeholder={t("signup.full_name_placeholder")}
+                    autoComplete="name"
+                  />
+                  {renderFieldStatus("fullName")}
                 </div>
+                {showError("fullName") && (
+                  <small className="su-err">{errors.fullName}</small>
+                )}
+              </div>
+
+              <div className={`su-field ${showError("email") ? "has-error" : ""}`}>
+                <label>{t("signup.email_label")}</label>
+                <div className="su-input-wrap">
+                  <input
+                    value={form.email}
+                    onChange={(e) => setField("email", e.target.value)}
+                    onBlur={() =>
+                      setTouched((p) => ({ ...p, email: true }))
+                    }
+                    placeholder={t("signup.email_placeholder")}
+                    autoComplete="email"
+                    inputMode="email"
+                  />
+                  {renderFieldStatus("email")}
+                </div>
+                {showError("email") && (
+                  <small className="su-err">{errors.email}</small>
+                )}
+              </div>
+
+              <div className={`su-field ${showError("password") ? "has-error" : ""}`}>
+                <label>{t("signup.password_label")}</label>
+                <div
+                  className={`su-input-wrap su-password-wrap ${
+                    isArabic ? "rtl" : "ltr"
+                  }`}
+                >
+                  <input
+                    value={form.password}
+                    onChange={(e) => setField("password", e.target.value)}
+                    onBlur={() =>
+                      setTouched((p) => ({ ...p, password: true }))
+                    }
+                    placeholder={t("signup.password_placeholder")}
+                    type={showPw ? "text" : "password"}
+                    autoComplete="new-password"
+                    className="su-password-input"
+                  />
+                  <button
+                    type="button"
+                    className="su-eye"
+                    onClick={() => setShowPw((v) => !v)}
+                    aria-label={
+                      showPw
+                        ? t("signup.hide_password")
+                        : t("signup.show_password")
+                    }
+                  >
+                    {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                  {renderFieldStatus("password")}
+                </div>
+
+                <div className="su-strength">
+                  <div className={`su-strength-bar s${pw.score}`}>
+                    <span />
+                  </div>
+                  <span className="su-strength-text">{pw.label}</span>
+                </div>
+
+                {showError("password") && (
+                  <small className="su-err">{errors.password}</small>
+                )}
+              </div>
+
+              <div className={`su-field ${showError("phone") ? "has-error" : ""}`}>
+                <label>{t("signup.phone_label")}</label>
+                <div className="su-input-wrap">
+                  <input
+                    value={form.phone}
+                    onChange={(e) => setField("phone", e.target.value)}
+                    onBlur={() =>
+                      setTouched((p) => ({ ...p, phone: true }))
+                    }
+                    placeholder={t("signup.phone_placeholder")}
+                    autoComplete="tel"
+                    inputMode="tel"
+                  />
+                  {renderFieldStatus("phone")}
+                </div>
+                {showError("phone") && (
+                  <small className="su-err">{errors.phone}</small>
+                )}
+              </div>
+
+              <div className={`su-field ${showError("gender") ? "has-error" : ""}`}>
+                <label>{t("signup.gender_label")}</label>
+                <div className="su-input-wrap">
+                  <select
+                    value={form.gender}
+                    onChange={(e) => setField("gender", e.target.value)}
+                    onBlur={() =>
+                      setTouched((p) => ({ ...p, gender: true }))
+                    }
+                  >
+                    <option value="">
+                      {t("signup.gender_select")}
+                    </option>
+                    <option value="female">
+                      {t("signup.gender_female")}
+                    </option>
+                    <option value="male">
+                      {t("signup.gender_male")}
+                    </option>
+                  </select>
+                  {renderFieldStatus("gender")}
+                </div>
+                {showError("gender") && (
+                  <small className="su-err">{errors.gender}</small>
+                )}
+              </div>
+
+              <div className={`su-field ${showError("age") ? "has-error" : ""}`}>
+                <label>{t("signup.age_label")}</label>
+                <div className="su-input-wrap">
+                  <input
+                    value={form.age}
+                    onChange={(e) => setField("age", e.target.value)}
+                    onBlur={() =>
+                      setTouched((p) => ({ ...p, age: true }))
+                    }
+                    placeholder={t("signup.age_placeholder")}
+                    inputMode="numeric"
+                  />
+                  {renderFieldStatus("age")}
+                </div>
+                {showError("age") && (
+                  <small className="su-err">{errors.age}</small>
+                )}
+              </div>
+
+              <div className={`su-field ${showError("country") ? "has-error" : ""}`}>
+                <label>{t("signup.country_label")}</label>
+                <div className="su-input-wrap">
+                  <select
+                    value={form.country}
+                    onChange={(e) => setField("country", e.target.value)}
+                    onBlur={() =>
+                      setTouched((p) => ({ ...p, country: true }))
+                    }
+                  >
+                    {countries.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                  {renderFieldStatus("country")}
+                </div>
+                {showError("country") && (
+                  <small className="su-err">{errors.country}</small>
+                )}
+              </div>
+
+              <label className={`su-check ${showError("agree") ? "has-error" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={form.agree}
+                  onChange={(e) => setField("agree", e.target.checked)}
+                  onBlur={() =>
+                    setTouched((p) => ({ ...p, agree: true }))
+                  }
+                />
+                <span>
+                  {t("signup.agree_prefix")}{" "}
+                  <button type="button" className="su-inline-link">
+                    {t("signup.terms")}
+                  </button>{" "}
+                  &nbsp;
+                  <button type="button" className="su-inline-link">
+                    {t("signup.privacy")}
+                  </button>
+                </span>
+              </label>
+              {showError("agree") && (
+                <small className="su-err">{errors.agree}</small>
               )}
 
-              {step === 2 && (
-                <div className="su-step">
-                  <div
-                    className={`su-field ${
-                      showError("phone") ? "has-error" : ""
-                    }`}
-                  >
-                    <label>{t("signup.phone_label")}</label>
-                    <div className="su-input-wrap">
-                      <input
-                        value={form.phone}
-                        onChange={(e) => setField("phone", e.target.value)}
-                        onBlur={() =>
-                          setTouched((p) => ({ ...p, phone: true }))
-                        }
-                        placeholder={t("signup.phone_placeholder")}
-                        autoComplete="tel"
-                        inputMode="tel"
-                      />
-                      {renderFieldStatus("phone")}
-                    </div>
-                    {showError("phone") && (
-                      <small className="su-err">{errors.phone}</small>
-                    )}
-                  </div>
-
-                  <div
-                    className={`su-field ${
-                      showError("gender") ? "has-error" : ""
-                    }`}
-                  >
-                    <label>{t("signup.gender_label")}</label>
-                    <div className="su-input-wrap">
-                      <select
-                        value={form.gender}
-                        onChange={(e) =>
-                          setField("gender", e.target.value)
-                        }
-                        onBlur={() =>
-                          setTouched((p) => ({ ...p, gender: true }))
-                        }
-                      >
-                        <option value="">
-                          {t("signup.gender_select")}
-                        </option>
-                        <option value="female">
-                          {t("signup.gender_female")}
-                        </option>
-                        <option value="male">
-                          {t("signup.gender_male")}
-                        </option>
-                      </select>
-                      {renderFieldStatus("gender")}
-                    </div>
-                    {showError("gender") && (
-                      <small className="su-err">{errors.gender}</small>
-                    )}
-                  </div>
-
-                  <div
-                    className={`su-field ${
-                      showError("age") ? "has-error" : ""
-                    }`}
-                  >
-                    <label>{t("signup.age_label")}</label>
-                    <div className="su-input-wrap">
-                      <input
-                        value={form.age}
-                        onChange={(e) => setField("age", e.target.value)}
-                        onBlur={() =>
-                          setTouched((p) => ({ ...p, age: true }))
-                        }
-                        placeholder={t("signup.age_placeholder")}
-                        inputMode="numeric"
-                      />
-                      {renderFieldStatus("age")}
-                    </div>
-                    {showError("age") && (
-                      <small className="su-err">{errors.age}</small>
-                    )}
-                  </div>
-
-                  <div
-                    className={`su-field ${
-                      showError("country") ? "has-error" : ""
-                    }`}
-                  >
-                    <label>{t("signup.country_label")}</label>
-                    <div className="su-input-wrap">
-                      <select
-                        value={form.country}
-                        onChange={(e) =>
-                          setField("country", e.target.value)
-                        }
-                        onBlur={() =>
-                          setTouched((p) => ({ ...p, country: true }))
-                        }
-                      >
-                        {countries.map((c) => (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ))}
-                      </select>
-                      {renderFieldStatus("country")}
-                    </div>
-                    {showError("country") && (
-                      <small className="su-err">{errors.country}</small>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="su-step">
-                  {role === "doctor" && (
-                    <>
-                      <div
-                        className={`su-field ${
-                          showError("specialization") ? "has-error" : ""
-                        }`}
-                      >
-                        <label>{t("signup.specialization_label")}</label>
-                        <div className="su-input-wrap">
-                          <input
-                            value={form.specialization}
-                            onChange={(e) =>
-                              setField("specialization", e.target.value)
-                            }
-                            onBlur={() =>
-                              setTouched((p) => ({
-                                ...p,
-                                specialization: true,
-                              }))
-                            }
-                            placeholder={t(
-                              "signup.specialization_placeholder"
-                            )}
-                          />
-                          {renderFieldStatus("specialization")}
-                        </div>
-                        {showError("specialization") && (
-                          <small className="su-err">
-                            {errors.specialization}
-                          </small>
-                        )}
-                      </div>
-
-                      <div
-                        className={`su-field ${
-                          showError("medicalId") ? "has-error" : ""
-                        }`}
-                      >
-                        <label>{t("signup.medical_id_label")}</label>
-                        <div className="su-input-wrap">
-                          <input
-                            value={form.medicalId}
-                            onChange={(e) =>
-                              setField("medicalId", e.target.value)
-                            }
-                            onBlur={() =>
-                              setTouched((p) => ({
-                                ...p,
-                                medicalId: true,
-                              }))
-                            }
-                            placeholder={t(
-                              "signup.medical_id_placeholder"
-                            )}
-                          />
-                          {renderFieldStatus("medicalId")}
-                        </div>
-                        {showError("medicalId") && (
-                          <small className="su-err">
-                            {errors.medicalId}
-                          </small>
-                        )}
-                      </div>
-                    </>
-                  )}
-
-                  {role === "center" && (
-                    <>
-                      <div
-                        className={`su-field ${
-                          showError("centerName") ? "has-error" : ""
-                        }`}
-                      >
-                        <label>{t("signup.center_name_label")}</label>
-                        <div className="su-input-wrap">
-                          <input
-                            value={form.centerName}
-                            onChange={(e) =>
-                              setField("centerName", e.target.value)
-                            }
-                            onBlur={() =>
-                              setTouched((p) => ({
-                                ...p,
-                                centerName: true,
-                              }))
-                            }
-                            placeholder={t(
-                              "signup.center_name_placeholder"
-                            )}
-                          />
-                          {renderFieldStatus("centerName")}
-                        </div>
-                        {showError("centerName") && (
-                          <small className="su-err">
-                            {errors.centerName}
-                          </small>
-                        )}
-                      </div>
-
-                      <div
-                        className={`su-field ${
-                          showError("licenseNumber") ? "has-error" : ""
-                        }`}
-                      >
-                        <label>{t("signup.license_label")}</label>
-                        <div className="su-input-wrap">
-                          <input
-                            value={form.licenseNumber}
-                            onChange={(e) =>
-                              setField("licenseNumber", e.target.value)
-                            }
-                            onBlur={() =>
-                              setTouched((p) => ({
-                                ...p,
-                                licenseNumber: true,
-                              }))
-                            }
-                            placeholder={t(
-                              "signup.license_placeholder"
-                            )}
-                          />
-                          {renderFieldStatus("licenseNumber")}
-                        </div>
-                        {showError("licenseNumber") && (
-                          <small className="su-err">
-                            {errors.licenseNumber}
-                          </small>
-                        )}
-                      </div>
-                    </>
-                  )}
-
-                  {role === "patient" && (
-                    <div className="su-patient-note">
-                      {t("signup.patient_note")}
-                    </div>
-                  )}
-
-                  <label
-                    className={`su-check ${
-                      showError("agree") ? "has-error" : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={form.agree}
-                      onChange={(e) =>
-                        setField("agree", e.target.checked)
-                      }
-                      onBlur={() =>
-                        setTouched((p) => ({ ...p, agree: true }))
-                      }
-                    />
-                    <span>
-                      {t("signup.agree_prefix")}{" "}
-                      <button
-                        type="button"
-                        className="su-inline-link"
-                      >
-                        {t("signup.terms")}
-                      </button>{" "}
-                      &nbsp;
-                      <button
-                        type="button"
-                        className="su-inline-link"
-                      >
-                        {t("signup.privacy")}
-                      </button>
-                    </span>
-                  </label>
-                  {showError("agree") && (
-                    <small className="su-err">{errors.agree}</small>
-                  )}
-
-                  <p className="su-lock">
-                    🔒 {t("signup.lock_note")}
-                  </p>
-                </div>
-              )}
+              <p className="su-lock">
+                🔒 {t("signup.lock_note")}
+              </p>
 
               <div className="su-nav">
                 <button
-                  type="button"
-                  className="su-ghost"
-                  onClick={goPrev}
-                  disabled={step === 1}
+                  type="submit"
+                  className={`su-next ${canSubmit() ? "ready" : ""}`}
+                  disabled={submitState === "loading" || !canSubmit()}
                 >
-                  {t("signup.previous")}
+                  {submitState === "loading"
+                    ? t("signup.creating")
+                    : t("signup.create_account")}
                 </button>
-
-                {step < 3 ? (
-                  <button
-                    type="button"
-                    className={`su-next ${canGoNext() ? "ready" : ""}`}
-                    onClick={goNext}
-                    disabled={!canGoNext()}
-                  >
-                    {t("signup.next")}
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    className="su-next"
-                    disabled={submitState === "loading"}
-                  >
-                    {submitState === "loading"
-                      ? t("signup.creating")
-                      : t("signup.create_account")}
-                  </button>
-                )}
               </div>
 
               <div className="su-footer">

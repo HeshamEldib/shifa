@@ -6,6 +6,7 @@ using System.Text;
 
 using Microsoft.EntityFrameworkCore;
 using Shifa.Infrastructure.Data;
+using Shifa.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<Shifa.API.Services.SettingsService>();
 // إضافة HttpClient لتمكين الاتصال بالـ API الخارجي
 builder.Services.AddHttpClient<Shifa.API.Services.PrayerTimeService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // ب. إعداد سياسة CORS (مهم جداً للربط مع React)
 // يسمح هذا الإعداد للفرونت إند بالاتصال بالـ API بدون مشاكل أمنية أثناء التطوير
@@ -30,7 +32,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy
-            .AllowOrigin("http://localhost:3000")
+            .WithOrigins("http://localhost:3000")
             .AllowAnyOrigin()  // يسمح لأي مصدر بالاتصال (غيّر هذا لاحقاً عند النشر)
             .AllowAnyMethod()  // يسمح بكل أنواع الطلبات (GET, POST, PUT, DELETE)
             .AllowAnyHeader()); // يسمح بكل الهيدرز
@@ -87,6 +89,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// إضافة خدمة الكاش لحفظ أكواد الـ OTP مؤقتاً
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

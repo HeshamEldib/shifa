@@ -4,11 +4,8 @@ namespace Shifa.API.Dtos.Auth
 {
     public class RegisterPatientDto
     {
-        [Required(ErrorMessage = "الاسم الأول مطلوب")]
-        public string FirstName { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "اسم العائلة مطلوب")]
-        public string LastName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "الاسم بالكامل مطلوب")]
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress(ErrorMessage = "صيغة البريد الإلكتروني غير صحيحة")]
@@ -20,7 +17,17 @@ namespace Shifa.API.Dtos.Auth
 
         [Required]
         [Phone]
-        public string PhoneNumber { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+
+        [Required]
+        public string Gender { get; set; } = string.Empty;
+
+        [Required]
+        public string Country { get; set; } = string.Empty;
+
+        [Required]
+        [Range(1, 120)]
+        public int Age { get; set; } = 1;
 
     }
 }
