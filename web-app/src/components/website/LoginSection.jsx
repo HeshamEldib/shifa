@@ -4,6 +4,10 @@ import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import heroImg from "../../assets/hero-illustration.png";
 import "./Login.css";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { authService } from "../../services/authService";
+import { setCredentials } from "../../store/slices/authSlice";
 
 function LoginSection({
   isLoaded,
@@ -19,6 +23,9 @@ function LoginSection({
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  const dispatch = useDispatch();
+const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,28 +44,25 @@ function LoginSection({
     setIsSubmitting(true);
 
     try {
-      const demoRole = "Patient";
-      const fakeData = {
-        token: "DEMO_TOKEN",
-        userId: "DEMO_USER",
-        role: demoRole,
-        expiration: new Date(
-          Date.now() + 2 * 60 * 60 * 1000
-        ).toISOString(),
-        email,
-      };
+      const data = await authService.login(email, password);
 
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({
-          token: fakeData.token,
-          userId: fakeData.userId,
-          role: demoRole,
-          expiration: fakeData.expiration,
+      const realToken = data.token;
+      const realRole = data.role || "Patient";
+
+      // 1. إرسال البيانات للـ Redux (وهو هيتكفل بالـ localStorage)
+      dispatch(
+        setCredentials({
+          token: realToken,
+          role: realRole,
+          userId: data.userId,
         })
       );
 
-      onLoginSuccess?.({ ...fakeData, role: demoRole });
+      // 2. التوجيه المباشر للصفحة المناسبة حسب الدور
+      if (realRole === "Patient") navigate("/patient");
+      else if (realRole === "Doctor") navigate("/doctor");
+      else if (realRole === "Admin") navigate("/admin");
+
     } catch (err) {
       setError(t("login.error_generic") || "Login failed, please try again.");
     } finally {

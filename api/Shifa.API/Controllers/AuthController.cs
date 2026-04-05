@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Shifa.Core.Constants;
+using Shifa.API.Services;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Shifa.API.Controllers
 {
@@ -18,11 +20,15 @@ namespace Shifa.API.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMemoryCache _cache;
+        private readonly IEmailService _emailService;
 
-        public AuthController(AppDbContext context, IConfiguration configuration)
+        public AuthController(AppDbContext context, IConfiguration configuration, IMemoryCache cache, IEmailService emailService)
         {
             _context = context;
             _configuration = configuration;
+            _cache = cache;
+            _emailService = emailService;
         }
 
         // ====================================================
@@ -48,11 +54,10 @@ namespace Shifa.API.Controllers
 
             var patientUser = new User
             {
-                FirstName = newUser.FirstName,
-                LastName = newUser.LastName,
+                FullName = newUser.FullName,
                 Email = newUser.Email,
                 PasswordHash = passwordHash,
-                PhoneNumber = newUser.PhoneNumber,
+                Phone = newUser.Phone,
                 RoleID = role.RoleID,
                 CreatedDate = DateTime.UtcNow,
                 IsActive = true
@@ -69,7 +74,7 @@ namespace Shifa.API.Controllers
                 var patientProfile = new Patient
                 {
                     PatientID = patientUser.UserID, // نفس الـ ID
-                    DateOfBirth = DateTime.MinValue, // قيمة افتراضية حتى يكمل بياناته
+                    DateOfBirth = new DateTime(2000, 1, 1), // قيمة افتراضية حتى يكمل بياناته
                     Gender = "NotSet"
                 };
                 _context.Patients.Add(patientProfile);
@@ -113,11 +118,13 @@ namespace Shifa.API.Controllers
 
             var staffUser = new User
             {
-                FirstName = newUser.FirstName,
-                LastName = newUser.LastName,
+                FullName = newUser.FullName,
                 Email = newUser.Email,
                 PasswordHash = passwordHash,
-                PhoneNumber = newUser.PhoneNumber,
+                Phone = newUser.Phone,
+                Gender = newUser.Gender,
+                Country = newUser.Country,
+                Age = newUser.Age,
                 RoleID = newUser.RoleID,
                 CreatedDate = DateTime.UtcNow,
                 IsActive = true
@@ -166,7 +173,7 @@ namespace Shifa.API.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()), // id
-                new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName), // الاسم
+                new Claim(ClaimTypes.Name, user.FullName), // الاسم
                 new Claim(ClaimTypes.Email, user.Email), // الايميل
                 new Claim(ClaimTypes.Role, user.Role.RoleName) // الدور (مهم جداً للصلاحيات)
             };
@@ -194,6 +201,76 @@ namespace Shifa.API.Controllers
                 role = user.Role.RoleName,
                 expiration = token.ValidTo
             });
+        }
+
+        // ====================================================
+        // 4. طلب استعادة كلمة المرور (إنشاء OTP)
+        // ====================================================
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            if (user == null)
+                return BadRequest(new { message = "البريد الإلكتروني غير مسجل لدينا." });
+
+            // إنشاء كود مكون من 6 أرقام عشوائية
+            string otp = new Random().Next(100000, 999999).ToString();
+
+            // حفظ الكود في الذاكرة لمدة 15 دقيقة، مرتبطاً بالإيميل
+            _cache.Set(dto.Email, otp, TimeSpan.FromMinutes(15));
+
+            // محتوى الإيميل (بتصميم بسيط)
+            string emailBody = $@"
+    <div style='font-family: Arial, sans-serif; text-align: right; direction: rtl;'>
+        <h2 style='color: #2E86C1;'>تطبيق شفاء</h2>
+        <p>لقد طلبت إعادة تعيين كلمة المرور الخاصة بك.</p>
+        <p>كود التحقق الخاص بك هو: <strong style='font-size: 24px; color: #E74C3C;'>{otp}</strong></p>
+        <p>هذا الكود صالح لمدة 15 دقيقة فقط.</p>
+        <p>إذا لم تطلب هذا الرمز، يرجى تجاهل هذه الرسالة.</p>
+    </div>";
+
+            // إرسال الإيميل فعلياً
+            try
+            {
+                await _emailService.SendEmailAsync(dto.Email, "كود استعادة كلمة المرور - تطبيق شفاء", emailBody);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "حدث خطأ أثناء إرسال البريد الإلكتروني. يرجى المحاولة لاحقاً." });
+            }
+
+            return Ok(new { message = "تم إرسال كود التحقق إلى بريدك الإلكتروني بنجاح." });
+        }
+
+        // ====================================================
+        // 5. إعادة تعيين كلمة المرور
+        // ====================================================
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            // 1. التأكد من أن الكود موجود في الذاكرة ولم تنتهِ صلاحيته
+            if (!_cache.TryGetValue(dto.Email, out string? savedOtp))
+            {
+                return BadRequest(new { message = "كود التحقق منتهي الصلاحية أو غير موجود. يرجى طلب كود جديد." });
+            }
+
+            // 2. مطابقة الكود
+            if (savedOtp != dto.OTP)
+            {
+                return BadRequest(new { message = "كود التحقق غير صحيح." });
+            }
+
+            // 3. جلب المستخدم وتحديث كلمة المرور
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            if (user == null) return BadRequest(new { message = "حدث خطأ غير متوقع." });
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            await _context.SaveChangesAsync();
+
+            // 4. مسح الكود من الذاكرة حتى لا يتم استخدامه مرة أخرى
+            _cache.Remove(dto.Email);
+
+            return Ok(new { message = "تم تغيير كلمة المرور بنجاح." });
         }
     }
 }

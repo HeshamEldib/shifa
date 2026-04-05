@@ -37,7 +37,7 @@ namespace Shifa.API.Controllers
                         {
                             DoctorID = ds.DoctorID,
                             // دمج الاسم الأول والأخير
-                            DoctorName = $"{ds.Doctor.FirstName} {ds.Doctor.LastName}",
+                            DoctorName = ds.Doctor.FullName,
                             Price = ds.Price, // السعر الخاص
                             DurationMinutes = ds.DurationMinutes // المدة الخاصة
                         })
@@ -66,7 +66,7 @@ namespace Shifa.API.Controllers
                         .Select(ds => new DoctorInfoForServiceDto
                         {
                             DoctorID = ds.DoctorID,
-                            DoctorName = $"{ds.Doctor.FirstName} {ds.Doctor.LastName}",
+                            DoctorName = ds.Doctor.FullName,
                             Price = ds.Price,
                             DurationMinutes = ds.DurationMinutes
                         })

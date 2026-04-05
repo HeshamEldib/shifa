@@ -11,12 +11,8 @@ namespace Shifa.Core.Entities
         public Guid UserID { get; set; } = Guid.NewGuid();
 
         [Required]
-        [MaxLength(100)]
-        public string FirstName { get; set; } = string.Empty;
-
-        [Required]
-        [MaxLength(100)]
-        public string LastName { get; set; } = string.Empty;
+        [MaxLength(200)]
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]
@@ -27,7 +23,16 @@ namespace Shifa.Core.Entities
         public string PasswordHash { get; set; } = string.Empty;
 
         [MaxLength(20)]
-        public string? PhoneNumber { get; set; }
+        public string? Phone { get; set; }
+
+        [MaxLength(20)]
+        public string? Gender { get; set; }
+
+        [MaxLength(50)]
+        public string? Country { get; set; }
+
+        [Range(1, 120)]
+        public int? Age { get; set; }
 
         public bool IsActive { get; set; } = true;
 

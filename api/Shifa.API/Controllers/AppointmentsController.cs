@@ -145,8 +145,8 @@ namespace Shifa.API.Controllers
                 .Select(a => new AppointmentDto
                 {
                     AppointmentID = a.AppointmentID,
-                    DoctorName = $"{a.Doctor.FirstName} {a.Doctor.LastName}",
-                    PatientName = $"{a.Patient.User.FirstName} {a.Patient.User.LastName}",
+                    DoctorName = a.Doctor.FullName,
+                    PatientName = a.Patient.User.FullName,
                     ServiceName = a.Service.ServiceName,
                     AppointmentDate = a.AppointmentDate,
                     Status = a.Status,

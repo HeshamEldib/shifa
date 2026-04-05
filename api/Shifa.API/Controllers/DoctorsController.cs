@@ -30,9 +30,9 @@ namespace Shifa.API.Controllers
                 .Select(u => new DoctorDto
                 {
                     DoctorID = u.UserID,
-                    FullName = $"{u.FirstName} {u.LastName}",
+                    FullName = u.FullName,
                     Email = u.Email,
-                    PhoneNumber = u.PhoneNumber
+                    Phone = u.Phone
                 })
                 .ToListAsync();
 
