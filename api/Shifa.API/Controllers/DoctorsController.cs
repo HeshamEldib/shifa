@@ -26,13 +26,27 @@ namespace Shifa.API.Controllers
         {
             var doctors = await _context.Users
                 .Include(u => u.Role)
+                .Include(u => u.Doctor)
                 .Where(u => u.Role.RoleName == AppRoles.Doctor)
                 .Select(u => new DoctorDto
                 {
                     DoctorID = u.UserID,
                     FullName = u.FullName,
                     Email = u.Email,
-                    Phone = u.Phone
+                    Phone = u.Phone,
+                    Image = u.Image,
+                    Age = u.Age,
+                    Gender = u.Gender,
+                    Country = u.Country,
+                    Address = u.Address,
+
+                    Specialization = u.Doctor != null ? u.Doctor.Specialization : string.Empty,
+                    Specialty = u.Doctor != null ? u.Doctor.Specialty : string.Empty,
+                    Quote = u.Doctor != null ? u.Doctor.Quote : string.Empty,
+                    Bio = u.Doctor != null ? u.Doctor.Bio : string.Empty,
+                    Rating = u.Doctor != null ? u.Doctor.Rating : 0,
+                    ExperienceYears = u.Doctor != null ? u.Doctor.ExperienceYears : 0,
+                    PatientsCount = u.Doctor != null ? u.Doctor.PatientsCount : 0
                 })
                 .ToListAsync();
 

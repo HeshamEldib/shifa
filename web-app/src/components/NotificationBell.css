@@ -1,0 +1,55 @@
+.nav-notification-wrapper {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+  margin-inline-end: 15px; /* مسافة قبل صورة البروفايل */
+}
+
+.nav-notification-wrapper:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-bell-icon {
+  color: #94a3b8;
+  transition: color 0.3s ease;
+}
+
+.nav-notification-wrapper:hover .nav-bell-icon {
+  color: #06b6d4;
+}
+
+/* فقاعة الرقم */
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #f59e0b; /* لون برتقالي للتنبيه */
+  color: #050a15;
+  font-size: 10px;
+  font-weight: 800;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0f172a; /* لإعطاء مسافة بين الفقاعة والأيقونة */
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+/* تأثير النبض للإشعارات غير المقروءة */
+.nav-notification-wrapper:has(.notification-badge) .nav-bell-icon {
+  animation: bell-shake 2s infinite ease-in-out;
+}
+
+@keyframes bell-shake {
+  0%, 100% { transform: rotate(0); }
+  10%, 30% { transform: rotate(10deg); }
+  20%, 40% { transform: rotate(-10deg); }
+  50% { transform: rotate(0); }
+}

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Shifa.Core.Entities;
 using Shifa.Core.Constants;
 using System.Linq;
+using Shifa.Core.Helpers;
 
 namespace Shifa.Infrastructure.Data
 {
@@ -15,6 +16,7 @@ namespace Shifa.Infrastructure.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<Medication> Medications { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
@@ -30,7 +32,6 @@ namespace Shifa.Infrastructure.Data
         public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<UserNotificationStatus> UserNotificationStatuses { get; set; }
-        public DbSet<DoctorService> DoctorServices { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -85,27 +86,23 @@ namespace Shifa.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MedicalRecord>()
-                 .HasOne(m => m.Doctor)
-                 .WithMany()
-                 .HasForeignKey(m => m.DoctorID)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(m => m.Doctor)
+                .WithMany()
+                .HasForeignKey(m => m.DoctorID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MedicalRecord>()
-                 .HasOne(m => m.Patient)
-                 .WithMany()
-                 .HasForeignKey(m => m.PatientID)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(m => m.Patient)
+                .WithMany()
+                .HasForeignKey(m => m.PatientID)
+                .OnDelete(DeleteBehavior.Restrict);
 
-
-            // 7. إعدادات جدول DoctorService
-            // منع تكرار الثنائية (نفس الطبيب + نفس الخدمة)
-            modelBuilder.Entity<DoctorService>()
-                .HasIndex(ds => new { ds.DoctorID, ds.ServiceID })
-                .IsUnique();
-
-            modelBuilder.Entity<DoctorService>()
-                .Property(p => p.Price)
-                .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<MedicalRecord>()
+                .Property(m => m.DiagnosisDetails)
+                .HasConversion(
+                    v => EncryptionHelper.Encrypt(v),  // يتنفذ قبل الحفظ في قاعدة البيانات
+                    v => EncryptionHelper.Decrypt(v)   // يتنفذ عند استخراج البيانات
+                );
         }
     }
 }

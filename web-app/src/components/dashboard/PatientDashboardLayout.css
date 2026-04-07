@@ -1,0 +1,132 @@
+/* src/components/dashboard/PatientDashboardLayout.css */
+
+.patient-portal-grid {
+  display: grid;
+  /* 280px للقائمة الجانبية، والباقي للمحتوى */
+  grid-template-columns: 280px 1fr; 
+  gap: 30px;
+  align-items: start;
+}
+
+/* ========================================= */
+/* 1. القائمة الجانبية (Sidebar) */
+/* ========================================= */
+.portal-sidebar {
+  /* التثبيت الذكي أثناء التمرير */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 100px; /* مسافة من أعلى الشاشة (تحت الهيدر) */
+  padding: 25px 20px;
+  z-index: 10;
+}
+
+.portal-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ========================================= */
+/* 2. روابط التنقل (Navigation Links) */
+/* ========================================= */
+.portal-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  color: #94a3b8; /* لون باهت افتراضياً */
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border-right: 3px solid transparent; /* مساحة للحدود في حالة النشاط (RTL) */
+  background: transparent;
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+.portal-link:hover {
+  background: rgba(6, 182, 212, 0.05);
+  color: #e2e8f0;
+  transform: translateX(-5px); /* حركة خفيفة لليسار عند التحويم */
+}
+
+/* حالة الرابط النشط (يتم إضافتها تلقائياً عبر NavLink) */
+.portal-link.active {
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, transparent 100%);
+  color: #06b6d4;
+  border-right: 3px solid #06b6d4; /* خط توهج على اليمين */
+  box-shadow: inset -10px 0 20px -10px rgba(6, 182, 212, 0.2);
+}
+
+.portal-link svg {
+  transition: transform 0.3s ease;
+}
+
+.portal-link.active svg,
+.portal-link:hover svg {
+  transform: scale(1.1);
+}
+
+/* ========================================= */
+/* 3. الروابط المعطلة وزر تسجيل الخروج */
+/* ========================================= */
+.disabled-link {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.disabled-link:hover {
+  background: transparent;
+  transform: none;
+  color: #94a3b8;
+}
+
+.logout-link {
+  color: #f87171;
+}
+
+.logout-link:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-right-color: #ef4444;
+}
+
+/* ========================================= */
+/* 4. التجاوب مع الموبايل والشاشات الصغيرة */
+/* ========================================= */
+@media (max-width: 992px) {
+  .patient-portal-grid {
+    grid-template-columns: 1fr; /* عمود واحد فقط */
+  }
+
+  .portal-sidebar {
+    position: relative;
+    top: 0;
+    padding: 15px;
+  }
+
+  .portal-nav {
+    flex-direction: row;
+    overflow-x: auto; /* السماح بالتمرير الأفقي للروابط */
+    padding-bottom: 10px;
+    gap: 15px;
+  }
+
+  .portal-link {
+    white-space: nowrap; /* منع النص من النزول لسطر جديد */
+    border-right: none;
+    border-bottom: 3px solid transparent; /* الخط النشط يصبح بالأسفل */
+  }
+
+  .portal-link.active {
+    background: linear-gradient(0deg, rgba(6, 182, 212, 0.15) 0%, transparent 100%);
+    border-right: none;
+    border-bottom: 3px solid #06b6d4;
+  }
+
+  .portal-link:hover {
+    transform: translateY(-2px); /* الحركة تصبح للأعلى بدلاً من اليسار */
+  }
+}

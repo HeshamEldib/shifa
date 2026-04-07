@@ -75,7 +75,7 @@ namespace Shifa.API.Controllers
                 {
                     PatientID = patientUser.UserID, // نفس الـ ID
                     DateOfBirth = new DateTime(2000, 1, 1), // قيمة افتراضية حتى يكمل بياناته
-                    Gender = "NotSet"
+                    // Gender = "NotSet"
                 };
                 _context.Patients.Add(patientProfile);
                 await _context.SaveChangesAsync();

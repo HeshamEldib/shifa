@@ -12,5 +12,7 @@ namespace Shifa.API.Dtos.Appointments
 
         [Required]
         public DateTime AppointmentDate { get; set; }
+
+        public string Notes { get; set; } = string.Empty;
     }
 }

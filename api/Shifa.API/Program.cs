@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Shifa.Infrastructure.Data;
 using Shifa.API.Services;
 
+using Microsoft.Extensions.FileProviders;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // ==========================================
@@ -92,6 +94,8 @@ builder.Services.AddAuthentication(options =>
 // إضافة خدمة الكاش لحفظ أكواد الـ OTP مؤقتاً
 builder.Services.AddMemoryCache();
 
+builder.Services.AddScoped<IFileService, FileService>();
+
 var app = builder.Build();
 
 // ==========================================
@@ -125,6 +129,19 @@ app.UseHttpsRedirection();
 
 // ب. تفعيل CORS (يجب أن يكون قبل UseAuthorization)
 app.UseCors("AllowReactApp");
+
+var webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+if (!Directory.Exists(webRootPath))
+{
+    Directory.CreateDirectory(webRootPath);
+}
+
+// 2. إخبار السيرفر بتقديم الملفات من هذا المجلد إجبارياً
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(webRootPath),
+    RequestPath = ""
+});
 
 app.UseAuthentication();
 

@@ -9,5 +9,6 @@ namespace Shifa.API.Dtos.Appointments
         public DateTime AppointmentDate { get; set; }
         public string Status { get; set; } = string.Empty;
         public decimal Price { get; set; }
+        public string Notes { get; set; } = string.Empty;
     }
 }

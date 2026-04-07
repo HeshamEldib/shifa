@@ -16,18 +16,22 @@ namespace Shifa.Core.Entities
         public User User { get; set; } = null!;
 
         public DateTime DateOfBirth { get; set; }
-        [MaxLength(10)]
-        public string Gender { get; set; } = string.Empty;
+        // [MaxLength(10)]
+        // public string Gender { get; set; } = string.Empty;
 
-        [MaxLength(255)]
-        public string? Address { get; set; }
         [MaxLength(100)]
         public string? Job { get; set; }
         [MaxLength(5)]
         public string? BloodType { get; set; }
+        public string? Allergies { get; set; } // الحساسية من أدوية معينة
+        public string? ChronicDiseases { get; set; } // الأمراض المزمنة
+
         [MaxLength(100)]
         public string? EmergencyContact { get; set; }
 
+        public double? Weight { get; set; }
+        public double? Height { get; set; }
         public string? PatientNotes { get; set; }
+        // public ICollection<MedicalRecord> MedicalRecords { get; set; }
     }
 }

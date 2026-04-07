@@ -1,0 +1,92 @@
+.user-menu-container {
+  position: relative;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.user-avatar-wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.user-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #06b6d4;
+  transition: transform 0.3s ease;
+}
+
+.user-menu-container:hover .user-avatar-img {
+  transform: scale(1.1);
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: -30px; /* لأننا في نظام عربي، القائمة تفتح لليمين */
+  width: 220px;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 15px 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  /* margin-top: 10px; */
+}
+.user-dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -15px; /* نفس قيمة الـ margin تقريباً */
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: transparent; /* شفافة تماماً */
+}
+
+.dropdown-header {
+  padding: 0 20px 10px;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.user-role {
+  font-size: 0.8rem;
+  color: #06b6d4;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: right;
+}
+
+.dropdown-item:hover {
+  background: rgba(6, 182, 212, 0.1);
+  color: #06b6d4;
+}
+
+.logout-btn {
+  color: #ef4444;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}

@@ -1,0 +1,381 @@
+/* src/components/website/BookingPage.css */
+
+.premium-booking-page {
+    min-height: 100vh;
+    background-color: #050a15;
+    color: #fff;
+    position: relative;
+    font-family: "Cairo", sans-serif;
+    padding-bottom: 80px;
+    /* overflow-x: hidden; */
+}
+
+/* هالة الأمان (من تصميم زميلك) */
+.security-aura {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+.aura-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.3;
+}
+.blue-glow {
+    width: 500px;
+    height: 500px;
+    background: #2563eb;
+    top: -10%;
+    left: -10%;
+}
+.cyan-glow {
+    width: 600px;
+    height: 600px;
+    background: #06b6d4;
+    bottom: -20%;
+    right: -10%;
+    animation: floatAura 15s infinite alternate;
+}
+
+.booking-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+/* ========================================= */
+/* عناصر الـ UI الجديدة */
+/* ========================================= */
+.section-header {
+    margin-bottom: 30px;
+}
+.title-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: #fff;
+}
+.secure-icon.pulse {
+    color: #06b6d4;
+}
+.subtitle {
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
+.booking-card {
+    background: rgb(0 0 0 / 25%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.card-inner-title {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* تنسيق التقويم ليتناسب مع الوضع المظلم */
+.calendar-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.dark-theme-calendar {
+    background: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    font-family: inherit !important;
+    width: 100% !important;
+    max-width: 400px;
+}
+.dark-theme-calendar .react-calendar__navigation button {
+    color: #fff;
+    min-width: 44px;
+    background: none;
+    font-size: 1.2rem;
+}
+.dark-theme-calendar .react-calendar__navigation button:enabled:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+.dark-theme-calendar .react-calendar__month-view__weekdays {
+    color: #94a3b8;
+    font-weight: bold;
+    text-decoration: none;
+}
+.dark-theme-calendar .react-calendar__month-view__weekdays__weekday abbr {
+    text-decoration: none;
+}
+.dark-theme-calendar .react-calendar__tile {
+    color: #fff;
+    padding: 1em 0.5em;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.dark-theme-calendar .react-calendar__tile:enabled:hover {
+    background: rgba(6, 182, 212, 0.2) !important;
+}
+.dark-theme-calendar .react-calendar__tile--active {
+    background: #06b6d4 !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+.dark-theme-calendar .react-calendar__tile:disabled {
+    color: #475569 !important;
+    background: transparent !important;
+}
+
+/* أزرار الأوقات المتاحة */
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+}
+.slot-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-weight: 600;
+}
+.slot-btn:hover {
+    background: rgba(6, 182, 212, 0.1);
+    border-color: rgba(6, 182, 212, 0.5);
+    color: #fff;
+    transform: translateY(-2px);
+}
+.slot-btn.active {
+    background: #06b6d4;
+    border-color: #06b6d4;
+    color: #050a15;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+
+/* حقل الملاحظات */
+.notes-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    color: #fff;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+.notes-input:focus {
+    outline: none;
+    border-color: #06b6d4;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* ========================================= */
+/* الفاتورة الزجاجية (من تصميم زميلك معدلة) */
+/* ========================================= */
+.glass-receipt {
+    position: sticky;
+    top: 20px;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.receipt-header h3 {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+}
+
+.receipt-doctor {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.receipt-doctor img {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.receipt-doctor h4 {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+.receipt-doctor span {
+    color: #06b6d4;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.receipt-details {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 25px;
+}
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+.icon-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+.highlight-val {
+    font-weight: 700;
+    color: #fff;
+}
+.text-cyan {
+    color: #06b6d4 !important;
+}
+
+.receipt-divider {
+    height: 1px;
+    width: 100%;
+    border-bottom: 2px dashed rgba(255, 255, 255, 0.15);
+    margin: 25px 0;
+    position: relative;
+}
+.receipt-divider::before,
+.receipt-divider::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    width: 20px;
+    height: 20px;
+    background: #050a15;
+    border-radius: 50%;
+}
+.receipt-divider::before {
+    left: -45px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+.receipt-divider::after {
+    right: -45px;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.finance-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+.total-price {
+    background: linear-gradient(90deg, #06b6d4, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* تنبيه الدفع النقدي */
+.cash-notice {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    color: #a7f3d0;
+    line-height: 1.5;
+}
+.notice-icon {
+    color: #10b981;
+    flex-shrink: 0;
+}
+
+/* زر تأكيد الحجز */
+.magic-pay-btn {
+    width: 100%;
+    height: 60px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #06b6d4, #2563eb);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.4s;
+    box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+    overflow: hidden;
+    position: relative;
+}
+.magic-pay-btn:disabled {
+    background: #334155;
+    box-shadow: none;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+.magic-pay-btn:not(:disabled):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(6, 182, 212, 0.6);
+}
+
+/* أنيميشن */
+.fade-in-up {
+    animation: fadeInUp 0.8s ease forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+.delay {
+    animation-delay: 0.2s;
+}
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* الموبايل */
+@media (max-width: 900px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+    .glass-receipt {
+        position: static;
+        margin-top: 20px;
+    }
+}

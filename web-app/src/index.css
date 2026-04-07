@@ -22,6 +22,10 @@ body {
   color: #e5e7eb;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 /* لما اللغة تبقى عربي نخلي خط Tajawal ونوسع السطور والحروف شوية */
 html[dir="rtl"] body {
@@ -31,6 +35,11 @@ html[dir="rtl"] body {
 }
 
 /* ========== حاوية التطبيق العامة ========== */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .app-container {
   min-height: 100vh;
