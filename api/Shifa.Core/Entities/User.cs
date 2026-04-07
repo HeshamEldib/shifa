@@ -31,6 +31,9 @@ namespace Shifa.Core.Entities
         [MaxLength(50)]
         public string? Country { get; set; }
 
+        [MaxLength(255)]
+        public string? Address { get; set; }
+
         [Range(1, 120)]
         public int? Age { get; set; }
 
@@ -38,6 +41,11 @@ namespace Shifa.Core.Entities
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
+        public string? Image { get; set; }
+
+        public Doctor? Doctor { get; set; }
+        public Patient? Patient { get; set; }
+        
         // العلاقة مع الدور (Foreign Key)
         [ForeignKey("Role")]
         public Guid RoleID { get; set; }

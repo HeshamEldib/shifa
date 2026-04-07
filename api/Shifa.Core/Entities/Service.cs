@@ -9,16 +9,19 @@ namespace Shifa.Core.Entities
     {
         [Key]
         public Guid ServiceID { get; set; } = Guid.NewGuid();
+        public Guid DoctorID { get; set; }
+        [ForeignKey("DoctorID")]
+        public Doctor Doctor { get; set; } = null!;
 
         [Required]
         [MaxLength(255)]
         public string ServiceName { get; set; } = string.Empty;
 
-        public int DefaultDurationMinutes { get; set; }
-
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal BasePrice { get; set; }
-
-        public ICollection<DoctorService> DoctorServices { get; set; } = new List<DoctorService>();
+        [MaxLength(100)]
+        public string Category { get; set; } = string.Empty;
+        public double Rating { get; set; } = 0.0;
+        public decimal Price { get; set; }
+        public int DurationMinutes { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

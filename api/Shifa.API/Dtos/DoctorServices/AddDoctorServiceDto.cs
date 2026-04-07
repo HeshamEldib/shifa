@@ -4,15 +4,18 @@ namespace Shifa.API.Dtos.DoctorServices
 {
     public class AddDoctorServiceDto
     {
-        [Required]
-        public Guid ServiceID { get; set; }
+        [Required(ErrorMessage = "اسم الخدمة مطلوب")]
+        [MaxLength(100)]
+        public string ServiceName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "تصنيف أو قسم الخدمة مطلوب")]
+        [MaxLength(100)]
+        public string Category { get; set; } = string.Empty;
 
         [Required]
-        [Range(0, 100000)]
         public decimal Price { get; set; }
 
         [Required]
-        [Range(5, 480)]
         public int DurationMinutes { get; set; }
     }
 }

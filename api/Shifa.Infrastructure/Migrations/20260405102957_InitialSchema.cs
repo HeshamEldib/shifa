@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shifa.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,20 +64,6 @@ namespace Shifa.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Services",
-                columns: table => new
-                {
-                    ServiceID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    DefaultDurationMinutes = table.Column<int>(type: "int", nullable: false),
-                    BasePrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Services", x => x.ServiceID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -88,9 +74,11 @@ namespace Shifa.Infrastructure.Migrations
                     Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Age = table.Column<int>(type: "int", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoleID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -151,27 +139,23 @@ namespace Shifa.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DoctorServices",
+                name: "Doctors",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DoctorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DurationMinutes = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Specialization = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Specialty = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Quote = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Bio = table.Column<string>(type: "nvarchar(555)", maxLength: 555, nullable: true),
+                    Rating = table.Column<double>(type: "float", nullable: false),
+                    ExperienceYears = table.Column<int>(type: "int", nullable: false),
+                    PatientsCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DoctorServices", x => x.Id);
+                    table.PrimaryKey("PK_Doctors", x => x.DoctorID);
                     table.ForeignKey(
-                        name: "FK_DoctorServices_Services_ServiceID",
-                        column: x => x.ServiceID,
-                        principalTable: "Services",
-                        principalColumn: "ServiceID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DoctorServices_Users_DoctorID",
+                        name: "FK_Doctors_Users_DoctorID",
                         column: x => x.DoctorID,
                         principalTable: "Users",
                         principalColumn: "UserID",
@@ -225,11 +209,11 @@ namespace Shifa.Infrastructure.Migrations
                 {
                     PatientID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Job = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     BloodType = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
                     EmergencyContact = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Weight = table.Column<double>(type: "float", nullable: true),
+                    Height = table.Column<double>(type: "float", nullable: true),
                     PatientNotes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -240,6 +224,30 @@ namespace Shifa.Infrastructure.Migrations
                         column: x => x.PatientID,
                         principalTable: "Users",
                         principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    ServiceID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Rating = table.Column<double>(type: "float", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    DurationMinutes = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.ServiceID);
+                    table.ForeignKey(
+                        name: "FK_Services_Doctors_DoctorID",
+                        column: x => x.DoctorID,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -269,6 +277,36 @@ namespace Shifa.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MedicalRecords",
+                columns: table => new
+                {
+                    RecordID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ChiefComplaint = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    DiagnosisDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentPlan = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VitalSignsJson = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalRecords", x => x.RecordID);
+                    table.ForeignKey(
+                        name: "FK_MedicalRecords_Patients_PatientID",
+                        column: x => x.PatientID,
+                        principalTable: "Patients",
+                        principalColumn: "PatientID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MedicalRecords_Users_DoctorID",
+                        column: x => x.DoctorID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -310,33 +348,33 @@ namespace Shifa.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MedicalRecords",
+                name: "Prescriptions",
                 columns: table => new
                 {
+                    PrescriptionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RecordID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PatientID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DoctorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ChiefComplaint = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    DiagnosisDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TreatmentPlan = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    VitalSignsJson = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    MedicalRecordRecordID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicationID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Dosage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Frequency = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Duration = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Instructions = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MedicalRecords", x => x.RecordID);
+                    table.PrimaryKey("PK_Prescriptions", x => x.PrescriptionID);
                     table.ForeignKey(
-                        name: "FK_MedicalRecords_Patients_PatientID",
-                        column: x => x.PatientID,
-                        principalTable: "Patients",
-                        principalColumn: "PatientID",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_Prescriptions_MedicalRecords_MedicalRecordRecordID",
+                        column: x => x.MedicalRecordRecordID,
+                        principalTable: "MedicalRecords",
+                        principalColumn: "RecordID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MedicalRecords_Users_DoctorID",
-                        column: x => x.DoctorID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_Prescriptions_Medications_MedicationID",
+                        column: x => x.MedicationID,
+                        principalTable: "Medications",
+                        principalColumn: "MedicationID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -384,36 +422,6 @@ namespace Shifa.Infrastructure.Migrations
                         column: x => x.AppointmentID,
                         principalTable: "Appointments",
                         principalColumn: "AppointmentID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Prescriptions",
-                columns: table => new
-                {
-                    PrescriptionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RecordID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MedicalRecordRecordID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MedicationID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Dosage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Frequency = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Duration = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Instructions = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prescriptions", x => x.PrescriptionID);
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_MedicalRecords_MedicalRecordRecordID",
-                        column: x => x.MedicalRecordRecordID,
-                        principalTable: "MedicalRecords",
-                        principalColumn: "RecordID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_Medications_MedicationID",
-                        column: x => x.MedicationID,
-                        principalTable: "Medications",
-                        principalColumn: "MedicationID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -487,17 +495,6 @@ namespace Shifa.Infrastructure.Migrations
                 column: "DoctorID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DoctorServices_DoctorID_ServiceID",
-                table: "DoctorServices",
-                columns: new[] { "DoctorID", "ServiceID" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DoctorServices_ServiceID",
-                table: "DoctorServices",
-                column: "ServiceID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DoctorTimeOffs_DoctorID",
                 table: "DoctorTimeOffs",
                 column: "DoctorID");
@@ -556,6 +553,11 @@ namespace Shifa.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Services_DoctorID",
+                table: "Services",
+                column: "DoctorID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TelemedicineSessions_AppointmentID",
                 table: "TelemedicineSessions",
                 column: "AppointmentID",
@@ -595,9 +597,6 @@ namespace Shifa.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "DoctorAvailabilities");
-
-            migrationBuilder.DropTable(
-                name: "DoctorServices");
 
             migrationBuilder.DropTable(
                 name: "DoctorTimeOffs");
@@ -640,6 +639,9 @@ namespace Shifa.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Services");
+
+            migrationBuilder.DropTable(
+                name: "Doctors");
 
             migrationBuilder.DropTable(
                 name: "Users");

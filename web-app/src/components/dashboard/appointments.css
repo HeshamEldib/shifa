@@ -1,568 +1,194 @@
-/* ===========================
-   Patient Appointments (ap-*)
-   ========================== */
+/* src/components/dashboard/appointments.css */
 
-.ap-shell {
-  min-height: 100vh;
-  padding: 18px 20px 26px;
-  /* كانت فيها background gradient – نشيلها عشان app-container يمسك الخلفية */
+.appointments-container {
+  padding: 10px;
+}
+
+/* ========================================= */
+/* نظام التبويب (Tabs) */
+/* ========================================= */
+.custom-tabs {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+}
+
+.tab-btn {
   background: transparent;
-  color: #e5e7eb;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", sans-serif;
-}
-
-/* Header */
-
-.ap-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.ap-back {
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
-  color: #e5e7eb;
-  font-size: 13px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: background 140ms ease, transform 140ms ease, border-color 140ms ease;
-}
-
-.ap-back:hover {
-  background: #0b1120;
-  transform: translateY(-1px);
-  border-color: #38bdf8;
-}
-
-.ap-header-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.ap-title {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.ap-sub {
-  margin: 0;
-  font-size: 13px;
-  color: #9ca3af;
-}
-
-/* Main split */
-
-.ap-main {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.8fr);
-  gap: 16px;
-  margin-top: 10px;
-}
-
-/* Inbox (left column) */
-
-.ap-inbox {
-  border-radius: 18px;
-  border: 1px solid rgba(30, 64, 175, 0.8);
-  background: radial-gradient(circle at 0 0, #020617, #020617 60%, #020617);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
-  padding: 12px 12px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.ap-inbox-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.ap-inbox-top h3 {
-  margin: 0;
-  font-size: 15px;
-}
-
-.ap-filters {
-  display: inline-flex;
-  gap: 6px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  padding: 3px;
-}
-
-.ap-chip {
-  border-radius: 999px;
   border: none;
-  padding: 4px 10px;
-  font-size: 11px;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  font-weight: 500;
+  padding: 10px 20px;
   cursor: pointer;
-  background: transparent;
-  color: #9ca3af;
-  transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.ap-chip.is-active {
-  background: linear-gradient(90deg, #22d3ee, #3b82f6);
-  color: #0b1120;
-  font-weight: 600;
-  transform: translateY(-1px);
+.tab-btn:hover {
+  color: #e2e8f0;
 }
 
-/* List of appointments */
-
-.ap-list {
-  margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: 380px;
-  overflow-y: auto;
-  padding-right: 4px;
+.tab-btn.active {
+  color: #06b6d4;
 }
 
-.ap-card {
+/* الخط المضيء تحت التبويب النشط */
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  left: 0;
   width: 100%;
-  text-align: left;
-  border-radius: 14px;
-  border: 1px solid rgba(30, 64, 175, 0.7);
-  background: rgba(15, 23, 42, 0.96);
-  padding: 8px 10px 8px;
-  cursor: pointer;
+  height: 3px;
+  background: #06b6d4;
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 -2px 10px rgba(6, 182, 212, 0.5);
+}
+
+/* ========================================= */
+/* شبكة كروت المواعيد (Grid) */
+/* ========================================= */
+.appointments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+.appointment-card {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease,
-    box-shadow 140ms ease;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  border-top: 4px solid transparent;
 }
 
-.ap-card:hover {
-  border-color: #38bdf8;
-  background: #020617;
-  transform: translateY(-1px);
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.9);
+.appointment-card:hover {
+  transform: translateY(-5px);
+  border-top-color: #06b6d4;
 }
 
-.ap-card.is-active {
-  border-color: #22c55e;
-  background: radial-gradient(circle at 0 0, #022c22, #020617 60%);
+.appointment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.ap-card-row {
+/* ========================================= */
+/* الشارات (Badges) */
+/* ========================================= */
+.status-badge, .type-badge {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
 }
 
-.ap-doctor {
-  font-size: 13px;
-  font-weight: 600;
+/* ألوان حالات الموعد */
+.status-badge { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.status-badge.confirmed { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+.status-badge.pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.status-badge.cancelled { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+.status-badge.completed { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
+
+/* ألوان نوع الموعد */
+.type-badge.online { color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); }
+.type-badge.clinic { color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+/* ========================================= */
+/* تفاصيل الموعد */
+/* ========================================= */
+.appointment-body {
+  flex-grow: 1;
 }
 
-.ap-spec {
-  font-size: 11px;
-  color: #9ca3af;
+.doctor-name {
+  color: #fff;
+  margin-bottom: 5px;
+  font-size: 1.25rem;
 }
 
-.ap-pill {
-  font-size: 11px;
-  border-radius: 999px;
-  padding: 3px 8px;
-  background: rgba(17, 24, 39, 0.9);
-  border: 1px solid rgba(129, 140, 248, 0.6);
+.service-name {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
 }
 
-.ap-type {
-  font-size: 12px;
-  color: #e5e7eb;
-}
-
-.ap-time {
-  font-size: 11px;
-  color: #9ca3af;
-}
-
-.ap-empty {
-  font-size: 12px;
-  color: #9ca3af;
-  padding: 12px 4px;
-}
-
-/* Detail (right column) */
-
-.ap-detail {
+.time-details {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.ap-detail-card {
-  border-radius: 18px;
-  border: 1px solid rgba(30, 64, 175, 0.8);
-  background: radial-gradient(circle at 0 0, #020617, #020617 60%, #020617);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.95);
-  padding: 14px 14px 12px;
-}
-
-.ap-kicker {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: #38bdf8;
-  margin-bottom: 4px;
-}
-
-.ap-detail-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.ap-detail-meta {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-.ap-tags {
-  margin-top: 10px;
+.detail-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  align-items: center;
+  gap: 10px;
+  color: #e2e8f0;
+  font-size: 0.95rem;
 }
 
-.ap-tag {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(34, 197, 94, 0.6);
-  color: #bbf7d0;
-}
-
-.ap-actions {
-  margin-top: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.ap-btn {
-  border-radius: 999px;
-  border: 1px solid transparent;
-  padding: 6px 14px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background 140ms ease, transform 140ms ease, box-shadow 140ms ease,
-    border-color 140ms ease;
-}
-
-.ap-btn-primary {
-  background: linear-gradient(90deg, #22c55e, #4ade80);
-  color: #052e16;
-  font-weight: 600;
-  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.3);
-}
-
-.ap-btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 32px rgba(34, 197, 94, 0.4);
-}
-
-.ap-btn-secondary {
-  background: #0b1120;
-  color: #e5e7eb;
-  border-color: rgba(148, 163, 184, 0.7);
-}
-
-.ap-btn-secondary:hover {
-  background: #020617;
-  border-color: #38bdf8;
-}
-
-.ap-btn-ghost {
-  background: transparent;
-  color: #9ca3af;
-  border-color: rgba(55, 65, 81, 0.8);
-}
-
-.ap-btn-ghost:hover {
-  border-color: #f97373;
-  color: #fecaca;
-}
-
-/* Quick actions under details */
-
-.ap-quick {
-  border-radius: 14px;
-  border: 1px dashed rgba(148, 163, 184, 0.5);
-  background: rgba(15, 23, 42, 0.9);
-  padding: 10px 12px;
-}
-
-.ap-quick-title {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.ap-quick-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.ap-quick-chip {
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.96);
-  font-size: 11px;
-  padding: 4px 10px;
-  cursor: pointer;
-  color: #e5e7eb;
-  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
-}
-
-.ap-quick-chip:hover {
-  background: #020617;
-  border-color: #38bdf8;
-  transform: translateY(-1px);
-}
-
-/* Timeline section */
-
-.ap-timeline {
-  margin-top: 18px;
-  border-radius: 16px;
-  border: 1px solid rgba(30, 64, 175, 0.7);
-  background: radial-gradient(circle at 0 0, #020617, #020617 60%, #020617);
-  padding: 12px 12px 10px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
-}
-
-.ap-timeline-title {
-  margin: 0 0 10px;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.ap-timeline-row {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.ap-t-item {
-  min-width: 180px;
-  border-radius: 12px;
-  border: 1px solid rgba(55, 65, 81, 0.9);
-  background: rgba(15, 23, 42, 0.96);
-  padding: 8px 10px;
-  font-size: 12px;
-}
-
-.ap-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  margin-bottom: 4px;
-}
-
-.ap-dot.visit {
-  background: #22c55e;
-}
-
-.ap-dot.lab {
-  background: #eab308;
-}
-
-.ap-t-date {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-bottom: 2px;
-}
-
-.ap-t-label {
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.ap-t-type {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-top: 2px;
-}
-
-/* forms row */
-
-.ap-forms-row {
-  margin: 16px 20px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* form card */
-
-.ap-formCard {
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(37, 99, 235, 0.6);
-  border-radius: 12px;
-  padding: 12px 16px 14px;
-  max-width: 560px;
-}
-
-.ap-formCard h4 {
-  margin: 0 0 4px;
-  font-size: 14px;
-}
-
-.ap-formCard p {
-  margin: 0 0 10px;
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-/* fields */
-
-.ap-formGrid {
+/* ========================================= */
+/* أزرار الإجراءات */
+/* ========================================= */
+.appointment-footer {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;
 }
 
-.ap-field {
+.btn-cancel-app, .btn-join-call {
   flex: 1;
-}
-
-.ap-field label {
-  display: block;
-  font-size: 11px;
-  color: #9ca3af;
-  margin-bottom: 4px;
-}
-
-.ap-field input,
-.ap-field textarea {
-  width: 100%;
-  font-size: 13px;
-  padding: 6px 8px;
-  border-radius: 8px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  background: rgba(15, 23, 42, 0.9);
-  color: #e5e7eb;
-}
-
-/* modal actions */
-
-.ap-modal-actions {
-  margin-top: 4px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
   gap: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
 }
 
-/* Responsive */
-
-/* تابلت / لابتوب أصغر */
-@media (max-width: 900px) {
-  .ap-main {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .ap-inbox {
-    max-height: none;
-  }
+.btn-cancel-app {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* موبايل عادي */
-@media (max-width: 640px) {
-  .ap-shell {
-    padding: 14px 12px 22px;
-  }
+.btn-cancel-app:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
 
-  .ap-main {
-    gap: 12px;
-  }
+.btn-join-call {
+  background: #06b6d4;
+  color: #050a15;
+  font-weight: bold;
+}
 
-  .ap-timeline-row {
-    gap: 10px;
-  }
+.btn-join-call:hover {
+  background: #22d3ee;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
 
-  .ap-formGrid {
+@media (max-width: 600px) {
+  .appointment-footer {
     flex-direction: column;
   }
-
-  .ap-header {
-    flex-wrap: wrap;
-  }
-}
-
-/* موبايل صغير جدًا (≤ 360px) */
-@media (max-width: 360px) {
-  .ap-shell {
-    padding: 10px 10px 18px;
-  }
-
-  .ap-inbox,
-  .ap-detail-card,
-  .ap-timeline {
-    padding: 10px 10px 8px;
-  }
-
-  .ap-title {
-    font-size: 18px;
-  }
-
-  .ap-sub {
-    font-size: 11px;
-  }
-
-  .ap-actions {
-    gap: 6px;
-  }
-
-  .ap-btn {
-    padding-inline: 10px;
-    font-size: 11px;
-  }
-
-  .ap-t-item {
-    min-width: 160px;
-  }
-}
-
-/* Force white text for buttons & cards */
-
-.ap-btn,
-.ap-btn span,
-.ap-btn strong {
-  color: #ffffff !important;
-}
-
-.ap-btn-primary {
-  color: #ffffff !important;
-}
-
-.ap-detail-card,
-.ap-detail-card * {
-  color: #ffffff !important;
-}
-
-.ap-card,
-.ap-card * {
-  color: #ffffff !important;
-}
-
-.ap-pill {
-  color: #ffffff !important;
-  border-color: rgba(129, 140, 248, 0.9);
 }

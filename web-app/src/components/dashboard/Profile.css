@@ -1,0 +1,119 @@
+/* src/components/website/Profile.css */
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* --- الجانب الأيمن (Sidebar) --- */
+.profile-sidebar .glass-receipt {
+  position: relative;
+  top: 0; /* لا نحتاجه sticky هنا مثل صفحة الحجز */
+  padding: 40px 20px;
+}
+
+.avatar-upload-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+}
+
+.large-profile-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+}
+
+.camera-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #06b6d4;
+  color: #050a15;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.camera-btn:hover {
+  transform: scale(1.1);
+  background: #22d3ee;
+}
+
+/* --- الجانب الأيسر (Form) --- */
+.profile-form-container .booking-card {
+  padding: 35px;
+}
+
+.input-group-custom {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group-custom label {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.input-group-custom .gender-options {
+  display: flex;
+  gap: 20px;
+  padding-left: 20px;
+}
+
+.input-group-custom input, 
+.input-group-custom textarea {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 15px;
+  color: #fff;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.input-group-custom input:focus, 
+.input-group-custom textarea:focus {
+  border-color: #06b6d4;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+}
+
+.disabled-input {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: rgba(255, 255, 255, 0.01) !important;
+}
+
+/* تحسين شكل النصوص الطويلة للطبيب */
+textarea {
+  min-height: 100px;
+  resize: none;
+}
+
+/* التوافق مع الموبايل */
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-sidebar {
+    margin-bottom: 20px;
+  }
+}

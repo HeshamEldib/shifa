@@ -21,76 +21,68 @@ namespace Shifa.API.Controllers
             _context = context;
         }
 
-        // 1. عرض خدماتي
+        // 1. عرض خدماتي (للطبيب)
         [HttpGet("my-services")]
         public async Task<ActionResult<IEnumerable<DoctorServiceResponseDto>>> GetMyServices()
         {
             var doctorId = GetCurrentUserId();
-
-            var services = await _context.DoctorServices
-                .Include(ds => ds.Service)
-                .Where(ds => ds.DoctorID == doctorId)
-                .Select(ds => new DoctorServiceResponseDto
+            var services = await _context.Services
+                .Where(s => s.DoctorID == doctorId)
+                .Select(s => new DoctorServiceResponseDto
                 {
-                    Id = ds.Id,
-                    ServiceID = ds.ServiceID,
-                    ServiceName = ds.Service.ServiceName,
-                    Price = ds.Price,
-                    DurationMinutes = ds.DurationMinutes,
-                    IsActive = ds.IsActive
-                })
-                .ToListAsync();
+                    ServiceID = s.ServiceID,
+                    ServiceName = s.ServiceName,
+                    Category = s.Category,
+                    Rating = s.Rating,
+                    Price = s.Price,
+                    DurationMinutes = s.DurationMinutes,
+                    IsActive = s.IsActive
+                }).ToListAsync();
 
             return Ok(services);
         }
 
-        // 2. إضافة خدمة لقائمتي
+        // 2. إضافة خدمة جديدة
         [HttpPost]
         public async Task<IActionResult> AddService(AddDoctorServiceDto dto)
         {
             var doctorId = GetCurrentUserId();
 
-            // هل الخدمة موجودة أصلاً في النظام؟
-            var globalService = await _context.Services.FindAsync(dto.ServiceID);
-            if (globalService == null) return NotFound("الخدمة المطلوبة غير موجودة في النظام.");
-
-            // هل أضفتها سابقاً؟
-            var exists = await _context.DoctorServices.AnyAsync(ds => ds.DoctorID == doctorId && ds.ServiceID == dto.ServiceID);
-            if (exists) return BadRequest("هذه الخدمة موجودة بالفعل في قائمتك.");
-
-            var doctorService = new DoctorService
+            var service = new Service
             {
+                ServiceID = Guid.NewGuid(),
                 DoctorID = doctorId,
-                ServiceID = dto.ServiceID,
+                ServiceName = dto.ServiceName,
+                Category = dto.Category,
                 Price = dto.Price,
                 DurationMinutes = dto.DurationMinutes,
+                Rating = 0.0,
                 IsActive = true
             };
 
-            _context.DoctorServices.Add(doctorService);
+            _context.Services.Add(service);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "تمت إضافة الخدمة لقائمتك بنجاح", id = doctorService.Id });
+            return Ok(new { message = "تمت إضافة الخدمة بنجاح", id = service.ServiceID });
         }
 
-        // 3. تعديل خدمة (السعر أو المدة)
+        // 3. تعديل خدمة قائمة
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateService(Guid id, [FromBody] AddDoctorServiceDto dto)
         {
             var doctorId = GetCurrentUserId();
+            var service = await _context.Services
+                .FirstOrDefaultAsync(s => s.ServiceID == id && s.DoctorID == doctorId);
 
-            // التأكد أن السجل يخص هذا الطبيب
-            var doctorService = await _context.DoctorServices
-                .FirstOrDefaultAsync(ds => ds.Id == id && ds.DoctorID == doctorId);
+            if (service == null) return NotFound("الخدمة غير موجودة.");
 
-            if (doctorService == null) return NotFound("الخدمة غير موجودة في قائمتك.");
-
-            doctorService.Price = dto.Price;
-            doctorService.DurationMinutes = dto.DurationMinutes;
-            // ملاحظة: لا نعدل الـ ServiceID، لو أراد تغيير الخدمة يحذف ويضيف جديدة
+            service.ServiceName = dto.ServiceName;
+            service.Category = dto.Category;
+            service.Price = dto.Price;
+            service.DurationMinutes = dto.DurationMinutes;
 
             await _context.SaveChangesAsync();
-            return Ok(new { message = "تم تحديث تفاصيل الخدمة" });
+            return Ok(new { message = "تم تحديث تفاصيل الخدمة بنجاح" });
         }
 
         // 4. تفعيل/إيقاف خدمة
@@ -98,34 +90,58 @@ namespace Shifa.API.Controllers
         public async Task<IActionResult> ToggleStatus(Guid id)
         {
             var doctorId = GetCurrentUserId();
-            var doctorService = await _context.DoctorServices
-                .FirstOrDefaultAsync(ds => ds.Id == id && ds.DoctorID == doctorId);
+            var service = await _context.Services
+                .FirstOrDefaultAsync(s => s.ServiceID == id && s.DoctorID == doctorId);
 
-            if (doctorService == null) return NotFound();
+            if (service == null) return NotFound("الخدمة غير موجودة.");
 
-            doctorService.IsActive = !doctorService.IsActive;
+            service.IsActive = !service.IsActive;
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "تم تغيير حالة الخدمة", isActive = doctorService.IsActive });
+            return Ok(new { message = "تم تغيير حالة الخدمة", isActive = service.IsActive });
         }
 
-        // 5. حذف خدمة من قائمتي
+        // 5. حذف خدمة
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveService(Guid id)
         {
             var doctorId = GetCurrentUserId();
-            var doctorService = await _context.DoctorServices
-                .FirstOrDefaultAsync(ds => ds.Id == id && ds.DoctorID == doctorId);
+            var service = await _context.Services
+                .FirstOrDefaultAsync(s => s.ServiceID == id && s.DoctorID == doctorId);
 
-            if (doctorService == null) return NotFound();
+            if (service == null) return NotFound("الخدمة غير موجودة.");
 
-            _context.DoctorServices.Remove(doctorService);
+            _context.Services.Remove(service);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // دالة مساعدة لاستخراج الـ ID من التوكن
+        // 6. عرض خدمات طبيب محدد (عام - للمرضى والزوار)
+        [HttpGet("doctor/{doctorId}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<DoctorServiceResponseDto>>> GetServicesByDoctor(Guid doctorId)
+        {
+            var services = await _context.Services
+                .Where(s => s.DoctorID == doctorId && s.IsActive)
+                .Select(s => new DoctorServiceResponseDto
+                {
+                    ServiceID = s.ServiceID,
+                    ServiceName = s.ServiceName,
+                    Category = s.Category,
+                    Rating = s.Rating,
+                    Price = s.Price,
+                    DurationMinutes = s.DurationMinutes,
+                    IsActive = s.IsActive,
+                    DoctorName = _context.Users.FirstOrDefault(u => u.UserID == s.DoctorID) != null 
+                                ? _context.Users.FirstOrDefault(u => u.UserID == s.DoctorID)!.FullName 
+                                : "طبيب غير معروف"
+                })
+                .ToListAsync();
+
+            return Ok(services);
+        }
+
         private Guid GetCurrentUserId()
         {
             var idStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

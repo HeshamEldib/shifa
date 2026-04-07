@@ -1,0 +1,320 @@
+/* src/components/dashboard/PatientRecords.css */
+
+.patient-records-container {
+  padding: 10px;
+}
+
+/* ========================================= */
+/* حالات التحميل والأخطاء */
+/* ========================================= */
+.records-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+}
+
+.custom-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(6, 182, 212, 0.1);
+  border-top-color: #06b6d4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.records-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  margin: 30px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* ========================================= */
+/* العناوين والرموز (Icons) */
+/* ========================================= */
+.records-page-header {
+  margin-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+}
+
+.records-page-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.records-page-header p {
+  color: #94a3b8;
+  margin: 0;
+}
+
+.icon-cyan { color: #06b6d4; }
+.icon-success { color: #22c55e; }
+.icon-warning { color: #f59e0b; }
+
+/* ========================================= */
+/* حالة السجل الفارغ */
+/* ========================================= */
+.empty-records {
+  text-align: center;
+  padding: 60px 20px;
+  margin-top: 30px;
+}
+
+.empty-records h4 {
+  color: #fff;
+  margin: 20px 0 10px;
+}
+
+.empty-records p {
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ========================================= */
+/* بطاقة السجل الطبي */
+/* ========================================= */
+.record-card {
+  position: static;
+  border-left: 4px solid #06b6d4;
+  margin-bottom: 30px;
+  padding: 25px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.record-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.record-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.record-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.record-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #06b6d4;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.record-doctor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+/* ========================================= */
+/* زر الطباعة */
+/* ========================================= */
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #06b6d4;
+  border: 1px solid #06b6d4;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.print-btn:hover {
+  background: #06b6d4;
+  color: #050a15;
+}
+
+/* ========================================= */
+/* شبكة البيانات (القسمان الداخليان) */
+/* ========================================= */
+.record-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.info-box, .prescription-box {
+  padding: 25px;
+  border-radius: 12px;
+  height: 100%;
+}
+
+.info-box {
+  background: rgba(255, 255, 255, 0.02);
+  transition: background 0.3s ease;
+}
+
+.info-box:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.info-group {
+  margin-bottom: 25px;
+}
+
+.info-group:last-child {
+  margin-bottom: 0;
+}
+
+.info-group h6 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+.info-group p {
+  color: #fff;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.highlight-text {
+  font-size: 1.05rem;
+}
+
+/* ========================================= */
+/* قسم الروشتة */
+/* ========================================= */
+.prescription-box {
+  background: rgba(6, 182, 212, 0.05);
+  border: 1px solid rgba(6, 182, 212, 0.1);
+}
+
+.prescription-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #06b6d4;
+  margin: 0 0 20px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+.prescription-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.prescription-item {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prescription-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.med-name {
+  display: block;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.med-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.med-details strong {
+  color: #e2e8f0;
+}
+
+.med-instructions {
+  color: #f59e0b;
+  font-size: 0.85rem;
+}
+
+.no-meds {
+  color: #94a3b8;
+  text-align: center;
+  margin: 30px 0;
+}
+
+/* ========================================= */
+/* التجاوب مع الموبايل (Responsive Grid) */
+/* ========================================= */
+@media (max-width: 900px) {
+  .record-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .record-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+/* ========================================= */
+/* إعدادات الطباعة */
+/* ========================================= */
+@media print {
+  header, footer, .portal-sidebar, .hide-on-print, .records-page-header {
+    display: none !important;
+  }
+
+  body, .premium-booking-page, .glass-receipt, .record-card {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .record-card { border-left: none !important; }
+  .text-white, .icon-cyan, .icon-success, .icon-warning, .med-name { color: #000 !important; }
+  
+  .prescription-box {
+    background: #f8f9fa !important;
+    border: 2px solid #000 !important;
+  }
+
+  .print-section {
+    page-break-inside: avoid;
+    margin-bottom: 30px;
+    border-bottom: 2px dashed #ccc !important;
+    padding-bottom: 20px;
+  }
+}

@@ -131,6 +131,41 @@ namespace Shifa.Infrastructure.Migrations
                     b.ToTable("ClinicSettings");
                 });
 
+            modelBuilder.Entity("Shifa.Core.Entities.Doctor", b =>
+                {
+                    b.Property<Guid>("DoctorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(555)
+                        .HasColumnType("nvarchar(555)");
+
+                    b.Property<int>("ExperienceYears")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientsCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Quote")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DoctorID");
+
+                    b.ToTable("Doctors");
+                });
+
             modelBuilder.Entity("Shifa.Core.Entities.DoctorAvailability", b =>
                 {
                     b.Property<Guid>("AvailabilityID")
@@ -154,37 +189,6 @@ namespace Shifa.Infrastructure.Migrations
                     b.HasIndex("DoctorID");
 
                     b.ToTable("DoctorAvailabilities");
-                });
-
-            modelBuilder.Entity("Shifa.Core.Entities.DoctorService", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DoctorID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DurationMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("ServiceID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ServiceID");
-
-                    b.HasIndex("DoctorID", "ServiceID")
-                        .IsUnique();
-
-                    b.ToTable("DoctorServices");
                 });
 
             modelBuilder.Entity("Shifa.Core.Entities.DoctorTimeOff", b =>
@@ -402,13 +406,15 @@ namespace Shifa.Infrastructure.Migrations
                     b.Property<Guid>("PatientID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<string>("Allergies")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BloodType")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("ChronicDiseases")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -417,10 +423,8 @@ namespace Shifa.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<double?>("Height")
+                        .HasColumnType("float");
 
                     b.Property<string>("Job")
                         .HasMaxLength(100)
@@ -428,6 +432,9 @@ namespace Shifa.Infrastructure.Migrations
 
                     b.Property<string>("PatientNotes")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Weight")
+                        .HasColumnType("float");
 
                     b.HasKey("PatientID");
 
@@ -529,11 +536,25 @@ namespace Shifa.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("BasePrice")
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("DoctorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<int>("DefaultDurationMinutes")
-                        .HasColumnType("int");
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.Property<string>("ServiceName")
                         .IsRequired()
@@ -541,6 +562,8 @@ namespace Shifa.Infrastructure.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("ServiceID");
+
+                    b.HasIndex("DoctorID");
 
                     b.ToTable("Services");
                 });
@@ -590,6 +613,10 @@ namespace Shifa.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<int?>("Age")
                         .HasColumnType("int");
 
@@ -613,6 +640,9 @@ namespace Shifa.Infrastructure.Migrations
                     b.Property<string>("Gender")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -706,6 +736,17 @@ namespace Shifa.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Shifa.Core.Entities.Doctor", b =>
+                {
+                    b.HasOne("Shifa.Core.Entities.User", "User")
+                        .WithOne("Doctor")
+                        .HasForeignKey("Shifa.Core.Entities.Doctor", "DoctorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Shifa.Core.Entities.DoctorAvailability", b =>
                 {
                     b.HasOne("Shifa.Core.Entities.User", "Doctor")
@@ -715,25 +756,6 @@ namespace Shifa.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Doctor");
-                });
-
-            modelBuilder.Entity("Shifa.Core.Entities.DoctorService", b =>
-                {
-                    b.HasOne("Shifa.Core.Entities.User", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Shifa.Core.Entities.Service", "Service")
-                        .WithMany("DoctorServices")
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("Shifa.Core.Entities.DoctorTimeOff", b =>
@@ -800,8 +822,8 @@ namespace Shifa.Infrastructure.Migrations
             modelBuilder.Entity("Shifa.Core.Entities.Patient", b =>
                 {
                     b.HasOne("Shifa.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("PatientID")
+                        .WithOne("Patient")
+                        .HasForeignKey("Shifa.Core.Entities.Patient", "PatientID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -836,6 +858,17 @@ namespace Shifa.Infrastructure.Migrations
                     b.Navigation("MedicalRecord");
 
                     b.Navigation("Medication");
+                });
+
+            modelBuilder.Entity("Shifa.Core.Entities.Service", b =>
+                {
+                    b.HasOne("Shifa.Core.Entities.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("Shifa.Core.Entities.TelemedicineSession", b =>
@@ -908,9 +941,11 @@ namespace Shifa.Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Shifa.Core.Entities.Service", b =>
+            modelBuilder.Entity("Shifa.Core.Entities.User", b =>
                 {
-                    b.Navigation("DoctorServices");
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

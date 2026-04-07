@@ -1,409 +1,228 @@
-// src/components/HomeSection.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Home.css";
-import { ArrowRight, Hospital, BriefcaseMedical, Pill, Menu, X } from "lucide-react";
-import heroImg from "../../assets/hero-illustration.png";
-import { useTranslation } from "react-i18next";
+// import "./AllDoctors.css";
+import {
+    ArrowLeft,
+    Play,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDoctors } from "../../store/slices/doctorsSlice";
+import { fetchServices } from "../../store/slices/servicesSlice";
+import CardDoctor from "./CardDoctor";
+import CardService from "./CardService";
 
 function HomeSection({
-  isLoaded,
-  onLoginClick,
-  onContactClick,
-  onAboutClick,
-  onSignupClick,
-  onGoPatient,
-  onGoAppointments,
-  onGoPatientPrescriptions,
-  role,
+    role,
 }) {
-  const { t } = useTranslation();
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+    const dispatch = useDispatch();
 
-  const isLoggedIn =
-    role === "Patient" || role === "Doctor" || role === "Admin";
+    // جلب الأطباء من Redux
+    const { data:dataDoc, isLoading:loadingDoc, error:errorDoc } = useSelector(
+        (state) => state.doctors || {},
+    );
+    const doctorsList = Array.isArray(dataDoc) ? dataDoc : [];
 
-  const handleCardClick = (type) => {
-    if (!isLoggedIn) {
-      onLoginClick();
-      return;
-    }
+    const { data:dataSer, isLoading:loadingSer, error:errorSer } = useSelector((state) => state.services || {});
+    const servicesList = Array.isArray(dataSer) ? dataSer : [];
 
-    if (type === "consultation") onGoPatient();
-    if (type === "booking") onGoAppointments();
-    if (type === "prescriptions") onGoPatientPrescriptions();
-  };
+    useEffect(() => {
+        if (doctorsList.length === 0) {
+            dispatch(fetchDoctors());
+        }
+    }, [dispatch, doctorsList.length]);
 
-  const handleNavLinkClick = (callback) => {
-    if (callback) callback();
-    setIsMobileNavOpen(false);
-  };
+    useEffect(() => {
+        if (servicesList.length === 0) {
+            dispatch(fetchServices());
+        }
+    }, [dispatch, servicesList.length]);
 
-  return (
-    <>
-      {/* الخلفية */}
-      <div className="background-wrapper">
-        <div
-          className="bg-image"
-          style={{ backgroundImage: `url(${heroImg})` }}
-        />
-        <div className="bg-overlay"></div>
-        <div className="glow-orb orb-1"></div>
-        <div className="glow-orb orb-2"></div>
-      </div>
+    // 👈 السر هنا: ترتيب الأطباء حسب التقييم ثم أخذ أول 3 فقط
+    const topDoctors = [...doctorsList]
+        .sort((a, b) => b.rating - a.rating) // ترتيب تنازلي (الأعلى أولاً)
+        .slice(0, 3); // قص المصفوفة لأول 3 عناصر فقط
 
-      {/* الهيدر */}
-      <nav className={`navbar ${isLoaded ? "fade-in-down" : ""}`}>
-        <div className="navbar-left">
-          <div className="logo-container">
-            <svg
-              width="52"
-              height="52"
-              viewBox="0 0 100 100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="team-logo-svg"
-            >
-              <path
-                d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50"
-                stroke="url(#logo-gradient)"
-                strokeWidth="8"
-                strokeLinecap="round"
-              />
-              <path
-                d="M20 50 L35 50 L45 30 L55 70 L65 50 L80 50"
-                stroke="white"
-                strokeWidth="7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="pulse-path"
-              />
-              <text
-                x="50"
-                y="57"
-                textAnchor="middle"
-                fontSize="36"
-                fontWeight="700"
-                fill="#e5f4ff"
-                className="logo-s-letter"
-              >
-                S
-              </text>
-              <defs>
-                <linearGradient id="logo-gradient" x1="0" y1="0" x2="100" y2="100">
-                  <stop offset="0%" stopColor="#22d3ee" />
-                  <stop offset="100%" stopColor="#7c3aed" />
-                </linearGradient>
-              </defs>
-            </svg>
+    
+    const topServices = [...servicesList]
+        .sort((a, b) => b.rating - a.rating) // ترتيب تنازلي (الأعلى أولاً)
+        .slice(0, 6); // قص المصفوفة لأول 6 عناصر فقط
 
-            <span className="logo-text-main">Shifaa</span>
-          </div>
-        </div>
+    const [isVideoMuted, setIsVideoMuted] = useState(false);
+    const videoRef = useRef(null);
 
-        {/* روابط الديسكتوب */}
-        <div className="nav-links desktop-only">
-          <a href="#home" className="nav-item">
-            {t("navbar.home")}
-          </a>
-          <button
-            type="button"
-            className="nav-item"
-            onClick={onAboutClick}
-          >
-            {t("navbar.about")}
-          </button>
-          <button
-            type="button"
-            className="nav-item"
-            onClick={onContactClick}
-          >
-            {t("navbar.contact")}
-          </button>
-        </div>
+    const isLoggedIn =
+        role === "Patient" || role === "Doctor" || role === "Admin";
 
-        <div className="nav-buttons desktop-only">
-          <button className="btn-secondary" onClick={onLoginClick}>
-            {t("navbar.login")}
-          </button>
-          <button className="btn-primary" onClick={onSignupClick}>
-            {t("navbar.signup")}
-          </button>
-        </div>
+    // Video Observer
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsVideoMuted(false);
+                        if (videoRef.current)
+                            videoRef.current.play().catch(() => {});
+                    } else {
+                        setIsVideoMuted(true);
+                    }
+                });
+            },
+            { threshold: 0.3 },
+        );
+        if (videoRef.current) observer.observe(videoRef.current);
+        return () => observer.disconnect();
+    }, []);
 
-        {/* زرار الموبايل */}
-        <button
-          type="button"
-          className="mobile-menu-toggle mobile-only"
-          onClick={() => setIsMobileNavOpen((prev) => !prev)}
-          aria-label="Toggle navigation"
-        >
-          {isMobileNavOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+    // Cards Animation
+    useEffect(() => {
+        const showCards = () => {
+            const cards = document.querySelectorAll(".bento-service-card");
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add("animate-in");
+                }, index * 250);
+            });
+        };
+        const timer = setTimeout(showCards, 500);
+        return () => clearTimeout(timer);
+    }, []);
 
-        {/* منيو الموبايل */}
-        <div
-          className={`mobile-nav-panel mobile-only ${
-            isMobileNavOpen ? "open" : ""
-          }`}
-        >
-          <a
-            href="#home"
-            className="mobile-nav-item"
-            onClick={() => setIsMobileNavOpen(false)}
-          >
-            {t("navbar.home")}
-          </a>
-          <button
-            type="button"
-            className="mobile-nav-item"
-            onClick={() => handleNavLinkClick(onAboutClick)}
-          >
-            {t("navbar.about")}
-          </button>
-          <button
-            type="button"
-            className="mobile-nav-item"
-            onClick={() => handleNavLinkClick(onContactClick)}
-          >
-            {t("navbar.contact")}
-          </button>
+    const unlockAudio = () => {
+        if (videoRef.current && isVideoMuted) {
+            videoRef.current.muted = false;
+            videoRef.current.play().catch(() => {});
+            setIsVideoMuted(false);
+        }
+    };
 
-          <div className="mobile-nav-divider" />
-
-          <button
-            type="button"
-            className="mobile-nav-btn secondary"
-            onClick={() => handleNavLinkClick(onLoginClick)}
-          >
-            {t("navbar.login")}
-          </button>
-          <button
-            type="button"
-            className="mobile-nav-btn primary"
-            onClick={() => handleNavLinkClick(onSignupClick)}
-          >
-            {t("navbar.signup")}
-          </button>
-        </div>
-      </nav>
-
-      {/* الهيرو */}
-      <main id="home" className="hero-section">
-        <div className="hero-content">
-          <div className={`text-wrapper ${isLoaded ? "fade-in-up" : ""}`}>
-            <div className="badge">
-              <span>{t("home.badge")}</span>
+    return (
+        <div className="premium-dark-app" dir="rtl" onClick={unlockAudio}>
+            {/* Backgrounds */}
+            <div className="aurora-bg">
+                <div className="aurora aurora-1"></div>
+                <div className="aurora aurora-2"></div>
+                <div className="tech-grid"></div>
             </div>
 
-            <h1 className="hero-title">
-              {t("home.title_line1")}
-              <br />
-              <span className="gradient-text">{t("home.title_line2")}</span>
-            </h1>
+            {/* Hero */}
+            <main id="home" className="hero-centered-section">
+                <div className="container">
+                    <div className="hero-text-centered">
+                        <div className="status-badge">
+                            <span className="status-dot"></span>
+                            النظام الأذكى لإدارة العيادات
+                        </div>
+                        <h1 className="hero-title-massive">
+                            مستقبل الرعاية الصحية،
+                            <br />
+                            <span className="text-gradient">بين يديك الآن</span>
+                        </h1>
+                        <p className="hero-desc-centered">
+                            ارتقِ بتجربتك الطبية مع منصة شفاء. حجز مواعيد، إدارة
+                            ملفات طبية، وتواصل مباشر مع نخبة الأطباء.
+                        </p>
+                        <div className="hero-buttons-centered">
+                            <Link to="/signup"
+                                className="btn-glow large"
+                            >
+                                ابدأ الاستخدام مجاناً <ArrowLeft size={18} />
+                            </Link>
 
-            <p className="hero-desc">
-              {t("home.subtitle")}
-            </p>
+                            <button
+                                className="btn-outline large"
+                                onClick={() => {
+                                    document
+                                        .querySelector(".services-section")
+                                        ?.scrollIntoView({
+                                            behavior: "smooth",
+                                        });
+                                }}
+                            >
+                                <Play size={18} /> تصفح الخدمات
+                            </button>
+                        </div>
+                    </div>
 
-            <div className="hero-buttons">
-              <button className="btn-primary btn-lg" onClick={onLoginClick}>
-                {t("home.cta_get_started")}{" "}
-                <ArrowRight size={18} style={{ marginLeft: "8px" }} />
-              </button>
+                    {/* فيديو كامل العرض */}
+                    <div className="full-width-video">
+                        <video
+                            ref={videoRef}
+                            src="/background-video.mp4"
+                            autoPlay
+                            loop
+                            muted={isVideoMuted}
+                            playsInline
+                            className="hero-video-full"
+                        />
+                    </div>
+                </div>
+            </main>
 
-              <button
-                className="btn-secondary btn-lg"
-                onClick={onAboutClick}
-              >
-                {t("home.cta_learn_more")}
-              </button>
-            </div>
+            {/* Services - Bento Grid */}
+            <section className="services-section">
+                <div className="section-heading-center">
+                    <h2 className="title">خدماتنا الطبية</h2>
+                    <p className="subtitle">
+                        رعاية صحية شاملة مصممة خصيصاً لتلبية احتياجاتك
+                    </p>
+                </div>
 
-            <div className="hero-badges">
-              <span className="hero-badge-chip">
-                {t("home.badge_support")}
-              </span>
-              <span className="hero-badge-chip">
-                {t("home.badge_doctors")}
-              </span>
-              <span className="hero-badge-chip">
-                {t("home.badge_secure")}
-              </span>
-            </div>
-          </div>
+                <div className="crystal-grid">
+                    {topServices.length > 0 &&
+                        topServices.map((service, index) => (
+                        <CardService
+                            key={service.serviceID}
+                            service={service}
+                            index={index} />
+                    ))}
+                </div>
 
-          {/* الكروت */}
-          <div className={`cards-grid ${isLoaded ? "fade-in-up-delay" : ""}`}>
-            <div
-              className="feature-card"
-              onClick={() => handleCardClick("consultation")}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="icon-wrapper color-cyan">
-                <Hospital size={28} />
-              </div>
-              <h3>{t("home.card_consultation_title")}</h3>
-              <p>{t("home.card_consultation_text")}</p>
-            </div>
-
-            <div
-              className="feature-card feature-card-center"
-              onClick={() => handleCardClick("booking")}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="icon-wrapper color-purple">
-                <BriefcaseMedical size={28} />
-              </div>
-              <h3>{t("home.card_booking_title")}</h3>
-              <p>{t("home.card_booking_text")}</p>
-
-              <div className="scroll-indicator">
-                <span className="scroll-text">{t("home.scroll")}</span>
-                <span className="scroll-arrow">▾</span>
-              </div>
-            </div>
-
-            <div
-              className="feature-card"
-              onClick={() => handleCardClick("prescriptions")}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="icon-wrapper color-blue">
-                <Pill size={28} />
-              </div>
-              <h3>{t("home.card_prescriptions_title")}</h3>
-              <p>{t("home.card_prescriptions_text")}</p>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* الفوتر */}
-      <footer className="footer-ecg">
-        <div className="footer-divider-line"></div>
-
-        <div className="footer-inner">
-          <div className="footer-column">
-            <div className="footer-ecg-logo">
-              {/* تقدر هنا تحط نفس الـ SVG بتاع اللوجو لو حابب */}
-              <span className="footer-ecg-text">Shifaa</span>
-            </div>
-
-            <p className="footer-desc">
-              {t("home.footer_desc")}
-            </p>
-          </div>
-
-          <div className="footer-column">
-            <h4 className="footer-heading">{t("home.footer_quick_links")}</h4>
-            <ul className="footer-links">
-              <li>
-                <a href="#home">{t("navbar.home")}</a>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="footer-link-button"
-                  onClick={onAboutClick}
+                {/* زر جديد تحت الكروت */}
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "40px",
+                    }}
                 >
-                  {t("navbar.about")}
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="footer-link-button"
-                  onClick={onContactClick}
-                >
-                  {t("navbar.contact")}
-                </button>
-              </li>
-              <li>
-                <a href="#home">{t("home.footer_services")}</a>
-              </li>
-            </ul>
-          </div>
+                    <Link to="/services" className="btn-text-link large">
+                        تصفح كل الخدمات <ArrowLeft size={18} />
+                    </Link>
+                </div>
+            </section>
 
-          <div className="footer-column">
-            <h4 className="footer-heading">{t("home.footer_contact_title")}</h4>
-            <ul className="footer-links">
-              <li>
-                <span>{t("home.footer_contact_email")}</span>
-              </li>
-              <li>
-                <span>{t("home.footer_contact_phone")}</span>
-              </li>
-              <li>
-                <span>{t("home.footer_contact_location")}</span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="footer-column">
-            <h4 className="footer-heading">{t("home.footer_stay_updated")}</h4>
-            <p className="footer-desc-small">
-              {t("home.footer_newsletter_text")}
-            </p>
-            <div className="footer-newsletter">
-              <input
-                type="email"
-                placeholder={t("home.footer_newsletter_placeholder")}
-                className="footer-input"
-              />
-              <button className="footer-button">
-                {t("home.footer_newsletter_button")}
-              </button>
-            </div>
-
-            <div className="footer-follow">
-              <span className="footer-follow-label">
-                {t("home.footer_follow_us")}
-              </span>
-              <div className="footer-follow-icons">
-                <a href="#facebook" className="footer-social-badge">
-                  FB
-                </a>
-                <a href="#instagram" className="footer-social-badge">
-                  IG
-                </a>
-                <a href="#linkedin" className="footer-social-badge">
-                  IN
-                </a>
-              </div>
-            </div>
-          </div>
+            {/* Doctors */}
+            <section className="doctors-section">
+                <div className="container">
+                    <div className="section-heading flex-between">
+                        <div>
+                            <h2 className="title">نخبة الأطباء</h2>
+                            <p className="subtitle">
+                                أفضل المتخصصين لمتابعة حالتك
+                            </p>
+                        </div>
+                        <Link
+                            to="/doctors"
+                            className="btn-text-link desktop-only"
+                        >
+                            عرض الجميع <ArrowLeft size={16} />
+                        </Link>
+                    </div>
+                    <div className="crystal-grid">
+                        {topDoctors.length > 0 &&
+                            topDoctors.map((doctor, index) => (
+                                <CardDoctor
+                                    key={doctor.doctorID}
+                                    doc={doctor}
+                                    index={index}
+                                />
+                            ))}
+                    </div>
+                </div>
+            </section>
         </div>
-
-        <div className="footer-ecg-bottom">
-          <div className="footer-ecg-links">
-            <a href="#home">{t("navbar.home")}</a>
-            <button
-              type="button"
-              className="footer-link-button"
-              onClick={onAboutClick}
-            >
-              {t("navbar.about")}
-            </button>
-            <button
-              type="button"
-              className="footer-link-button"
-              onClick={onContactClick}
-            >
-              {t("navbar.contact")}
-            </button>
-          </div>
-
-          <div className="footer-ecg-right">
-            <span>{t("home.footer_copy")}</span>
-            <span className="footer-ecg-dot">•</span>
-            <a href="#privacy">{t("home.footer_privacy")}</a>
-            <span className="footer-ecg-dot">•</span>
-            <a href="#terms">{t("home.footer_terms")}</a>
-          </div>
-        </div>
-      </footer>
-    </>
-  );
+    );
 }
 
 export default HomeSection;
