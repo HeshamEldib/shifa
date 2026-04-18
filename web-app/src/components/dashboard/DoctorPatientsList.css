@@ -1,0 +1,179 @@
+/* src/components/dashboard/DoctorPatientsList.css */
+
+.doctor-patients-page {
+  padding: 10px 10px 80px;
+}
+
+/* ========================================= */
+/* شريط البحث */
+/* ========================================= */
+.patients-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+}
+
+.search-wrapper {
+  position: relative;
+  flex-grow: 1;
+  max-width: 500px;
+}
+
+.search-icon {
+  position: absolute;
+  inset-inline-end: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.patient-search-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 15px 12px 45px; /* مسافة للأيقونة على اليمين */
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.patient-search-input:focus {
+  border-color: #06b6d4;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(6, 182, 212, 0.1);
+  color: #06b6d4;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.stat-badge strong {
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+/* ========================================= */
+/* شبكة كروت المرضى */
+/* ========================================= */
+.patients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.patient-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0; /* سنوزع الـ Padding داخلياً */
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.patient-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(6, 182, 212, 0.3);
+}
+
+.patient-card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.patient-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.patient-name {
+  color: #fff;
+  margin: 0 0 5px 0;
+  font-size: 1.15rem;
+}
+
+.patient-demographics {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+/* ========================================= */
+/* تفاصيل الكارت */
+/* ========================================= */
+.patient-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+}
+
+/* ========================================= */
+/* الفوتر والزر */
+/* ========================================= */
+.patient-card-footer {
+  padding: 15px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-medical-record {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: #06b6d4;
+  border: 1px solid #06b6d4;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-medical-record:hover {
+  background: #06b6d4;
+  color: #050a15;
+}
+
+.header-title-p {
+  color: #fff;
+  margin-bottom: 5px;
+}
+.description-p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}

@@ -17,5 +17,8 @@ namespace Shifa.API.Dtos.DoctorServices
 
         [Required]
         public int DurationMinutes { get; set; }
+        [Required(ErrorMessage = "نوع الخدمة مطلوب")]
+        [RegularExpression("^(In-Clinic|Telemedicine)$", ErrorMessage = "نوع الخدمة يجب أن يكون 'In-Clinic' أو 'Telemedicine'")]
+        public string Type { get; set; }
     }
 }

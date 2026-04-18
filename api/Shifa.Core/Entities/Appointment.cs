@@ -15,7 +15,7 @@ namespace Shifa.Core.Entities
 
         public Guid DoctorID { get; set; } = Guid.NewGuid();
         [ForeignKey("DoctorID")]
-        public User Doctor { get; set; } = null!;
+        public Doctor Doctor { get; set; } = null!;
 
         public Guid ServiceID { get; set; } = Guid.NewGuid();
         public Service Service { get; set; } = null!;

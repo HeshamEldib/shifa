@@ -4,7 +4,7 @@ namespace Shifa.API.Dtos.Doctors
 {
     public class AvailabilityDto
     {
-        public Guid AvailabilityID { get; set; }
+        public Guid? AvailabilityID { get; set; }
 
         [Required]
         [Range(0, 6, ErrorMessage = "يجب اختيار يوم صحيح (0 = الأحد, 6 = السبت)")]
@@ -15,5 +15,6 @@ namespace Shifa.API.Dtos.Doctors
 
         [Required]
         public TimeSpan EndTime { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

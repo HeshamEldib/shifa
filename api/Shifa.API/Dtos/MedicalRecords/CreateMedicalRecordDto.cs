@@ -8,6 +8,8 @@ namespace Shifa.API.Dtos.MedicalRecords
     {
         [Required]
         public Guid PatientID { get; set; }
+        public Guid DoctorID { get; set; }
+        public Guid AppointmentID { get; set; } 
         
         public DateTime VisitDate { get; set; } = DateTime.UtcNow;
         

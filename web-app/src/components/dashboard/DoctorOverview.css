@@ -1,0 +1,247 @@
+/* src/components/dashboard/DoctorOverview.css */
+
+.doctor-overview-container {
+  padding: 10px 10px 80px;
+}
+
+.overview-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  color: #94a3b8;
+}
+
+.overview-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ========================================= */
+/* 1. شبكة الإحصائيات (Stats Grid) */
+/* ========================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: transform 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.border-cyan { border-bottom-color: #06b6d4; }
+.border-success { border-bottom-color: #22c55e; }
+.border-warning { border-bottom-color: #f59e0b; }
+.border-purple { border-bottom-color: #a855f7; }
+
+.stat-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-cyan-light { background: rgba(6, 182, 212, 0.15); }
+.bg-success-light { background: rgba(34, 197, 94, 0.15); }
+.bg-warning-light { background: rgba(245, 158, 11, 0.15); }
+.bg-purple-light { background: rgba(168, 85, 247, 0.15); }
+
+.text-cyan { color: #06b6d4; }
+.text-success { color: #22c55e; }
+.text-warning { color: #f59e0b; }
+.text-purple { color: #a855f7; }
+
+.stat-info p {
+  color: #94a3b8;
+  margin: 0 0 5px 0;
+  font-size: 0.95rem;
+}
+
+.stat-info h3 {
+  color: #fff;
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ========================================= */
+/* 2. القسم السفلي (Bottom Grid) */
+/* ========================================= */
+.overview-bottom-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+}
+
+@media (max-width: 992px) {
+  .overview-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================= */
+/* جدول مواعيد اليوم */
+/* ========================================= */
+.today-schedule-section {
+  padding: 25px;
+}
+
+.badge-info {
+  background: rgba(6, 182, 212, 0.1);
+  color: #06b6d4;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.schedule-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: background 0.3s ease;
+  direction: rtl;
+}
+
+.schedule-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.schedule-time {
+  min-width: 90px;
+  color: #06b6d4;
+  font-size: 1.1rem;
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.1);
+  padding-inline-end: 15px;
+  margin-inline-end: 15px;
+}
+
+.schedule-details {
+  flex-grow: 1;
+  /* direction: rtl; */
+}
+
+.patient-name {
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+
+.app-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.meta-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.meta-badge.online { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+.meta-badge.clinic { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.confirmed { background: #22c55e; box-shadow: 0 0 8px rgba(34, 197, 94, 0.5); }
+.status-dot.pending { background: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+
+.btn-action-sm {
+  background: transparent;
+  color: #06b6d4;
+  border: 1px solid #06b6d4;
+  padding: 6px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btn-action-sm:hover {
+  background: #06b6d4;
+  color: #050a15;
+}
+
+/* ========================================= */
+/* الإجراءات السريعة */
+/* ========================================= */
+.quick-actions-section {
+  padding: 25px;
+}
+
+.action-buttons-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: right;
+  font-size: 1rem;
+}
+
+.action-btn:hover {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.3);
+  color: #06b6d4;
+  transform: translateX(-5px);
+}
+
+.header-title-action {
+  color: #fff;
+  margin-bottom: 20px;
+}
+.header-title-action-icon {
+  color: #a855f7;
+  margin-inline-end: 10px;
+}
+
+.status-label {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}

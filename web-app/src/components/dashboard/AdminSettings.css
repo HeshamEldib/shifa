@@ -1,0 +1,108 @@
+.admin-settings-page {
+  padding: 10px 10px 80px;
+}
+
+.settings-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+@media (max-width: 900px) {
+  .settings-layout-grid { grid-template-columns: 1fr; }
+}
+
+.admin-section {
+  padding: 25px;
+  border-radius: 12px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 1.2rem;
+}
+
+/* رفع الشعار (Logo Uploader) */
+.logo-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s;
+}
+
+.logo-wrapper:hover {
+  border-color: #06b6d4;
+}
+
+.clinic-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.btn-upload-logo {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #06b6d4;
+  color: #050a15;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 3px solid #0f172a;
+  transition: transform 0.2s;
+}
+
+.btn-upload-logo:hover {
+  transform: scale(1.1);
+}
+
+/* حقول الإدخال مع الأيقونات (Social Media) */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon .input-icon {
+  position: absolute;
+  right: 15px; /* RTL alignment */
+  pointer-events: none;
+}
+
+.input-with-icon .custom-input {
+  padding-right: 45px; /* مساحة للأيقونة */
+  direction: ltr; /* لجعل الروابط تكتب من اليسار لليمين */
+  text-align: left;
+}
+
+/* في حالة إضافة Placeholder بالعربي مع رابط LTR */
+.input-with-icon .custom-input::placeholder {
+  text-align: right;
+}
+
+/* تذييل حفظ التعديلات */
+.admin-actions-footer {
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: flex-end; /* لدفعه لليسار في RTL */
+}

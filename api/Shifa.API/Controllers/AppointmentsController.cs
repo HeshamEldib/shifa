@@ -55,8 +55,8 @@ namespace Shifa.API.Controllers
             var isWorking = await _context.DoctorAvailabilities.AnyAsync(a =>
                 a.DoctorID == data.DoctorID &&
                 a.DayOfWeek == dayOfWeek &&
-                a.StartTime <= timeOfDay && 
-                a.EndTime >= endTimeOfDay   
+                a.StartTime <= timeOfDay &&
+                a.EndTime >= endTimeOfDay
             );
 
             if (!isWorking)
@@ -64,8 +64,8 @@ namespace Shifa.API.Controllers
 
             var isBusy = await _context.Appointments.AnyAsync(a =>
                 a.DoctorID == data.DoctorID &&
-                a.AppointmentDate < endTime && 
-                a.AppointmentDate.AddMinutes(service.DurationMinutes) > data.AppointmentDate 
+                a.AppointmentDate < endTime &&
+                a.AppointmentDate.AddMinutes(service.DurationMinutes) > data.AppointmentDate
             );
 
             if (isBusy)
@@ -77,7 +77,7 @@ namespace Shifa.API.Controllers
                 DoctorID = data.DoctorID,
                 ServiceID = data.ServiceID,
                 AppointmentDate = data.AppointmentDate,
-                Status = "Pending", 
+                Status = "Pending",
                 Notes = data.Notes
             };
 
@@ -86,8 +86,8 @@ namespace Shifa.API.Controllers
             {
                 InvoiceID = Guid.NewGuid(),
                 PatientID = patientId,
-                AppointmentID = appointment.AppointmentID, 
-                TotalAmount = service.Price, 
+                AppointmentID = appointment.AppointmentID,
+                TotalAmount = service.Price,
                 IssueDate = DateTime.UtcNow,
                 IsPaid = false,
                 PaymentMethod = "Cash"
@@ -105,17 +105,17 @@ namespace Shifa.API.Controllers
         // 2. عرض مواعيدي (للمريض أو الطبيب)
         // ==========================================
         [HttpGet("my-appointments")]
-        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetMyAppointments()
+        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetMyAppointments([FromQuery] DateTime? date)
         {
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
             if (!Guid.TryParse(userIdStr, out Guid userId)) return Unauthorized();
 
             var query = _context.Appointments
-                .Include(a => a.Doctor) 
-                .Include(a => a.Patient).ThenInclude(p => p.User) 
+                .Include(a => a.Doctor)
+                .Include(a => a.Patient).ThenInclude(p => p.User)
                 .Include(a => a.Service)
-                .Include(a => a.Invoice) 
+                .Include(a => a.Invoice)
                 .AsQueryable();
 
             if (role == AppRoles.Patient)
@@ -127,19 +127,30 @@ namespace Shifa.API.Controllers
                 query = query.Where(a => a.DoctorID == userId);
             }
 
+            if (date.HasValue)
+            {
+                // نستخدم .Date لضمان مطابقة اليوم وتجاهل الساعات والدقائق
+                query = query.Where(a => a.AppointmentDate.Date == date.Value.Date);
+            }
+
             var appointments = await query
-                .OrderByDescending(a => a.AppointmentDate)
-                .Select(a => new AppointmentDto
-                {
-                    AppointmentID = a.AppointmentID,
-                    DoctorName = a.Doctor.FullName,
-                    PatientName = a.Patient.User.FullName,
-                    ServiceName = a.Service.ServiceName,
-                    AppointmentDate = a.AppointmentDate,
-                    Status = a.Status,
-                    Price = a.Invoice != null ? a.Invoice.TotalAmount : 0
-                })
-                .ToListAsync();
+        .OrderByDescending(a => a.AppointmentDate)
+        .Select(a => new AppointmentDto
+        {
+            AppointmentID = a.AppointmentID,
+            DoctorID = a.DoctorID,
+            PatientID = a.PatientID,
+            ServiceID = a.ServiceID,
+            DoctorName = a.Doctor.User.FullName,
+            PatientName = a.Patient.User.FullName,
+            ServiceName = a.Service.ServiceName,
+            AppointmentDate = a.AppointmentDate,
+            Status = a.Status,
+            HasMedicalRecord = _context.MedicalRecords.Any(r => r.AppointmentID == a.AppointmentID),
+            // Notes = a.Notes,
+            Price = a.Invoice != null ? a.Invoice.TotalAmount : 0
+        })
+        .ToListAsync();
 
             return Ok(appointments);
         }
@@ -148,7 +159,7 @@ namespace Shifa.API.Controllers
         // 3. API لجلب المواعيد المتاحة (Slots)
         // ==========================================
         [HttpGet("available-slots")]
-        [AllowAnonymous] 
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<SlotDto>>> GetAvailableSlots(
             [FromQuery] Guid doctorId,
             [FromQuery] Guid serviceId,
@@ -168,13 +179,13 @@ namespace Shifa.API.Controllers
                 .FirstOrDefaultAsync(d => d.DoctorID == doctorId && d.DayOfWeek == dayOfWeek);
 
             if (availability == null)
-                return Ok(new List<SlotDto>()); 
+                return Ok(new List<SlotDto>());
 
             var blockers = new List<Shifa.API.Services.TimeRange>();
 
             // [تعديل]: جلب المواعيد المحجوزة مسبقاً لحساب الحواجز
             var exactBooked = await _context.Appointments
-                .Include(a => a.Service) 
+                .Include(a => a.Service)
                 .Where(a => a.DoctorID == doctorId && a.AppointmentDate.Date == date.Date && a.Status != "Cancelled")
                 .ToListAsync();
 
@@ -197,7 +208,7 @@ namespace Shifa.API.Controllers
 
             if (date.Date == DateTime.UtcNow.Date)
             {
-                var now = DateTime.UtcNow.AddHours(2); 
+                var now = DateTime.UtcNow.AddHours(2);
                 if (currentScanTime < now) currentScanTime = now;
             }
 
@@ -272,5 +283,48 @@ namespace Shifa.API.Controllers
 
             return Ok(new { Message = "تم إلغاء الموعد بنجاح" });
         }
+
+        [HttpPut("{id}/status")]
+[Authorize(Roles = "Doctor")]
+public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateAppointmentStatusDto dto)
+{
+    // 1. استخراج ID الطبيب من التوكن للأمان
+    var doctorIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(doctorIdStr, out Guid doctorId)) return Unauthorized();
+
+    // 2. البحث عن الموعد والتأكد من ملكيته للطبيب
+    var appointment = await _context.Appointments.FindAsync(id);
+    if (appointment == null) return NotFound("الموعد غير موجود.");
+    
+    if (appointment.DoctorID != doctorId) 
+        return Forbid("لا تملك صلاحية تعديل هذا الموعد.");
+
+    // 3. 🛡️ المنطق الجوهري: منع الإكمال بدون سجل طبي
+    if (dto.Status == "Completed")
+    {
+        // البحث في جدول السجلات الطبية عن أي سجل مرتبط بهذا الـ AppointmentID
+        var hasMedicalRecord = await _context.MedicalRecords
+            .AnyAsync(r => r.AppointmentID == id);
+
+        if (!hasMedicalRecord)
+        {
+            return BadRequest(new { 
+                Message = "عذراً، لا يمكن إتمام الموعد تقنياً قبل كتابة السجل الطبي والروشتة للمريض." 
+            });
+        }
+    }
+
+    // 4. تنفيذ التحديث إذا اجتاز الشروط
+    appointment.Status = dto.Status;
+    
+    // حفظ التغييرات
+    await _context.SaveChangesAsync();
+
+    return Ok(new { 
+        Message = $"تم تغيير حالة الموعد إلى {dto.Status} بنجاح.",
+        Status = appointment.Status 
+    });
+}
+
     }
 }

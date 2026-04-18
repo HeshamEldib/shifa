@@ -1,212 +1,236 @@
-// src/components/doctor/DoctorProfile.jsx
-import React, { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import "./Doctor Profile.css";
+import React, { useState, useEffect } from "react";
+import { User, BriefcaseMedical, Save, Camera } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    updateProfile,
+    updateProfileImage,
+} from "../../store/slices/userProfileSlice";
+import "./DoctorProfile.css";
 
 function DoctorProfile() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language && i18n.language.startsWith("ar");
+    const dispatch = useDispatch();
+    const { data: user, isLoading } = useSelector((state) => state.userProfile);
+    const [isSaving, setIsSaving] = useState(false);
 
-  const [doctor, setDoctor] = useState({
-    name: "",
-    specialty: "",
-    phone: "",
-    email: "",
-  });
+    const [formData, setFormData] = useState({
+        fullName: "",
+        phone: "",
+        email: "",
+        age: "",
+        gender: "",
+        address: "",
+        bio: "",
+        quote: "",
+        specialty: "",
+        specialization: "",
+        experienceYears: "",
+    });
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+    useEffect(() => {
+        if (user) setFormData({ ...user });
+    }, [user]);
 
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId");
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) dispatch(updateProfileImage(file));
+        window.location.reload();
+    };
+    const handleProfileChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setIsSaving(true);
+    };
 
-  useEffect(() => {
-    async function fetchDoctor() {
-      try {
-        setLoading(true);
-        const res = await fetch(
-          `/api/doctor/profile${userId ? `/${userId}` : ""}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            },
-          }
-        );
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-        if (!res.ok) {
-          throw new Error("Failed to load profile");
-        }
+        dispatch(updateProfile(formData));
+        window.location.reload();
+    };
 
-        const data = await res.json();
-
-        setDoctor({
-          name: data.name || "",
-          specialty: data.specialty || "",
-          phone: data.phone || "",
-          email: data.email || "",
-        });
-      } catch (err) {
-        console.error(err);
-        setDoctor((prev) =>
-          prev.name
-            ? prev
-            : {
-                name: "د. أحمد سامي",
-                specialty: "طبيب باطني",
-                phone: "+20 100 123 4567",
-                email: "ahmed.sami@example.com",
-              }
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchDoctor();
-  }, [token, userId]);
-
-  const initials = useMemo(() => {
-    if (!doctor.name) return "DR";
-    const parts = doctor.name.trim().split(" ");
-    if (parts.length === 1) return parts[0][0]?.toUpperCase() || "D";
     return (
-      (parts[0][0] || "").toUpperCase() +
-      (parts[parts.length - 1][0] || "").toUpperCase()
+        <form onSubmit={handleSubmit} className="profile-form-container">
+            {/* قسم الصورة */}
+            <div className="profile-avatar-section glass-receipt text-center mb-4">
+                <div className="avatar-wrapper mx-auto">
+                    <img
+                        src={user?.image || "/user.png"}
+                        alt="Avatar"
+                        className="profile-avatar-img"
+                    />
+                    <label className="camera-btn btn-change-avatar">
+                        <Camera size={20} />
+                        <input
+                            type="file"
+                            hidden
+                            onChange={handleImageChange}
+                            accept="image/*"
+                        />
+                    </label>
+                </div>
+                <h4 className="text-white mt-3 mb-1">د. {user?.fullName}</h4>
+                <p className="text-cyan m-0">
+                    {user?.specialization || "تخصص غير محدد"}
+                </p>
+            </div>
+
+            <div className="profile-grid">
+                <div className="profile-section glass-receipt">
+                    <h4 className="section-title">
+                        <User size={20} className="text-cyan" /> البيانات
+                        الأساسية
+                    </h4>
+                    <div className="form-group mb-3">
+                        <label>الاسم الكامل</label>
+                        <input
+                            required
+                            type="text"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+
+                    <div className="form-group mb-3">
+                        <label>الهاتف</label>
+                        <input
+                            required
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+
+                    <div className="form-group mb-3">
+                        <label>البريد الإلكتروني</label>
+                        <input
+                            required
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            disabled
+                            // onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+                    <div className="form-group mb-3">
+                        <label>العمر</label>
+                        <input
+                            required
+                            type="number"
+                            name="age"
+                            value={formData.age}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+                    <div className="form-group mb-3">
+                        <label>الجنس</label>
+                        <select
+                            required
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        >
+                            <option value="">اختر الجنس</option>
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                    </div>
+                    <div className="form-group mb-3">
+                        <label>العنوان</label>
+                        <input
+                            required
+                            type="text"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+                </div>
+
+                <div className="profile-section glass-receipt">
+                    <h4 className="section-title">
+                        <BriefcaseMedical size={20} className="text-cyan" />{" "}
+                        البيانات المهنية
+                    </h4>
+                    <div className="form-group mb-3">
+                        <label>التخصص</label>
+                        <input
+                            required
+                            type="text"
+                            name="specialty"
+                            value={formData.specialty}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+                    <div className="form-group mb-3">
+                        <label>التخصص الدقيق</label>
+                        <input
+                            required
+                            type="text"
+                            name="specialization"
+                            value={formData.specialization}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+
+                    <div className="form-group mb-3">
+                        <label>سنوات الخبرة</label>
+                        <input
+                            required
+                            type="number"
+                            name="experienceYears"
+                            value={formData.experienceYears}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+                    <div className="form-group mb-3">
+                        <label>الاقتباس المفضل</label>
+                        <input
+                            type="text"
+                            name="quote"
+                            value={formData.quote}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                        />
+                    </div>
+                    <div className="form-group mb-3">
+                        <label>النبذة التعريفية</label>
+                        <textarea
+                            name="bio"
+                            value={formData.bio}
+                            onChange={handleProfileChange}
+                            className="custom-input"
+                            rows="4"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="profile-actions glass-receipt mt-4 text-left">
+                <button
+                    type="submit"
+                    className="btn-primary-action"
+                    disabled={!isSaving}
+                >
+                    {isSaving ? (
+                        <span className="custom-spinner-sm"></span>
+                    ) : (
+                        <Save size={20} />
+                    )}{" "}
+                    حفظ الملف الشخصي
+                </button>
+            </div>
+        </form>
     );
-  }, [doctor.name]);
-
-  const handleChange = (field) => (e) => {
-    setDoctor((prev) => ({
-      ...prev,
-      [field]: e.target.value,
-    }));
-  };
-
-  const handleSave = async () => {
-    try {
-      setSaving(true);
-      const res = await fetch(
-        `/api/doctor/profile${userId ? `/${userId}` : ""}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({
-            name: doctor.name,
-            specialty: doctor.specialty,
-            phone: doctor.phone,
-            email: doctor.email,
-          }),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to save profile");
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  return (
-    <div className="dd-profile-shell" dir={isRTL ? "rtl" : "ltr"}>
-      <main className="dd-main dd-profile-main">
-        <section className="dd-profile-card">
-          <div className="dd-profile-header-title">
-            <h2 className="dd-profile-title">
-              {t("doctor.account_title", "إعدادات حساب الطبيب")}
-            </h2>
-            <p className="dd-profile-subtitle">
-              {t(
-                "doctor.account_subtitle",
-                "حدّث بياناتك الشخصية وطرق التواصل مع المرضى."
-              )}
-            </p>
-          </div>
-
-          <div className="dd-profile-top">
-            <div className="dd-sidebar-avatar dd-profile-avatar">
-              {initials}
-            </div>
-            <div>
-              <div className="dd-profile-name">
-                {loading
-                  ? t("common.loading", "جاري التحميل...")
-                  : doctor.name}
-              </div>
-              <div className="dd-profile-role">{doctor.specialty}</div>
-            </div>
-          </div>
-
-          <div className="dd-profile-fields">
-            <div className="dd-profile-row">
-              <label className="dd-profile-label">
-                {t("doctor.field_name", "الاسم")}
-              </label>
-              <input
-                className="dd-profile-input"
-                value={doctor.name}
-                onChange={handleChange("name")}
-                readOnly
-              />
-            </div>
-
-            <div className="dd-profile-row">
-              <label className="dd-profile-label">
-                {t("doctor.field_specialty", "التخصص")}
-              </label>
-              <input
-                className="dd-profile-input"
-                value={doctor.specialty}
-                onChange={handleChange("specialty")}
-                readOnly
-              />
-            </div>
-
-            <div className="dd-profile-row">
-              <label className="dd-profile-label">
-                {t("doctor.field_phone", "رقم الهاتف")}
-              </label>
-              <input
-                className="dd-profile-input"
-                value={doctor.phone}
-                onChange={handleChange("phone")}
-              />
-            </div>
-
-            <div className="dd-profile-row">
-              <label className="dd-profile-label">
-                {t("doctor.field_email", "البريد الإلكتروني")}
-              </label>
-              <input
-                className="dd-profile-input"
-                value={doctor.email}
-                onChange={handleChange("email")}
-              />
-            </div>
-          </div>
-
-          <div className="dd-profile-actions">
-            <button
-              type="button"
-              className="dd-profile-save"
-              onClick={handleSave}
-              disabled={saving || loading}
-            >
-              {saving
-                ? t("doctor.saving", "جاري الحفظ...")
-                : t("doctor.save_changes", "حفظ التغييرات")}
-            </button>
-          </div>
-        </section>
-      </main>
-    </div>
-  );
 }
 
 export default DoctorProfile;

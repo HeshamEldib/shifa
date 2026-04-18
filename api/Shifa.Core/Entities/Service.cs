@@ -22,6 +22,8 @@ namespace Shifa.Core.Entities
         public double Rating { get; set; } = 0.0;
         public decimal Price { get; set; }
         public int DurationMinutes { get; set; }
+
+        public string Type { get; set; } = "In-Clinic"; // أو "Telemedicine"
         public bool IsActive { get; set; } = true;
     }
 }

@@ -1,0 +1,141 @@
+.admin-overview {
+  padding: 20px 20px 80px;
+}
+
+.admin-header {
+  margin-bottom: 30px;
+}
+
+/* بطاقات الإحصائيات */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(6, 182, 212, 0.3);
+}
+
+.stat-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon-wrapper.doctors { background: rgba(6, 182, 212, 0.1); color: #06b6d4; }
+.stat-icon-wrapper.patients { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+.stat-icon-wrapper.appointments { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.stat-icon-wrapper.revenue { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+
+.stat-value {
+  color: #fff;
+  margin: 5px 0 0 0;
+  font-size: 1.8rem;
+}
+
+.stat-label {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+/* تخطيط المحتوى السفلي */
+.admin-content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+}
+
+@media (max-width: 1000px) {
+  .admin-content-grid { grid-template-columns: 1fr; }
+}
+
+.admin-section {
+  padding: 25px;
+  border-radius: 15px;
+}
+
+.section-title-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-view-all {
+  background: transparent;
+  color: #06b6d4;
+  border: 1px solid #06b6d4;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* جداول الإدارة */
+.custom-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+}
+
+.custom-admin-table th {
+  color: #64748b;
+  font-weight: 500;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-admin-table td {
+  padding: 15px 0;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.btn-table-action {
+  background: rgba(6, 182, 212, 0.1);
+  color: #06b6d4;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* القائمة الجانبية للنشاط */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.activity-item {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.act-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.act-icon.success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.act-icon.pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }

@@ -1,0 +1,202 @@
+.admin-patients-page {
+    padding: 10px;
+}
+
+/* شريط البحث */
+.search-box.full-width {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-box.full-width input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    width: 100%;
+    outline: none;
+    font-size: 1rem;
+}
+
+/* حاوية الجدول */
+.admin-table-container {
+    overflow-x: auto;
+    padding: 0; /* إزالة الـ Padding ليمتد الجدول للحواف */
+    border-radius: 12px;
+}
+
+.custom-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: right;
+    min-width: 800px; /* ضمان عدم تكسر الجدول في الشاشات الصغيرة */
+}
+
+.custom-admin-table th {
+    background: rgba(0, 0, 0, 0.2);
+    color: #94a3b8;
+    font-weight: 600;
+    padding: 15px 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-admin-table td {
+    padding: 15px 20px;
+    color: #e2e8f0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    vertical-align: middle;
+}
+
+.custom-admin-table tr:hover {
+    background: rgba(255, 255, 255, 0.01);
+}
+
+/* الصف الموقوف */
+.suspended-row td {
+    opacity: 0.6;
+}
+.suspended-row td .font-weight-bold {
+    text-decoration: line-through;
+    color: #94a3b8 !important;
+}
+
+/* معلومات التواصل */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.badge-count {
+    background: rgba(6, 182, 212, 0.1);
+    color: #06b6d4;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* أقراص الحالة */
+.status-pill {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.status-pill.active {
+    background: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.status-pill.suspended {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* أزرار الإجراءات */
+.actions-cell {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-icon-action {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    width: fit-content;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-icon-action:hover {
+    transform: translateY(-2px);
+}
+
+.btn-icon-action.view:hover {
+    border-color: #06b6d4;
+    color: #06b6d4;
+}
+.btn-icon-action.suspend:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+.btn-icon-action.activate:hover {
+    border-color: #22c55e;
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+/* تنسيق اختيار الجنس */
+.gender-selector {
+  display: flex;
+  gap: 15px;
+  margin-top: 8px;
+}
+
+.gender-option {
+  flex: 1;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #94a3b8;
+}
+
+.gender-option input { display: none; }
+
+.gender-option.active {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: #06b6d4;
+  color: #06b6d4;
+}
+
+/* الأيقونات داخل المدخلات */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-inner {
+  position: absolute;
+  right: 12px;
+  color: #64748b;
+}
+
+.icon-padding {
+  padding-right: 40px !important;
+}
+
+/* المودال وأزراره */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 20px;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 256, 0.1);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}

@@ -220,8 +220,8 @@ function BookingPage() {
                     {/* ========================================= */}
                     {/* العمود الأيسر: الفاتورة والتأكيد */}
                     {/* ========================================= */}
-                    <div className="receipt-section fade-in-up delay">
-                        <div className="glass-receipt">
+                    <div className="receipt-section fade-in-up booking delay">
+                        <div className="glass-receipt booking">
                             <div className="receipt-header">
                                 <h3>ملخص الحجز</h3>
                             </div>

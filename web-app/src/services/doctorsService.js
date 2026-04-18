@@ -11,16 +11,7 @@ export const getAllDoctors = async () => {
     return await response.json();
 };
 
-// جلب مواعيد عمل طبيب محدد
-export const getDoctorAvailability = async (doctorId) => {
-    const response = await fetch(`${API_URL}/api/doctors/${doctorId}/availability`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-    });
-    
-    if (!response.ok) throw new Error("تعذر جلب مواعيد الطبيب");
-    return await response.json();
-};
+
 
 // جلب الخدمات التي يقدمها طبيب محدد
 export const getDoctorServices = async (doctorId) => {

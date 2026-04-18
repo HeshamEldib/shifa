@@ -38,8 +38,8 @@ namespace Shifa.API.Controllers
                     
                     // نجلب اسم الطبيب من جدول المستخدمين المرتبط به
                     DoctorName = _context.Users.FirstOrDefault(u => u.UserID == s.DoctorID) != null 
-                                 ? _context.Users.FirstOrDefault(u => u.UserID == s.DoctorID)!.FullName 
-                                 : "طبيب غير معروف"
+                                ? _context.Users.FirstOrDefault(u => u.UserID == s.DoctorID)!.FullName 
+                                : "طبيب غير معروف"
                 })
                 .ToListAsync();
 

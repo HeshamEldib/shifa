@@ -35,6 +35,7 @@ namespace Shifa.API.Controllers
                     Category = s.Category,
                     Rating = s.Rating,
                     Price = s.Price,
+                    Type = s.Type,
                     DurationMinutes = s.DurationMinutes,
                     IsActive = s.IsActive
                 }).ToListAsync();
@@ -57,6 +58,7 @@ namespace Shifa.API.Controllers
                 Price = dto.Price,
                 DurationMinutes = dto.DurationMinutes,
                 Rating = 0.0,
+                Type = dto.Type,
                 IsActive = true
             };
 
@@ -79,6 +81,7 @@ namespace Shifa.API.Controllers
             service.ServiceName = dto.ServiceName;
             service.Category = dto.Category;
             service.Price = dto.Price;
+            service.Type = dto.Type;
             service.DurationMinutes = dto.DurationMinutes;
 
             await _context.SaveChangesAsync();

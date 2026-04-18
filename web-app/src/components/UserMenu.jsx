@@ -89,8 +89,8 @@ function UserMenu() {
                         <Link
                             to={
                                 user.role === "Admin"
-                                    ? "/admin/dashboard"
-                                    : "/doctor/dashboard"
+                                    ? "/admin"
+                                    : "/doctor"
                             }
                             className="dropdown-item"
                         >
