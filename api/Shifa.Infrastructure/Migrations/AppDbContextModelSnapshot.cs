@@ -140,7 +140,22 @@ namespace Shifa.Infrastructure.Migrations
                         .HasMaxLength(555)
                         .HasColumnType("nvarchar(555)");
 
+                    b.Property<bool>("BlockPrayerTimes")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("DefaultMinutesAfter")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefaultMinutesBefore")
+                        .HasColumnType("int");
+
                     b.Property<int>("ExperienceYears")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JumuahMinutesAfter")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JumuahMinutesBefore")
                         .HasColumnType("int");
 
                     b.Property<int>("PatientsCount")
@@ -180,6 +195,9 @@ namespace Shifa.Infrastructure.Migrations
 
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time");
@@ -289,6 +307,9 @@ namespace Shifa.Infrastructure.Migrations
                 {
                     b.Property<Guid>("RecordID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AppointmentID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ChiefComplaint")
@@ -561,6 +582,10 @@ namespace Shifa.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ServiceID");
 
                     b.HasIndex("DoctorID");
@@ -700,7 +725,7 @@ namespace Shifa.Infrastructure.Migrations
 
             modelBuilder.Entity("Shifa.Core.Entities.Appointment", b =>
                 {
-                    b.HasOne("Shifa.Core.Entities.User", "Doctor")
+                    b.HasOne("Shifa.Core.Entities.Doctor", "Doctor")
                         .WithMany()
                         .HasForeignKey("DoctorID")
                         .OnDelete(DeleteBehavior.Restrict)

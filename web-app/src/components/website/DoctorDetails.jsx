@@ -12,10 +12,10 @@ import "./DoctorDetails.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDoctors } from "../../store/slices/doctorsSlice";
 import {
-    getDoctorAvailability,
     getDoctorServices,
 } from "../../services/doctorsService";
 import CardService from "./CardService";
+import { getDoctorAvailability } from "../../services/doctorAvailabilityService";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -43,7 +43,6 @@ function DoctorDetails() {
     const [loadingAvail, setLoadingAvail] = useState(true);
     const [loadingServices, setLoadingServices] = useState(true);
 
-    // console.log("doc ser =>", services);
     
     // التأكد من تحميل قائمة الأطباء إذا دخل المستخدم للصفحة مباشرة (Refresh)
     useEffect(() => {
@@ -101,6 +100,7 @@ function DoctorDetails() {
         "الأربعاء",
         "الخميس",
         "الجمعة",
+        "السبت",
     ];
     function time(t) {
         const [hour, minute] = t.split(":");

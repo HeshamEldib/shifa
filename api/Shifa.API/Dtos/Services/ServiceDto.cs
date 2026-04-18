@@ -10,6 +10,7 @@ namespace Shifa.API.Dtos.Services
         public decimal Price { get; set; }
         public int DurationMinutes { get; set; }
         public double Rating { get; set; }
+        public string Type { get; set; } 
 
         // 👈 بيانات الطبيب مقدم الخدمة لكي تظهر في الكارت
         public Guid DoctorID { get; set; }

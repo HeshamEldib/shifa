@@ -29,5 +29,12 @@ namespace Shifa.Core.Entities
     public double Rating { get; set; } = 0.0;
     public int ExperienceYears { get; set; } = 0;
     public int PatientsCount { get; set; } = 0;
+
+
+    public bool BlockPrayerTimes { get; set; } = false;
+    public int DefaultMinutesBefore { get; set; } = 15;
+    public int DefaultMinutesAfter { get; set; } = 15;
+    public int JumuahMinutesBefore { get; set; } = 30;
+    public int JumuahMinutesAfter { get; set; } = 30;
   }
 }

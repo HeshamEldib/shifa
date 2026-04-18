@@ -52,6 +52,7 @@ namespace Shifa.API.Controllers
                 Age = user.Age,
                 Role = user.Role.RoleName ?? "User",
                 Image = user.Image,
+                CreatedDate = user.CreatedDate,
 
                 // بيانات خاصة بالطبيب (إذا كان الطبيب)
                 Specialization = user.Doctor?.Specialization,

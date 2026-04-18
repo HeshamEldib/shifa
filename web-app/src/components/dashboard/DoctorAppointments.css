@@ -1,0 +1,254 @@
+/* src/components/dashboard/DoctorAppointments.css */
+
+.doctor-appointments-page {
+  padding: 10px 10px 80px;
+}
+
+.page-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 20px;
+}
+
+/* ========================================= */
+/* شريط الأدوات (Toolbar) */
+/* ========================================= */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 15px 20px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 15px;
+  border-radius: 8px;
+  flex-grow: 1;
+  max-width: 400px;
+  transition: border-color 0.3s ease;
+}
+
+.search-box:focus-within {
+  border-color: #06b6d4;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  width: 100%;
+}
+
+.filters-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.filter-icon {
+  color: #94a3b8;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.filter-item select option {
+  background: #15223d;
+  border: none;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  color-scheme: dark; /* يضمن ظهور أيقونة التقويم بشكل صحيح في الوضع الليلي */
+}
+.filter-item select option:checked {
+  color: #06b6d4;
+}
+.filter-item select, .filter-item input[type="date"] {
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  color-scheme: dark; /* يضمن ظهور أيقونة التقويم بشكل صحيح في الوضع الليلي */
+}
+
+/* ========================================= */
+/* قائمة المواعيد (List) */
+/* ========================================= */
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.appointment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-radius: 12px;
+  border-right: 4px solid transparent; /* لون الحالة يظهر كخط على اليمين */
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.appointment-row:hover {
+  transform: translateX(-5px);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ألوان الحالات */
+.status-pending { border-right-color: #f59e0b; }
+.status-confirmed { border-right-color: #06b6d4; }
+.status-completed { border-right-color: #22c55e; }
+.status-cancelled { border-right-color: #ef4444; opacity: 0.7; }
+
+.row-main-info {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.app-time-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.time-primary {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.app-patient-info h4 {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.app-meta-tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.divider { color: #475569; }
+
+/* ========================================= */
+/* أزرار الإجراءات */
+/* ========================================= */
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-action.confirm {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.btn-action.confirm:hover { background: rgba(34, 197, 94, 0.3); }
+
+.btn-action.reject, .btn-action.cancel {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}
+
+.btn-action.reject:hover, .btn-action.cancel:hover { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.3); }
+
+.btn-action.complete {
+  background: transparent;
+  color: #22c55e;
+  border-color: #22c55e;
+}
+
+.btn-action.complete:hover { background: #22c55e; color: #000; }
+
+.btn-action.join-call {
+  background: #06b6d4;
+  color: #050a15;
+}
+.btn-action.join-call:hover { background: #22d3ee; transform: scale(1.05); }
+.btn-action.write-record {
+  /* background: #f9fafb; */
+  color: #f9fafb;
+  border-color: #4f46e5;
+}
+.btn-action.write-record:hover { background: #4f46e5; transform: scale(1.05); }
+
+.status-label {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+/* ========================================= */
+/* تجاوب الشاشات الصغيرة */
+/* ========================================= */
+@media (max-width: 900px) {
+  .appointment-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .row-main-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .app-time-box {
+    border-left: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 0;
+    padding-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .row-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}

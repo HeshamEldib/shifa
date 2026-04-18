@@ -41,6 +41,7 @@ namespace Shifa.API.Controllers
             {
                 PatientID = dto.PatientID,
                 DoctorID = doctorId,
+                AppointmentID = dto.AppointmentID, // إذا كان هناك موعد مرتبط، نربطه بالسجل
                 VisitDate = dto.VisitDate,
                 ChiefComplaint = dto.ChiefComplaint,
                 DiagnosisDetails = dto.DiagnosisDetails, // سيتم تشفيره تلقائياً
@@ -79,6 +80,9 @@ namespace Shifa.API.Controllers
                 .Select(m => new 
                 {
                     m.RecordID,
+                    m.PatientID,
+                    m.DoctorID,
+                    m.AppointmentID,
                     m.VisitDate,
                     DoctorName = m.Doctor.FullName,
                     m.ChiefComplaint,

@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import {
     BrowserRouter,
@@ -50,6 +49,22 @@ import PatientDashboardLayout from "./components/dashboard/PatientDashboardLayou
 import PatientRecords from "./components/dashboard/PatientRecords.jsx";
 import PatientAppointments from "./components/dashboard/PatientAppointments.jsx";
 import PatientNotifications from "./components/dashboard/Notifications.jsx";
+import DashboardLayout from "./components/dashboard/DashboardLayout.jsx";
+import DoctorOverview from "./components/dashboard/DoctorOverview.jsx";
+import DoctorAppointments from "./components/dashboard/DoctorAppointments.jsx";
+import DoctorPatientsList from "./components/dashboard/DoctorPatientsList.jsx";
+import DoctorServices from "./components/dashboard/DoctorServices.jsx";
+import DoctorMedicines from "./components/dashboard/DoctorMedicines.jsx";
+import DoctorSettings from "./components/dashboard/DoctorSettings.jsx";
+import DoctorNotifications from "./components/dashboard/DoctorNotifications.jsx";
+import AdminOverview from "./components/dashboard/AdminOverview.jsx";
+import AdminPatients from "./components/dashboard/AdminPatients.jsx";
+import AdminDoctors from "./components/dashboard/AdminDoctors.jsx";
+import AdminAppointments from "./components/dashboard/AdminAppointments.jsx";
+import AdminSpecialties from "./components/dashboard/AdminSpecialties.jsx";
+import AdminSettings from "./components/dashboard/AdminSettings.jsx";
+import AdminNotifications from "./components/dashboard/AdminNotifications.jsx";
+import AdminProfile from "./components/dashboard/AdminProfile.jsx";
 
 // ---------- favicon SVG ----------
 const shifaaFaviconSvg = `
@@ -86,6 +101,12 @@ const PatientLayout = () => (
         </div>
         {/* <Footer /> */}
     </>
+);
+
+const DashboardLayoutWrapper = () => (
+        <Outlet />
+    // <div className="app-container">
+    // </div>
 );
 
 // 2. Layout لصفحات المصادقة (بدون Header و Footer)
@@ -179,6 +200,49 @@ function MainApp() {
             <FloatingLanguageSwitcher />
 
             <Routes>
+                <Route element={<DashboardLayoutWrapper />}>
+                {/* ========================================= */}
+                {/* مسارات لوحة تحكم الطبيب */}
+                {/* ========================================= */}
+                <Route element={<RequireAuth role="Doctor" />}>
+                    <Route path="/doctor" element={<DashboardLayout />}>
+                        {/* سيتم حقن هذه الصفحات مكان <Outlet /> */}
+                        <Route path="" element={<DoctorOverview />} />
+                        <Route path="dashboard" element={<DoctorOverview />} />
+                        <Route
+                            path="appointments"
+                            element={<DoctorAppointments />}
+                        />
+                        <Route
+                            path="patients"
+                            element={<DoctorPatientsList />}
+                        />
+                        <Route path="records/:patientId" element={<DoctorPatientRecords />} />
+                        <Route path="medicines" element={<DoctorMedicines />} />
+                        <Route path="services" element={<DoctorServices />} />
+                        <Route path="notifications" element={<DoctorNotifications />} />
+                        <Route path="settings" element={<DoctorSettings />} />
+                    </Route>
+                </Route>
+
+                {/* ========================================= */}
+                {/* مسارات لوحة تحكم الإدارة (Admin) */}
+                {/* ========================================= */}
+                <Route element={<RequireAuth role="Admin" />}>
+                    <Route path="/admin" element={<DashboardLayout />}>
+                        <Route path="" element={<AdminOverview />} />
+                        <Route path="overview" element={<AdminOverview />} />
+                        <Route path="patients" element={<AdminPatients />} />
+                        <Route path="doctors" element={<AdminDoctors />} />
+                        <Route path="appointments" element={<AdminAppointments />} />
+                        <Route path="specialties" element={<AdminSpecialties />} />
+                        <Route path="notifications" element={<AdminNotifications />} />
+                        <Route path="settings" element={<AdminSettings />} />
+                        <Route path="profile" element={<AdminProfile />} />
+                    </Route>
+                </Route>
+                </Route>
+
                 {/* --- 1. مسارات المصادقة للزوار فقط (بدون Header و Footer) --- */}
                 <Route element={<RequireGuest />}>
                     <Route element={<AuthLayout />}>
@@ -317,19 +381,31 @@ function MainApp() {
 
                 {/* 👈 مجموعة مسارات المريض المتداخلة */}
                 <Route element={<RequireAuth />}>
-                <Route element={<PatientLayout />}>
-                <Route path="/patient" element={<PatientDashboardLayout />}>
-                    {/* /patient/profile */}
-                    <Route path="profile" element={<Profile />} /> 
-                    
-                    {/* /patient/records */}
-                    <Route path="records" element={<PatientRecords />} /> 
-                    {/* /patient/appointments */}
-                    <Route path="appointments" element={<PatientAppointments />} /> 
-                    {/* /patient/notifications */}
-                    <Route path="notifications" element={<PatientNotifications />} /> 
-                </Route>
-                </Route>
+                    <Route element={<PatientLayout />}>
+                        <Route
+                            path="/patient"
+                            element={<PatientDashboardLayout />}
+                        >
+                            {/* /patient/profile */}
+                            <Route path="profile" element={<Profile />} />
+
+                            {/* /patient/records */}
+                            <Route
+                                path="records"
+                                element={<PatientRecords />}
+                            />
+                            {/* /patient/appointments */}
+                            <Route
+                                path="appointments"
+                                element={<PatientAppointments />}
+                            />
+                            {/* /patient/notifications */}
+                            <Route
+                                path="notifications"
+                                element={<PatientNotifications />}
+                            />
+                        </Route>
+                    </Route>
                 </Route>
 
                 {/* --- 3. المسارات المحمية للمستخدمين المسجلين (مع Header و Footer) --- */}
@@ -528,3 +604,6 @@ function MainApp() {
 }
 
 export default AppWrapper;
+
+// dotnet ef migrations add AddIsActiveToAvailability --project ../Shifa.Infrastructure
+// dotnet ef database update --project ../Shifa.Infrastructure

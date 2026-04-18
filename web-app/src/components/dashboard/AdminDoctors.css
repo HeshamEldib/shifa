@@ -1,0 +1,161 @@
+/* شريط التحكم العلوي (التبويبات + البحث) */
+.admin-controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-radius: 12px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+
+.tab-btn.active {
+  background: rgba(6, 182, 212, 0.1);
+  color: #06b6d4;
+}
+
+.badge-notification {
+  background: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* تنسيقات الخلايا داخل الجدول */
+.doc-info-cell {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-specialty {
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+/* أزرار الإجراءات داخل الجدول */
+.btn-icon-action.approve { border-color: rgba(34, 197, 94, 0.3); color: #4ade80; display: flex; gap: 5px; padding: 0 10px; width: auto; }
+.btn-icon-action.approve:hover { background: rgba(34, 197, 94, 0.1); border-color: #4ade80; }
+
+.btn-icon-action.reject { border-color: rgba(239, 68, 68, 0.3); color: #f87171; display: flex; gap: 5px; padding: 0 10px; width: auto; }
+.btn-icon-action.reject:hover { background: rgba(239, 68, 68, 0.1); border-color: #ef4444; }
+
+/* المودال (نافذة الإضافة) */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(5, 10, 21, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.custom-modal-content {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 600px;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: scaleUp 0.3s ease-out forwards;
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 15px;
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.btn-close-modal:hover { color: #fff; }
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+.form-row .form-group { flex: 1; }
+
+.alert-info-box {
+  background: rgba(6, 182, 212, 0.05);
+  border: 1px dashed rgba(6, 182, 212, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.modal-actions-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-secondary-action {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-secondary-action:hover { background: rgba(255, 255, 255, 0.05); }
+
+@media (max-width: 768px) {
+  .form-row { flex-direction: column; }
+}

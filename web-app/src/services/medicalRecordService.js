@@ -27,8 +27,8 @@ export const addMedicalRecordApi = async (recordData) => {
     return await response.json();
 };
 
-export const getMedicationsApi = async () => {
-    const response = await fetch(`${API_URL}/api/Medications`);
-    if (!response.ok) throw new Error("فشل جلب قائمة الأدوية");
-    return await response.json();
-};
+// export const getMedicationsApi = async () => {
+//     const response = await fetch(`${API_URL}/api/Medications`);
+//     if (!response.ok) throw new Error("فشل جلب قائمة الأدوية");
+//     return await response.json();
+// };

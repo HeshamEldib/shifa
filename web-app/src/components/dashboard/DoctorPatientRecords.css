@@ -1,395 +1,295 @@
-.pr-shell {
-  min-height: 100vh;
-  background: radial-gradient(circle at 0% 0%, #020617, #000);
-  color: #e5e7eb;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", sans-serif;
-  padding: 24px 28px 28px;
+.medical-records-page {
+    padding: 10px 10px 80px;
+}
+.records-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.btn-back {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-/* top */
-
-.pr-topbar {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 12px;
+.records-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 25px;
+}
+@media (max-width: 1200px) {
+    .records-layout {
+        grid-template-columns: 1fr;
+    }
 }
 
-.pr-back {
-  all: unset;
-  cursor: pointer;
-  color: #7dd3fc;
-  font-size: 13px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
 }
 
-.pr-title {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+.prescription-box {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+.prescription-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.prescription-header h5 {
+    color: #fff;
+    margin: 0;
 }
 
-.pr-subtitle {
-  margin: 4px 0 0;
-  font-size: 12px;
-  color: #9ca3af;
+.med-grid-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 40px;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.btn-add-med {
+    background: transparent;
+    border: 1px solid #06b6d4;
+    color: #06b6d4;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+.btn-del-med {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
 }
 
-/* patient card */
-
-.pr-patient-card {
-  margin-top: 14px;
-  margin-bottom: 18px;
-  padding: 18px 20px;
-  border-radius: 18px;
-  background: radial-gradient(circle at 0% 0%, #020617, #020617 40%, #000 100%);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  box-shadow:
-    0 0 0 1px rgba(15, 23, 42, 0.8),
-    0 18px 40px rgba(15, 23, 42, 0.95);
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: center;
+.btn-save-record {
+    width: 100%;
+    padding: 15px;
+    background: #06b6d4;
+    color: #050a15;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.pr-patient-main {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.pr-avatar-circle {
-  width: 52px;
-  height: 52px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 0, #1f2937, #020617);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 20px;
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.9);
-}
-
-.pr-patient-name {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.pr-patient-grid {
-  margin-top: 4px;
-  display: grid;
-  grid-auto-flow: column;
-  gap: 10px;
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-.pr-patient-condition {
-  margin-top: 4px;
-  font-size: 12px;
-}
-
-.pr-patient-condition span {
-  color: #4ade80;
-  font-weight: 500;
-}
-
-.pr-patient-summary {
-  display: flex;
-  gap: 28px;
-  font-size: 12px;
-}
-
-.pr-summary-main {
-  font-weight: 500;
-}
-
-.pr-muted {
-  font-size: 11px;
-  color: #9ca3af;
-}
-
-/* layout */
-
-.pr-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
-  gap: 22px;
-  margin-top: 4px;
-}
-
-.pr-column {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* cards */
-
-.pr-card {
-  border-radius: 20px;
-  background: rgba(2, 6, 23, 0.95);
-  border: 1px solid rgba(30, 64, 175, 0.8);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.95);
-  padding: 18px 20px 16px;
-}
-
-.pr-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.pr-card-header h2 {
-  margin: 0;
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.pr-tag {
-  font-size: 11px;
-  color: #9ca3af;
-}
-
-/* blocks */
-
-.pr-block {
-  border-top: 1px solid rgba(30, 64, 175, 0.6);
-  padding-top: 10px;
-  margin-top: 8px;
-}
-
-.pr-block-title {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: #9ca3af;
-  margin-bottom: 10px;
-}
-
-/* appointments as blocks */
-
-.pr-appointment-row {
-  margin-bottom: 8px;
-}
-
-.pr-appointment-main {
-  border-radius: 12px;
-  background: #020818;
-  padding: 10px 12px;
-  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.pr-appointment-type {
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.pr-appointment-doctor-block {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.pr-appointment-doctor-name {
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.pr-appointment-doctor-specialty {
-  font-size: 11px;
-  color: #9ca3af;
-}
-
-.pr-appointment-datetime {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  font-size: 11px;
-  color: #6b7280;
-}
-
-.pr-appointment-date {
-  font-weight: 500;
-}
-
-.pr-appointment-time {
-  opacity: 0.8;
-}
-
-.pr-appointment-location {
-  font-size: 11px;
-  color: #6b7280;
-}
-
-.pr-divider {
-  height: 1px;
-  margin-top: 8px;
-  background: linear-gradient(
-    to right,
-    rgba(30, 64, 175, 0.4),
-    transparent
-  );
-}
-
-/* activity */
-
-.pr-activity-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pr-activity-row {
-  padding: 4px 0;
-}
-
-.pr-activity-date-line {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-bottom: 2px;
-}
-
-.pr-activity-type {
-  display: inline-block;
-  min-width: 44px;
-  text-align: center;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(56, 189, 248, 0.6);
-  color: #bae6fd;
-  margin-right: 6px;
-}
-
-.pr-activity-label {
-  color: #e5e7eb;
-}
-
-/* meds as blocks */
-
-.pr-med-list {
-  list-style: none;
-  margin: 0 0 10px;
-  padding: 0;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pr-med-item {
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: #020818;
-  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
-}
-
-.pr-med-name {
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.pr-med-note {
-  color: #9ca3af;
-  margin-top: 2px;
-  font-size: 12px;
-}
-
-/* allergies & notes */
-
-.pr-allergy-list {
-  list-style: disc;
-  margin: 4px 0 0 18px;
-  padding: 0;
-  font-size: 12px;
-}
-
-.pr-notes-list {
-  list-style: disc;
-  margin: 4px 0 0 18px;
-  padding: 0;
-  font-size: 12px;
-  color: #cbd5e1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-/* actions */
-
-.pr-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.pr-btn-primary,
-.pr-btn-secondary {
-  border-radius: 999px;
-  font-size: 12px;
-  padding: 7px 14px;
-  cursor: pointer;
-  border: none;
-  transition: background 150ms ease, transform 150ms ease,
-    box-shadow 150ms ease, border-color 150ms ease;
-}
-
-.pr-btn-primary {
-  background: linear-gradient(90deg, #22c55e, #4ade80);
-  color: #022c22;
-  font-weight: 600;
-  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.3);
-}
-
-.pr-btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(34, 197, 94, 0.4);
-}
-
-.pr-btn-secondary {
-  background: #020617;
-  color: #e5e7eb;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-}
-
-.pr-btn-secondary:hover {
-  background: #0b1120;
-  border-color: #38bdf8;
-  transform: translateY(-1px);
-}
-
-/* responsive */
-
-@media (max-width: 900px) {
-  .pr-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .pr-patient-card {
+/* Timeline History */
+.timeline-wrapper {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-  }
+    gap: 15px;
+    /* max-height: 800px; */
+    overflow-y: auto;
+    padding-left: 10px;
+}
+.timeline-card {
+    border-left: 3px solid #a855f7;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 0 10px 10px 0;
+}
+.timeline-date {
+    color: #a855f7;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+.med-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(6, 182, 212, 0.1);
+    color: #06b6d4;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin: 5px 5px 0 0;
+}
 
-  .pr-patient-summary {
+/* ... (نحتفظ بالتنسيقات القديمة للهيكل العام) ... */
+
+/* قسم العلامات الحيوية في الفورم */
+.vitals-section {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid #ef4444;
+}
+
+.sub-section-title {
+    color: #ef4444;
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+/* تنسيق بلوك الدواء الواحد */
+.med-entry-block {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.med-grid-top {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.med-grid-top select {
+    flex-grow: 1;
+}
+
+.med-grid-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* ========================================= */
+/* تنسيقات عرض التاريخ المرضي (History Cards) */
+/* ========================================= */
+.detailed-history-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.history-card-header {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.doctor-name {
+    color: #06b6d4;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.record-date {
+    color: #a855f7;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.badge-completed {
+    background: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+.history-card-body {
+    padding: 15px;
+}
+
+/* العلامات الحيوية المصغرة */
+.history-vitals {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.vital-badge {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+/* تنسيق السطور (Label: Value) */
+.data-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.data-label {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.data-value {
+    color: #fff;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* جدول الأدوية المصغر */
+.history-prescriptions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.meds-table-mini {
+    display: flex;
     flex-direction: column;
     gap: 8px;
-  }
+}
+
+.med-row-mini {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid #06b6d4;
+}
+
+.m-name {
+    color: #06b6d4;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.m-dose {
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+.m-inst {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-style: italic;
 }

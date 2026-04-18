@@ -9,7 +9,7 @@ namespace Shifa.Core.Entities
     {
         [Key]
         public Guid RecordID { get; set; } = Guid.NewGuid();
-
+        public Guid? AppointmentID { get; set; }
         public Guid PatientID { get; set; } = Guid.NewGuid();
         public Patient Patient { get; set; } = null!;
 

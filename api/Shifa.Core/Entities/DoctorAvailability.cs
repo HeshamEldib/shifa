@@ -17,5 +17,6 @@ namespace Shifa.Core.Entities
         public int DayOfWeek { get; set; } // 1=Sunday
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

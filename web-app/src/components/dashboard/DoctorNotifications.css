@@ -1,0 +1,99 @@
+.notifications-page {
+  padding: 10px;
+}
+
+.unread-badge {
+  background: #ef4444;
+  color: white;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  vertical-align: middle;
+}
+
+.btn-mark-all {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-mark-all:hover {
+  background: #4ade80;
+  color: #050a15;
+}
+
+/* قائمة الإشعارات */
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.notification-card:hover {
+  transform: translateX(-5px); /* حركة خفيفة لليسار عند التمرير في الواجهة العربية */
+  border-color: rgba(6, 182, 212, 0.4);
+}
+
+/* تمييز الإشعار غير المقروء */
+.notification-card.unread {
+  background: rgba(6, 182, 212, 0.05);
+  border-right: 4px solid #06b6d4; /* خط جانبي مميز */
+}
+
+.notification-icon {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-content {
+  flex-grow: 1;
+}
+
+.n-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.n-time {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.n-message {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.unread-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.fill-cyan {
+  fill: #06b6d4;
+}

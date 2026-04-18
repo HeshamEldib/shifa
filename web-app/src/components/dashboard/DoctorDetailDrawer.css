@@ -1,0 +1,149 @@
+/* DoctorDetailDrawer.css */
+/* يمكنك إعادة استخدام نفس أكواد الـ Overlay والـ Content من ملف المريض إذا كنت تفضل دمجهم في ملف عام */
+
+.drawer-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(5, 10, 21, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 2000;
+  display: flex;
+  justify-content: flex-end; /* لجعله يظهر في الجانب الأيسر */
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.drawer-overlay.open {
+  visibility: visible;
+  opacity: 1;
+}
+
+.drawer-content {
+  width: 100%;
+  max-width: 700px;
+  height: 100%;
+  background: #0f172a;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%); 
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer-overlay.open .drawer-content {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  padding: 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close-drawer {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.btn-close-drawer:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+
+.drawer-body {
+  padding: 30px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* تنسيقات الطبيب الخاصة */
+.profile-header-brief {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.doctor-avatar {
+  background: rgba(34, 197, 94, 0.1); /* لون مختلف لتمييز الطبيب عن المريض */
+  color: #22c55e;
+}
+
+.badge-specialty-primary {
+  background: rgba(6, 182, 212, 0.15);
+  color: #06b6d4;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-item .details span { display: block; color: #64748b; font-size: 0.8rem; margin-bottom: 2px; }
+.info-item .details strong { color: #e2e8f0; font-size: 0.95rem; }
+
+.section-divider {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 10px;
+  margin: 30px 0 20px 0;
+  color: #94a3b8; /* لون هادئ للعناوين الفرعية */
+  font-size: 1.1rem;
+}
+
+/* الإحصائيات */
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.stat-card {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  text-align: center;
+  align-items: center;
+}
+
+.stat-card .details span { display: block; color: #64748b; font-size: 0.8rem; margin-bottom: 5px; }
+.stat-card .details strong { color: #fff; font-size: 1.2rem; }
+
+.bio-area {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.drawer-footer-meta {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #475569;
+  font-size: 0.8rem;
+  text-align: center;
+}

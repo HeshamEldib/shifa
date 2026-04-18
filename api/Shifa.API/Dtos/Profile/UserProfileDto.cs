@@ -10,6 +10,8 @@ namespace Shifa.API.Dtos.Profile
         public int? Age { get; set; }
         public string Role { get; set; } = string.Empty;
         public string? Image { get; set; }
+        public DateTime CreatedDate { get; set; }
+
         public string? Specialization { get; set; }
         public string? Specialty { get; set; }
         public string? Quote { get; set; }
