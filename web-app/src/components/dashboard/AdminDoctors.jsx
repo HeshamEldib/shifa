@@ -195,11 +195,11 @@ function AdminDoctors() {
               <div className="form-row mb-3">
                 <div className="form-group">
                   <label>سنوات الخبرة</label>
-                  <input required type="number" className="custom-input" value={newDoctor.experienceYears} onChange={e => setNewDoctor({...newDoctor, experienceYears: e.target.value})} />
+                  <input required type="number" min="0" max="50" className="custom-input" value={newDoctor.experienceYears} onChange={e => setNewDoctor({...newDoctor, experienceYears: e.target.value})} />
                 </div>
                 <div className="form-group">
                   <label>رقم الهاتف</label>
-                  <input required type="tel" className="custom-input" value={newDoctor.phone} onChange={e => setNewDoctor({...newDoctor, phone: e.target.value})} />
+                  <input required type="tel" pattern="01[0-9]{9}" inputMode="tel" maxLength="11" minLength="11" className="custom-input" value={newDoctor.phone} onChange={e => setNewDoctor({...newDoctor, phone: e.target.value})} />
                 </div>
               </div>
               <div className="form-group mb-4">

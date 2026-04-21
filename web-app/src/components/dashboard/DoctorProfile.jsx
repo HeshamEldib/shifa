@@ -97,6 +97,10 @@ function DoctorProfile() {
                             required
                             type="tel"
                             name="phone"
+                            pattern="01[0-9]{9}"
+                            inputMode="tel"
+                            maxLength="11"
+                            minLength="11"
                             value={formData.phone}
                             onChange={handleProfileChange}
                             className="custom-input"
