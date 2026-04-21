@@ -202,11 +202,11 @@ const handleOpenDrawer = (id) => {
               <div className="form-row mb-3">
                 <div className="form-group">
                   <label>رقم الهاتف</label>
-                  <input required type="tel" className="custom-input" placeholder="01xxxxxxxxx" value={newPatient.phone} onChange={e => setNewPatient({...newPatient, phone: e.target.value})} />
+                  <input required type="tel" pattern="01[0-9]{9}" inputMode="tel" maxLength="11" minLength="11" className="custom-input" placeholder="01xxxxxxxxx" value={newPatient.phone} onChange={e => setNewPatient({...newPatient, phone: e.target.value})} />
                 </div>
                 <div className="form-group">
                   <label>العمر</label>
-                  <input required type="number" className="custom-input" value={newPatient.age} onChange={e => setNewPatient({...newPatient, age: e.target.value})} />
+                  <input required type="number" min="0" max="120" className="custom-input" value={newPatient.age} onChange={e => setNewPatient({...newPatient, age: e.target.value})} />
                 </div>
               </div>
 

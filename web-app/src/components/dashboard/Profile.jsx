@@ -123,6 +123,12 @@ function Profile() {
                                         </label>
                                         <input
                                             type="text"
+                                            pattern="01[0-9]{9}"
+                                            inputMode="tel"
+                                            maxLength="11"
+                                            minLength="11"
+                                            required
+
                                             value={formData.phone}
                                             onChange={(e) =>
                                                 setFormData({
@@ -424,7 +430,9 @@ function Profile() {
                                             <div className="input-group-custom">
                                                 <label>سنوات الخبرة</label>
                                                 <input
-                                                    type="text"
+                                                    type="number"
+                                                    min={0}
+                                                    max={100}
                                                     value={
                                                         formData.experienceYears
                                                     }

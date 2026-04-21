@@ -80,15 +80,7 @@ function DoctorMedicines() {
                 <label>اسم الدواء (تجاري)</label>
                 <input required className="custom-input" value={currentMed.name} onChange={e => setCurrentMed({...currentMed, name: e.target.value})} />
               </div>
-              {/* <div className="form-group">
-                <label>المادة الفعالة (علمي)</label>
-                <input required className="custom-input" value={currentMed.genericName} onChange={e => setCurrentMed({...currentMed, genericName: e.target.value})} />
-              </div> */}
               <div className="form-row">
-                {/* <div className="form-group">
-                  <label>التصنيف</label>
-                  <input className="custom-input" value={currentMed.category} onChange={e => setCurrentMed({...currentMed, category: e.target.value})} placeholder="مثلاً: مسكن" />
-                </div> */}
                 <div className="form-group">
                   <label>الشكل الدوائي</label>
                   <select className="custom-input" value={currentMed.dosageForm} onChange={e => setCurrentMed({...currentMed, dosageForm: e.target.value})}>

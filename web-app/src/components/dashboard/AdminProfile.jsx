@@ -138,6 +138,11 @@ function AdminProfile() {
                                 <input
                                     disabled={!isEditing}
                                     className="custom-input"
+                                    type="tel"
+                                    pattern="01[0-9]{9}"
+                                    inputMode="tel"
+                                    maxLength="11"
+                                    minLength="11"
                                     value={formData.phone}
                                     onChange={(e) =>
                                         setFormData({

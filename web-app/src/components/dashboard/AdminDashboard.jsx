@@ -1257,6 +1257,11 @@ export default function AdminDashboard({ onLogout, onOpenSettings }) {
                               <input
                                 className="cc-input-inline"
                                 value={draft.phone}
+                                type="tel"
+                                pattern="01[0-9]{9}"
+                                inputMode="tel"
+                                maxLength="11"
+                                minLength="11"
                                 onChange={(e) =>
                                   setEditingPatientDraft((prev) => ({
                                     ...prev,
@@ -2137,6 +2142,11 @@ function AddPatientForm({ onSubmit, onCancel }) {
       <input
         className="cc-input"
         value={phone}
+        type="tel"
+        pattern="01[0-9]{9}"
+        inputMode="tel"
+        maxLength="11"
+        minLength="11"
         onChange={(e) => setPhone(e.target.value)}
         placeholder={t("admin.form_phone_ph")}
       />

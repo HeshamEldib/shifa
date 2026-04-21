@@ -344,6 +344,9 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
                 <div className="su-input-wrap">
                   <input
                     value={form.phone}
+                    pattern="01[0-9]{9}"
+                    maxLength="11"
+                    minLength="11"
                     onChange={(e) => setField("phone", e.target.value)}
                     onBlur={() =>
                       setTouched((p) => ({ ...p, phone: true }))
@@ -391,6 +394,9 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
                 <div className="su-input-wrap">
                   <input
                     value={form.age}
+                    type="number"
+                    min="0"
+                    max="120"
                     onChange={(e) => setField("age", e.target.value)}
                     onBlur={() =>
                       setTouched((p) => ({ ...p, age: true }))
