@@ -10,6 +10,51 @@ import {
 // import { getPrayerSettings, updatePrayerSettings } from "../../services/doctorSettingsService";
 import "./DoctorProfile.css";
 
+const defaultSchedule = [
+    {
+        dayOfWeek: 6,
+        label: "السبت",
+        isActive: false,
+        shifts: [{ startTime: "", endTime: "" }],
+    },
+    {
+        dayOfWeek: 0,
+        label: "الأحد",
+        isActive: false,
+        shifts: [{ startTime: "", endTime: "" }],
+    },
+    {
+        dayOfWeek: 1,
+        label: "الإثنين",
+        isActive: false,
+        shifts: [{ startTime: "", endTime: "" }],
+    },
+    {
+        dayOfWeek: 2,
+        label: "الثلاثاء",
+        isActive: false,
+        shifts: [{ startTime: "", endTime: "" }],
+    },
+    {
+        dayOfWeek: 3,
+        label: "الأربعاء",
+        isActive: false,
+        shifts: [{ startTime: "", endTime: "" }],
+    },
+    {
+        dayOfWeek: 4,
+        label: "الخميس",
+        isActive: false,
+        shifts: [{ startTime: "", endTime: "" }],
+    },
+    {
+        dayOfWeek: 5,
+        label: "الجمعة",
+        isActive: false,
+        shifts: [{ startTime: "", endTime: "" }],
+    },
+];
+
 function DoctorWorkingTime() {
     // const id = localStorage.getItem("userId");
     const [isSaving, setIsSaving] = useState(false);
@@ -25,51 +70,7 @@ function DoctorWorkingTime() {
         jumuahMinutesAfter: 30,
     });
 
-    // 2. هيكل الأيام والفترات (تحويل البيانات لتناسب الواجهة)
-    const defaultSchedule = [
-        {
-            dayOfWeek: 6,
-            label: "السبت",
-            isActive: false,
-            shifts: [{ startTime: "", endTime: "" }],
-        },
-        {
-            dayOfWeek: 0,
-            label: "الأحد",
-            isActive: false,
-            shifts: [{ startTime: "", endTime: "" }],
-        },
-        {
-            dayOfWeek: 1,
-            label: "الإثنين",
-            isActive: false,
-            shifts: [{ startTime: "", endTime: "" }],
-        },
-        {
-            dayOfWeek: 2,
-            label: "الثلاثاء",
-            isActive: false,
-            shifts: [{ startTime: "", endTime: "" }],
-        },
-        {
-            dayOfWeek: 3,
-            label: "الأربعاء",
-            isActive: false,
-            shifts: [{ startTime: "", endTime: "" }],
-        },
-        {
-            dayOfWeek: 4,
-            label: "الخميس",
-            isActive: false,
-            shifts: [{ startTime: "", endTime: "" }],
-        },
-        {
-            dayOfWeek: 5,
-            label: "الجمعة",
-            isActive: false,
-            shifts: [{ startTime: "", endTime: "" }],
-        },
-    ];
+    
     // const daysData = [
     //     { dayOfWeek: 6, label: "السبت" },
     //     { dayOfWeek: 0, label: "الأحد" },

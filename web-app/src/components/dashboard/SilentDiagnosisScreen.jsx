@@ -139,24 +139,24 @@ function SilentDiagnosisScreen({ onBack, sessionId, patientId, exposeBuildPayloa
     return concernsPart + t("silentScreen.summary_decision_emergency");
   };
 
-  // ===== build payload للباك (مافيش UI جديد) =====
-  const buildSilentSummaryPayload = () => ({
-    sessionId: sessionId || null,
-    patientId: patientId || null,
-    at: new Date().toISOString(),
-    observations,
-    log,
-    decision: selectedDecision,
-    gestures: {
-      lastGesture,
-      painLocation: painLocation || null,
-      painScale,
-      breathingActive,
-    },
-  });
-
   // نبعت الفانكشن للأب كل ما تتغير (عشان يشوف آخر حالة لو حب يحفظ)
   useEffect(() => {
+    // ===== build payload للباك (مافيش UI جديد) =====
+    const buildSilentSummaryPayload = () => ({
+      sessionId: sessionId || null,
+      patientId: patientId || null,
+      at: new Date().toISOString(),
+      observations,
+      log,
+      decision: selectedDecision,
+      gestures: {
+        lastGesture,
+        painLocation: painLocation || null,
+        painScale,
+        breathingActive,
+      },
+    });
+
     if (typeof exposeBuildPayload === "function") {
       exposeBuildPayload(buildSilentSummaryPayload);
     }
