@@ -100,8 +100,6 @@ function DoctorPatientRecords() {
                 vitalSignsJson: JSON.stringify(vitals),
             };
 
-            console.log("gg =>", payload);
-
             await addMedicalRecordApi(payload);
             // alert("تم توثيق السجل الطبي بنجاح!");
             navigate("/doctor/appointments");
@@ -118,7 +116,6 @@ function DoctorPatientRecords() {
             return null;
         }
     };
-    console.log("history =>", newRecord.prescriptions);
 
     if (isLoading) return <div className="custom-spinner"></div>;
 
@@ -270,8 +267,6 @@ function DoctorPatientRecords() {
                                             className="custom-input"
                                             value={p.medicationID}
                                             onChange={(e) => {
-                                                console.log("oo =>", p);
-
                                                 handleMedChange(
                                                     index,
                                                     "medicationID",

@@ -129,10 +129,8 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
     setSubmitState("loading");
 
     try {
-      console.log("data =>", form);
       const data = await authService.register(form, "Patient");
 
-      
       setSubmitState("success");
       
       if (typeof onSignupSuccess === "function") {
@@ -148,7 +146,7 @@ function SignUpSection({ isLoaded, onLoginClick, onSignupSuccess }) {
     setTimeout(() => {
       setSocialLoading(null);
       // TODO: Integrate with your backend OAuth
-      console.log(`Social signup with ${provider} clicked`);
+      // console.log(`Social signup with ${provider} clicked`);
     }, 700);
   };
 

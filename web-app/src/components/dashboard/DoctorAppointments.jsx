@@ -74,8 +74,6 @@ function DoctorAppointments() {
             </div>
         );
     }
-
-    console.log("app t =>", appointments);
     
     return (
         <div className="doctor-appointments-page fade-in-up">
@@ -254,8 +252,6 @@ function DoctorAppointments() {
                                                     : ""
                                             }
                                             onClick={() =>{
-                                                console.log("app =>", app);
-                                                
                                                 handleStatusChange(
                                                     app.appointmentID,
                                                     "Completed",
