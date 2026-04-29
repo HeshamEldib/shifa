@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
     X,
     Calendar,
-    Clock,
     User,
     Stethoscope,
     FileText,
@@ -16,12 +15,6 @@ function AppointmentDetailDrawer({ appointmentId, isOpen, onClose }) {
     const [details, setDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        if (isOpen && appointmentId) {
-            loadDetails();
-        }
-    }, [isOpen, appointmentId]);
-
     const loadDetails = async () => {
         setIsLoading(true);
         try {
@@ -33,6 +26,12 @@ function AppointmentDetailDrawer({ appointmentId, isOpen, onClose }) {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (isOpen && appointmentId) {
+            loadDetails();
+        }
+    }, [isOpen, appointmentId]);
 
     if (!isOpen) return null;
 

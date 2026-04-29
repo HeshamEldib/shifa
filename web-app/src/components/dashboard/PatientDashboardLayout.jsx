@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { User, Activity, Calendar, Bell, Settings, CreditCard, LogOut } from 'lucide-react';
+import { User, Activity, Calendar, Bell, LogOut } from 'lucide-react';
 import { logout } from '../../store/slices/authSlice'; // افترض وجودها
 import './PatientDashboardLayout.css';
 

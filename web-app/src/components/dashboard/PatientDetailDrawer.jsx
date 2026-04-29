@@ -6,24 +6,24 @@ import './PatientDetailDrawer.css';
 function PatientDetailDrawer({ patientId, isOpen, onClose }) {
   const [patient, setPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+    const loadPatientDetails = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getPatientDetailsApi(patientId);
+        setPatient(data);
+      } catch (error) {
+        console.error("خطأ في جلب تفاصيل المريض", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   useEffect(() => {
     if (isOpen && patientId) {
       loadPatientDetails();
     }
   }, [isOpen, patientId]);
-
-  const loadPatientDetails = async () => {
-    setIsLoading(true);
-    try {
-      const data = await getPatientDetailsApi(patientId);
-      setPatient(data);
-    } catch (error) {
-      console.error("خطأ في جلب تفاصيل المريض", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   if (!isOpen) return null;
 

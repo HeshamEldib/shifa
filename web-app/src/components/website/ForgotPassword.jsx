@@ -26,10 +26,10 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
   const [loading, setLoading] = useState(false);
   const [particles, setParticles] = useState([]);
   const [magicTransition, setMagicTransition] = useState(false);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
-  const [step, setStep] = useState(1);
+  // const [step, setStep] = useState(1);
 
   const inputRef = useRef(null);
 
@@ -76,7 +76,7 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
         try {
             const res = await forgotPassword(email);
             setSuccessMessage(res.message); // "تم إرسال كود التحقق..."
-            setStep(2); // الانتقال للخطوة الثانية
+            // setStep(2); // الانتقال للخطوة الثانية
             setPhase("otp");
         } catch (err) {
             setError(err.message);
@@ -141,7 +141,7 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
           <div className="ne-card">
             <div className="ne-title">{t("forgot.title_email") || "Forgot Password?"}</div>
             <div className="ne-sub">{t("forgot.subtitle_email") || "Enter your email"}</div>
-            {message && <div className="ne-message">{message}</div>}
+            {error && <div className="ne-message">{error}</div>}
             <form className="ne-form" onSubmit={handleSendEmail}>
               <div className={`ne-field ${getEmailError() ? "has-error" : ""}`}>
                 <input 
@@ -166,7 +166,7 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
           <div className="ne-card">
             <div className="ne-title">{t("forgot.title_otp") || "Verify OTP"}</div>
             <div className="ne-email-display">{email}</div>
-            {message && <div className="ne-message">{message}</div>}
+            {successMessage && <div className="ne-message">{successMessage}</div>}
             <div className="ne-form">
               <div className={`ne-field ${getOtpError() ? "has-error" : ""}`}>
                 <label>{t("forgot.otp_label") || "Verification OTP"}</label>
@@ -193,7 +193,7 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
         {phase === "reset" && (
           <div className="ne-card">
             <div className="ne-title">{t("forgot.title_reset") || "New Password"}</div>
-            {message && <div className="ne-message">{message}</div>}
+            {successMessage && <div className="ne-message">{successMessage}</div>}
             <form className="ne-form" onSubmit={handleResetPassword}>
               
               {/* ✅ Password Field */}

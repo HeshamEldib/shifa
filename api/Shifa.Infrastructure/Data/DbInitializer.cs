@@ -10,6 +10,11 @@ namespace Shifa.Infrastructure.Data
     {
         public static async Task InitializeAsync(AppDbContext context)
         {
+            // context.Database.EnsureDeleted();
+            // // ثانياً: إعادة إنشاء قاعدة البيانات وتطبيق الجداول
+            // context.Database.EnsureCreated();
+
+            
             // 1. تطبيق الهجرات المعلقة وإنشاء قاعدة البيانات إذا لم تكن موجودة
             await context.Database.MigrateAsync();
 

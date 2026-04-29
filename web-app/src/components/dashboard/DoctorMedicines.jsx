@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pill, Plus, Search, Edit3, Trash2, X, FlaskConical, Bookmark } from 'lucide-react';
+import { Pill, Plus, Search, Edit3, Trash2, X, FlaskConical } from 'lucide-react';
 import { getMedicinesApi, saveMedicineApi } from '../../services/medicineService';
 import './DoctorMedicines.css';
 

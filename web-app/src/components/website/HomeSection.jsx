@@ -18,12 +18,12 @@ function HomeSection({
     const dispatch = useDispatch();
 
     // جلب الأطباء من Redux
-    const { data:dataDoc, isLoading:loadingDoc, error:errorDoc } = useSelector(
+    const { data:dataDoc } = useSelector(
         (state) => state.doctors || {},
     );
     const doctorsList = Array.isArray(dataDoc) ? dataDoc : [];
 
-    const { data:dataSer, isLoading:loadingSer, error:errorSer } = useSelector((state) => state.services || {});
+    const { data:dataSer } = useSelector((state) => state.services || {});
     const servicesList = Array.isArray(dataSer) ? dataSer : [];
 
     useEffect(() => {
@@ -48,31 +48,31 @@ function HomeSection({
         .sort((a, b) => b.rating - a.rating) // ترتيب تنازلي (الأعلى أولاً)
         .slice(0, 6); // قص المصفوفة لأول 6 عناصر فقط
 
-    const [isVideoMuted, setIsVideoMuted] = useState(false);
-    const videoRef = useRef(null);
+    // const [isVideoMuted, setIsVideoMuted] = useState(false);
+    // const videoRef = useRef(null);
 
-    const isLoggedIn =
-        role === "Patient" || role === "Doctor" || role === "Admin";
+    // const isLoggedIn =
+    //     role === "Patient" || role === "Doctor" || role === "Admin";
 
     // Video Observer
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setIsVideoMuted(false);
-                        if (videoRef.current)
-                            videoRef.current.play().catch(() => {});
-                    } else {
-                        setIsVideoMuted(true);
-                    }
-                });
-            },
-            { threshold: 0.3 },
-        );
-        if (videoRef.current) observer.observe(videoRef.current);
-        return () => observer.disconnect();
-    }, []);
+    // useEffect(() => {
+    //     const observer = new IntersectionObserver(
+    //         (entries) => {
+    //             entries.forEach((entry) => {
+    //                 if (entry.isIntersecting) {
+    //                     setIsVideoMuted(false);
+    //                     if (videoRef.current)
+    //                         videoRef.current.play().catch(() => {});
+    //                 } else {
+    //                     setIsVideoMuted(true);
+    //                 }
+    //             });
+    //         },
+    //         { threshold: 0.3 },
+    //     );
+    //     if (videoRef.current) observer.observe(videoRef.current);
+    //     return () => observer.disconnect();
+    // }, []);
 
     // Cards Animation
     useEffect(() => {
@@ -88,16 +88,16 @@ function HomeSection({
         return () => clearTimeout(timer);
     }, []);
 
-    const unlockAudio = () => {
-        if (videoRef.current && isVideoMuted) {
-            videoRef.current.muted = false;
-            videoRef.current.play().catch(() => {});
-            setIsVideoMuted(false);
-        }
-    };
+    // const unlockAudio = () => {
+    //     if (videoRef.current && isVideoMuted) {
+    //         videoRef.current.muted = false;
+    //         videoRef.current.play().catch(() => {});
+    //         setIsVideoMuted(false);
+    //     }
+    // };
 
     return (
-        <div className="premium-dark-app" dir="rtl" onClick={unlockAudio}>
+        <div className="premium-dark-app" dir="rtl">
             {/* Backgrounds */}
             <div className="aurora-bg">
                 <div className="aurora aurora-1"></div>
@@ -145,7 +145,7 @@ function HomeSection({
                     </div>
 
                     {/* فيديو كامل العرض */}
-                    <div className="full-width-video">
+                    {/* <div className="full-width-video">
                         <video
                             ref={videoRef}
                             src="/background-video.mp4"
@@ -155,7 +155,7 @@ function HomeSection({
                             playsInline
                             className="hero-video-full"
                         />
-                    </div>
+                    </div> */}
                 </div>
             </main>
 

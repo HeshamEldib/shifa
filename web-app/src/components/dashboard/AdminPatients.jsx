@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, UserPlus, UserCheck, UserX, Eye, ShieldAlert, X, Phone, Mail, User } from 'lucide-react';
+import { Search, UserPlus, UserCheck, UserX, Eye, X } from 'lucide-react';
 import { getAdminPatientsApi, addPatientApi, togglePatientStatusApi } from '../../services/adminPatientService'; // استيراد الخدمات
 import './AdminPatients.css';
 import PatientDetailDrawer from './PatientDetailDrawer';
