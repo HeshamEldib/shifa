@@ -9,23 +9,23 @@ function PatientAppointments() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' | 'past'
   const [error, setError] = useState(null);
+  
+    const fetchAppointments = async () => {
+      try {
+        if (userId) {
+          const data = await getPatientAppointmentsApi(userId);
+          setAppointments(data);
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   useEffect(() => {
     fetchAppointments();
   }, [userId]);
-
-  const fetchAppointments = async () => {
-    try {
-      if (userId) {
-        const data = await getPatientAppointmentsApi(userId);
-        setAppointments(data);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   console.log("app =>", appointments);
   

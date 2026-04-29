@@ -9,7 +9,7 @@ import "./DoctorProfile.css";
 
 function DoctorProfile() {
     const dispatch = useDispatch();
-    const { data: user, isLoading } = useSelector((state) => state.userProfile);
+    const { data: user } = useSelector((state) => state.userProfile);
     const [isSaving, setIsSaving] = useState(false);
 
     const [formData, setFormData] = useState({

@@ -5,7 +5,6 @@ import {
     Camera,
     Building2,
     Phone,
-    Mail,
     Globe,
     Facebook,
     Instagram,

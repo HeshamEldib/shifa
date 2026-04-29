@@ -12,7 +12,6 @@ import {
     LogOut,
     ShieldCheck,
     BriefcaseMedical,
-    CreditCard,
     Bell,
     Pill,
 } from "lucide-react";

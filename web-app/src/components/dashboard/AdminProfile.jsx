@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
-    User,
     Mail,
-    Phone,
-    MapPin,
-    Globe,
     Calendar,
     Save,
     Camera,
     Edit2,
 } from "lucide-react";
-// import {
-//     getAdminProfileApi,
-//     updateAdminProfileApi,
-// } from "../../services/adminProfileService";
 import "./AdminProfile.css";
 import { useDispatch, useSelector } from "react-redux";
 import {

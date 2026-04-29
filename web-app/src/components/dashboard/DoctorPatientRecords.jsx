@@ -7,7 +7,6 @@ import {
     Trash2,
     Save,
     Pill,
-    Activity,
     ChevronLeft,
     HeartPulse,
 } from "lucide-react";

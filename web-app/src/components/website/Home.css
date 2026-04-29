@@ -186,3 +186,9 @@ body { background-color: #050b14; color: #f8fafc; overflow-x: hidden; margin: 0;
     gap: 20px;
   }
 }
+
+
+.stat-icon {
+width: 30px !important;
+height: 30px !important;
+}

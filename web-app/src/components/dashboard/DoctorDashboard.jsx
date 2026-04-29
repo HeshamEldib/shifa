@@ -38,7 +38,8 @@ function DoctorDashboard({
   const focusPatient = "Mona Ali";
   const avgWaiting = "6 min";
 
-  const todaySchedule = [
+  const todaySchedule = useMemo(
+    () => [
     {
       id: 1,
       time: "10:00",
@@ -69,13 +70,14 @@ function DoctorDashboard({
       ),
       kind: "emergency",
     },
-  ];
+  ],[t]);
 
-  const patientQueue = [
+  const patientQueue = useMemo(
+    () => [
     { id: 1, name: "Omar Hassan", wait: "12 min", level: "High" },
     { id: 2, name: "Laila Samir", wait: "5 min", level: "Medium" },
     { id: 3, name: "Hana Youssef", wait: "2 min", level: "Low" },
-  ];
+  ], []);
 
   const recentUpdates = useMemo(
     () => [

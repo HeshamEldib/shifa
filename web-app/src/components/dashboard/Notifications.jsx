@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Check, CheckCircle2, Clock, Trash2 } from 'lucide-react';
+import { Bell, CheckCircle2, Clock } from 'lucide-react';
 import { getNotificationsApi, markAsReadApi, markAllAsReadApi } from '../../services/notificationService';
 import './Notifications.css';
 

@@ -6,7 +6,6 @@ import {
     User,
     LayoutDashboard,
     LogOut,
-    Settings,
     Calendar,
     Activity,
 } from "lucide-react";
@@ -64,7 +63,7 @@ function UserMenu() {
 
                     <hr />
 
-                    {user.role.toLowerCase() == "patient" && (
+                    {user.role.toLowerCase() === "patient" && (
                         <>
                             <Link to="/patient/profile" className="dropdown-item">
                                 <User size={18} /> ملفي الشخصي

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, Phone, Mail, Stethoscope, Star, Users, Calendar, Award, BookOpen } from 'lucide-react';
-import { getAdminDoctorsApi } from '../../services/adminDoctorService'; // افترضنا أننا سنجلب من نفس الملف للتسهيل، لكن الأفضل إضافة دالة منفصلة
+// import { getAdminDoctorsApi } from '../../services/adminDoctorService'; // افترضنا أننا سنجلب من نفس الملف للتسهيل، لكن الأفضل إضافة دالة منفصلة
 import './DoctorDetailDrawer.css';
 
 // ملاحظة: قم بإضافة هذه الدالة في ملف adminDoctorService.js
@@ -16,24 +16,24 @@ export const getDoctorDetailsApi = async (id) => {
 function DoctorDetailDrawer({ doctorId, isOpen, onClose }) {
   const [doctor, setDoctor] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+    const loadDoctorDetails = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getDoctorDetailsApi(doctorId);
+        setDoctor(data);
+      } catch (error) {
+        console.error("خطأ في جلب تفاصيل الطبيب", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   useEffect(() => {
     if (isOpen && doctorId) {
       loadDoctorDetails();
     }
   }, [isOpen, doctorId]);
-
-  const loadDoctorDetails = async () => {
-    setIsLoading(true);
-    try {
-      const data = await getDoctorDetailsApi(doctorId);
-      setDoctor(data);
-    } catch (error) {
-      console.error("خطأ في جلب تفاصيل الطبيب", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   if (!isOpen) return null;
 

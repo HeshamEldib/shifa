@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
     Calendar,
-    Clock,
     User,
     MapPin,
     Video,
     CheckCircle,
     XCircle,
-    AlertCircle,
     Filter,
     Search,
     FileText,
@@ -25,22 +23,22 @@ function DoctorAppointments() {
     const [filterStatus, setFilterStatus] = useState("All"); // All, Pending, Confirmed, Completed
     const [dateFilter, setDateFilter] = useState(""); // تصفية بالتاريخ
     const [searchQuery, setSearchQuery] = useState("");
+    
+        const fetchAppointments = async () => {
+            setIsLoading(true);
+            try {
+                const data = await getDoctorAppointmentsApi(dateFilter);
+                setAppointments(data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
     useEffect(() => {
         fetchAppointments();
     }, [dateFilter]);
-
-    const fetchAppointments = async () => {
-        setIsLoading(true);
-        try {
-            const data = await getDoctorAppointmentsApi(dateFilter);
-            setAppointments(data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleStatusChange = async (id, newStatus) => {
         try {

@@ -70,15 +70,15 @@ function DoctorWorkingTime() {
             shifts: [{ startTime: "", endTime: "" }],
         },
     ];
-    const daysData = [
-        { dayOfWeek: 6, label: "السبت" },
-        { dayOfWeek: 0, label: "الأحد" },
-        { dayOfWeek: 1, label: "الإثنين" },
-        { dayOfWeek: 2, label: "الثلاثاء" },
-        { dayOfWeek: 3, label: "الأربعاء" },
-        { dayOfWeek: 4, label: "الخميس" },
-        { dayOfWeek: 5, label: "الجمعة" },
-    ];
+    // const daysData = [
+    //     { dayOfWeek: 6, label: "السبت" },
+    //     { dayOfWeek: 0, label: "الأحد" },
+    //     { dayOfWeek: 1, label: "الإثنين" },
+    //     { dayOfWeek: 2, label: "الثلاثاء" },
+    //     { dayOfWeek: 3, label: "الأربعاء" },
+    //     { dayOfWeek: 4, label: "الخميس" },
+    //     { dayOfWeek: 5, label: "الجمعة" },
+    // ];
 
     const [schedule, setSchedule] = useState(defaultSchedule);
 
@@ -96,7 +96,7 @@ function DoctorWorkingTime() {
 
                 // تحويل المصفوفة المسطحة إلى الهيكل المجمع حسب اليوم
                 if (apiAvailability && apiAvailability.length > 0) {
-                    const grouped = daysData.map((d) => {
+                    const grouped = defaultSchedule.map((d) => {
                         const dayShifts = apiAvailability.filter(
                             (item) => item.dayOfWeek === d.dayOfWeek,
                         );

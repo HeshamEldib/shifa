@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy
-            .WithOrigins("http://localhost:3000")
+            // .WithOrigins("http://localhost:3000")
             .AllowAnyOrigin()  // يسمح لأي مصدر بالاتصال (غيّر هذا لاحقاً عند النشر)
             .AllowAnyMethod()  // يسمح بكل أنواع الطلبات (GET, POST, PUT, DELETE)
             .AllowAnyHeader()); // يسمح بكل الهيدرز
@@ -69,6 +69,8 @@ builder.Services.AddSwaggerGen(options =>
             new string[] {}
         }
     });
+
+    options.CustomSchemaIds(type => type.FullName);
 });
 
 // إعدادات الـ JWT
@@ -119,13 +121,13 @@ using (var scope = app.Services.CreateScope())
 }
 
 // أ. إعداد Swagger (واجهة تجربة الـ API) في بيئة التطوير
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 // ب. تفعيل CORS (يجب أن يكون قبل UseAuthorization)
 app.UseCors("AllowReactApp");
