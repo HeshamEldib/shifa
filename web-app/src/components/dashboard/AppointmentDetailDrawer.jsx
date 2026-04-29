@@ -15,19 +15,19 @@ function AppointmentDetailDrawer({ appointmentId, isOpen, onClose }) {
     const [details, setDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const loadDetails = async () => {
-        setIsLoading(true);
-        try {
-            const data = await getAppointmentDetailsApi(appointmentId);
-            setDetails(data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const loadDetails = async () => {
+            setIsLoading(true);
+            try {
+                const data = await getAppointmentDetailsApi(appointmentId);
+                setDetails(data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
         if (isOpen && appointmentId) {
             loadDetails();
         }

@@ -6,7 +6,8 @@ import './PatientDetailDrawer.css';
 function PatientDetailDrawer({ patientId, isOpen, onClose }) {
   const [patient, setPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+
+  useEffect(() => {
     const loadPatientDetails = async () => {
       setIsLoading(true);
       try {
@@ -19,7 +20,6 @@ function PatientDetailDrawer({ patientId, isOpen, onClose }) {
       }
     };
 
-  useEffect(() => {
     if (isOpen && patientId) {
       loadPatientDetails();
     }

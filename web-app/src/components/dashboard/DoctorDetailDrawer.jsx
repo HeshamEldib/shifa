@@ -17,6 +17,7 @@ function DoctorDetailDrawer({ doctorId, isOpen, onClose }) {
   const [doctor, setDoctor] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   
+  useEffect(() => {
     const loadDoctorDetails = async () => {
       setIsLoading(true);
       try {
@@ -29,7 +30,6 @@ function DoctorDetailDrawer({ doctorId, isOpen, onClose }) {
       }
     };
 
-  useEffect(() => {
     if (isOpen && doctorId) {
       loadDoctorDetails();
     }

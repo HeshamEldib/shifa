@@ -10,6 +10,7 @@ function PatientAppointments() {
   const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' | 'past'
   const [error, setError] = useState(null);
   
+  useEffect(() => {
     const fetchAppointments = async () => {
       try {
         if (userId) {
@@ -23,7 +24,6 @@ function PatientAppointments() {
       }
     };
 
-  useEffect(() => {
     fetchAppointments();
   }, [userId]);
 

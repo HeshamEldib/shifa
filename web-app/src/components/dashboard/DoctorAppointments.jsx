@@ -24,6 +24,7 @@ function DoctorAppointments() {
     const [dateFilter, setDateFilter] = useState(""); // تصفية بالتاريخ
     const [searchQuery, setSearchQuery] = useState("");
     
+    useEffect(() => {
         const fetchAppointments = async () => {
             setIsLoading(true);
             try {
@@ -36,7 +37,6 @@ function DoctorAppointments() {
             }
         };
 
-    useEffect(() => {
         fetchAppointments();
     }, [dateFilter]);
 
