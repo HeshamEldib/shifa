@@ -1,8 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/api-proxy/(.*)",
-      "destination": "http://heshameldib-001-site1.qtempurl.com"
+      "source": "/api-proxy/:path*",
+      "destination": "http://heshameldib-001-site1.qtempurl.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
