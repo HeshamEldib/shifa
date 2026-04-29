@@ -26,7 +26,6 @@ function ContactSection({
       return;
     }
 
-    console.log("Contact form submitted:", { name, email, message });
 
     setStatus(t("contact.success_message"));
     setName("");

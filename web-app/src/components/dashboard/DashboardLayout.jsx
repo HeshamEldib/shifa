@@ -27,8 +27,6 @@ function DashboardLayout() {
     const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // console.log("test =>", user);
-
     // التأكد من وجود دور للمستخدم لتجنب الأخطاء
     // const userRole = user?.role || 'Doctor';
 
@@ -127,8 +125,6 @@ function DashboardLayout() {
 
     // اختيار الروابط بناءً على الدور
     const sidebarLinks = userRole === "Admin" ? adminLinks : doctorLinks;
-
-    // console.log("test =>", user);
 
     return (
         <div className="dashboard-layout">

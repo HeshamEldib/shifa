@@ -26,8 +26,6 @@ function PatientAppointments() {
 
     fetchAppointments();
   }, [userId]);
-
-  console.log("app =>", appointments);
   
   const handleCancel = async (appointmentId) => {
     if (!window.confirm('هل أنت متأكد من إلغاء هذا الموعد؟')) return;

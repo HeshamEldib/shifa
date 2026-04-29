@@ -15,9 +15,8 @@ export const getDoctorPatientsApi = async () => {
             { patientID: 'p4', name: 'فاطمة علي', age: 52, gender: 'Female', phone: '01555555555', lastVisit: '2026-04-05', totalVisits: 2 },
         ];
     }
-    
+
     const data = await response.json();
-    console.log("data =>", data);
-    
+
     return data;
 };
