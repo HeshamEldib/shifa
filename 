@@ -1,0 +1,55 @@
+t push origin featdrop 25e8e3b # Upload Shifaa app for teamure/newversion --force-with-leasepick f695d9c # Initial commit
+pick 025ee5f # first commit
+pick 6d9c3a4 # secant commit
+pick 0e6dcc8 # Initial commit: Project setup with Clean Architecture, Auth, and DbInitializer
+pick dce0846 # finished Appointments
+pick 4fd07d7 # Update copyright holders in LICENSE file
+pick dca790c # Initialize project using Create React App
+pick c5f41c2 # first commit
+pick 731c3da # Restore colleague's work on main
+pick 25e8e3b # Upload Shifaa app for team
+pick 7ba5f4a # Team UI updates: dashboards, appointments, i18n, and auth pages
+pick a17ae85 # Update doctor dashboard logout modal and contact translations
+pick 4503524 # create profile endpoints and forgot endpoint and linked the backend to (login, signup and forgot password)
+pick 6305b64 # finished part one
+pick 3986188 # finished webside 2
+pick 13f38d8 # finished all
+pick 85c0501 # uplode backend
+pick c05de18 # fix vercel errors
+pick d3c1eb0 # fix vercel errors 2
+pick 9ad486f # fix Mixed Content
+pick f52bdc0 # fix vercel 3
+pick 87c91a8 # fix vercel 4
+pick 39b25df # chore: add backend folder (shifaa-backend) restore server.js and backend files
+pick c9294d6 # feat: your short description of changes
+drop cbc3769 # Update Shifaa project
+
+# Rebase cbc3769 onto f5b6545 (25 commands)
+dropddgit rebase --abortrop
+git rebase --abortropdropdropdropdrop#dropdropdropdropdropddrop 25e8e3b # Upload Shifaa app for teamdrop 25e8e3b # Upload Shifaa app for teamropdropdropdrop
+#
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
+#                    commit's log message, unless -C is used, in which case
+#                    keep only this commit's message; -c is same as -C but
+#                    opens the editor
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+#         create a merge commit using the original merge commit's
+#         message (or the oneline, if no original merge commit was
+#         specified); use -c <commit> to reword the commit message
+# u, update-ref <ref> = track a placeholder for the <ref> to be updated
+#                       to this position in the new commits. The <ref> is
+#                       updated at the end of the rebase
+#
+# These lines can be re-ordered; they are ex  drop
+drp
+
