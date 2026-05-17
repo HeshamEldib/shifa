@@ -1,0 +1,249 @@
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const Groq = require("groq-sdk");
+const fileUpload = require("express-fileupload");
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Middleware
+app.use(cors());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(fileUpload({ limits: { fileSize: 10 * 1024 * 1024 } }));
+
+// Sample patient data
+let globalPatientData = {
+  appointments: [],
+  prescriptions: [],
+  notes: [],
+};
+
+// 🆕 جميع الصفحات + forgot-password
+const pages = [
+  "", "services", "doctors", "about", "contact", 
+  "login", "signup", "booking", "appointments", 
+  "patient-prescriptions", "patient", "doctor-records", "settings",
+  "forgot"
+];
+
+app.use(express.static(path.join(__dirname, "public")));
+
+pages.forEach(page => {
+  app.get(`/${page}`, (req, res) => {
+    const fileName = page ? `${page}.html` : "index.html";
+    const filePath = path.join(__dirname, "public", fileName);
+    
+    // ✅ لو موجودة = يجيبها، لو مش موجودة = 404 واضح
+    if (require('fs').existsSync(filePath)) {
+      res.sendFile(filePath);
+    } else {
+      res.status(404).send(`
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head><title>404 - الصفحة غير موجودة</title></head>
+        <body style="font-family:Arial;text-align:center;padding:100px;">
+          <h1>❌ 404</h1>
+          <p>الصفحة "${page || 'الرئيسية'}" غير موجودة</p>
+          <a href="/" style="color:#007bff;">← العودة للرئيسية</a>
+        </body>
+        </html>
+      `);
+    }
+  });
+});
+
+// 🆕 Routes ديناميكية للحجز /booking/:id
+app.get("/booking/:id", (req, res) => {
+  const id = req.params.id;
+  const filePath = path.join(__dirname, "public", "booking.html");
+  
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send(`
+      <!DOCTYPE html>
+      <html dir="rtl"><head><title>404 - حجز غير موجود</title></head>
+      <body style="font-family:Arial;text-align:center;padding:100px;">
+        <h1>❌ حجز #${id} غير موجود</h1>
+        <a href="/booking" style="color:#007bff;">← حجز جديد</a>
+      </body></html>
+    `);
+  }
+});
+
+// Upload file endpoint ✅ محسّن للـ PDF
+app.post("/api/ai/upload", async (req, res) => {
+  const file = req.files?.file;
+  const fileType = req.body.fileType || "external";
+
+  if (!file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  let fileContent = "";
+
+  try {
+    if (file.mimetype === "application/pdf") {
+      fileContent = `📄 ملف PDF: "${file.name}"
+📏 الحجم: ${Math.round(file.size/1024)} كيلوبايت
+🏷️ النوع: ${fileType === "medical" ? "ملف طبي" : "ملف خارجي"}
+✅ جاهز للشرح والتلخيص`;
+    } else if (file.mimetype.startsWith("image/")) {
+      fileContent = `🖼️ صورة: "${file.name}"
+📏 الحجم: ${Math.round(file.size/1024)} كيلوبايت
+🏷️ النوع: ${fileType === "medical" ? "طبي" : "خارجي"}`;
+    } else {
+      fileContent = file.data.toString("utf8").slice(0, 2000);
+    }
+
+    res.json({
+      fileContent,
+      fileType,
+      message: "تم تحليل الملف بنجاح",
+    });
+  } catch (err) {
+    console.error("File processing error:", err);
+    res.status(500).json({ error: "حدث خطأ في تحليل الملف." });
+  }
+});
+
+// Chat endpoint ✅ محسّن + أسلوب ذكي (طبي vs عادي) + booking/:id
+app.post("/api/ai/chat", async (req, res) => {
+  const { messages, fileContent = "", fileType } = req.body;
+
+  if (!messages || !Array.isArray(messages)) {
+    return res.status(400).json({
+      response: "يرجى إرسال رسالة صحيحة",
+    });
+  }
+
+  const lastMessage = messages[messages.length - 1];
+
+  if (!lastMessage || lastMessage.role !== "user") {
+    return res.status(400).json({
+      response: "لا يوجد رسالة مستخدم.",
+    });
+  }
+
+  const context = `
+بيانات المريض:
+- المواعيد: ${
+    globalPatientData.appointments.length > 0
+      ? globalPatientData.appointments
+          .map((a) => `${a.date} - ${a.service}`)
+          .join("، ")
+      : "لا يوجد مواعيد مسجلة"
+  }
+- الوصفات: ${
+    globalPatientData.prescriptions.length > 0
+      ? globalPatientData.prescriptions
+          .map((p) => `${p.drug} - ${p.dosage}`)
+          .join("، ")
+      : "لا يوجد وصفات مسجلة"
+  }
+- الملاحظات: ${
+    globalPatientData.notes.length > 0
+      ? globalPatientData.notes.join("، ")
+      : "لا يوجد ملاحظات"
+  }
+
+${fileContent ? `📄 محتوى الملف المرفوع (${fileType}): ${fileContent}` : ""}
+`.trim();
+
+  const systemPrompt = `
+أنت Shifaa AI - مساعد **طبي** بس للأسئلة الطبية.
+
+🎯 **فرّق كده:**
+- **سؤال طبي** (ألم، دواء، مرض، تحليل): رد طبي دقيق
+- **كلام عادي** (زهقانة، عاملة إيه، بحب): رد مصري عادي "تمام يا قمر" 😊
+- **لو قالت 'حجز رقم 3' أو 'موعد 3' → قول 'booking 3' بالظبط**
+لو قالت 'نسيت الباسورد' أو 'استعادة كلمة المرور' → رد بـ 'تمام، هحولك لصفحة استعادة كلمة المرور حالا' وقول 'forgot' بالظبط.
+- **مواعيدي/وصفاتي/حجز**: قول الكلمة بالظبط
+
+🚫 **ممنوع** تحوّل الزهق لطب! رد عادي بس.
+
+قواعد:
+1️⃣ لو fileContent: شرح اسم + حجم + نوع
+2️⃣ رد قصير: 2-3 جمل
+3️⃣ عربي مصري ودود
+
+${context}
+`;
+
+  try {
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+    const params = {
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...messages.map((m) => ({ role: m.role, content: m.content })),
+      ],
+      model: process.env.GROQ_MODEL || "llama-3.1-8b-instant",
+    };
+
+    const chatCompletion = await groq.chat.completions.create(params);
+    const aiResponse = chatCompletion.choices[0]?.message?.content?.trim();
+
+    if (!aiResponse) {
+      throw new Error("No response from AI");
+    }
+
+    // Navigation ✅ محسّن + forgot-password + booking/:id
+    const contentLower = aiResponse.toLowerCase();
+    let actionUrl = null;
+
+   // استبدلي الـ urlMap بالكود ده **فقط**:
+const urlMap = [
+  { triggers: ["الصفحة الرئيسية", "الرئيسية", "المنزل"], url: "/" },
+  { triggers: ["الخدمات"], url: "/services" },
+  { triggers: ["الأطباء"], url: "/doctors" },
+  { triggers: ["من نحن", "about"], url: "/about" },
+  { triggers: ["التواصل", "contact"], url: "/contact" },
+  { triggers: ["تسجيل الدخول", "login"], url: "/login" },
+  { triggers: ["إنشاء حساب", "signup"], url: "/signup" },
+  { triggers: ["استعادة كلمة المرور", "نسيت كلمة المرور", "forgot", "نسيت الباسورد"], url: "/forgot" },
+  { triggers: ["booking 3", "حجز 3", "رقم 3"], url: "/booking/3" }, 
+   { triggers: ["مواعيدي"], url: "/appointments" },
+  { triggers: ["وصفاتي"], url: "/patient-prescriptions" },
+  { triggers: ["ملفي الشخصي"], url: "/patient" },
+  { triggers: ["سجلاتي الطبية"], url: "/doctor-records" },
+  { triggers: ["الإعدادات"], url: "/settings" },
+];
+
+    for (const item of urlMap) {
+      if (item.triggers.some((t) => contentLower.includes(t))) {
+        actionUrl = item.url;
+        break;
+      }
+    }
+
+    // 🆕 LOG للاختبار
+    console.log("🔗 User said:", lastMessage.content);
+    console.log("🤖 AI response:", aiResponse.substring(0, 100) + "...");
+    console.log("🔗 Navigation detected:", actionUrl);
+
+    res.json({
+      response: aiResponse,
+      actionUrl,
+    });
+  } catch (error) {
+    console.error("Chat API error:", error);
+    res.json({
+      response: "حدث خطأ، من فضلك جرّبي مرة أخرى لاحقًا.",
+    });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ Shifaa AI Backend running on port ${PORT}`);
+  console.log("🌐 Static pages:", pages.map(p => `/${p}`).join('\n'));
+  console.log("🔗 Dynamic: /booking/:id");
+  console.log("📡 Endpoints:");
+  console.log("  - POST /api/ai/upload");
+  console.log("  - POST /api/ai/chat");
+});

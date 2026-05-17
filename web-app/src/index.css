@@ -5,6 +5,13 @@
 *::after {
   box-sizing: border-box;
 }
+html, body, #root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
 
 html,
 body,
@@ -43,7 +50,7 @@ html[dir="rtl"] body {
 
 .app-container {
   min-height: 100vh;
-  padding: 28px 32px;
+  padding: 0 !important;  /* كدة شيلنا المسافة من فوق ومن كل الجوانب */
   box-sizing: border-box;
 }
 

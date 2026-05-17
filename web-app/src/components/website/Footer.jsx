@@ -1,69 +1,78 @@
-import { Link } from "react-router-dom";
-import "./Footer.css";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
+import "./Footer.css";
 
-export default function Footer() {
-    return (
-        <div className="container">
-            <footer className="giant-footer-card">
-                <div className="footer-grid">
-                    <div className="footer-brand-col">
-                        <Link to="/" className="footer-brand-col">
-                            <div className="logo-icon-neon large">S</div>
-                            <span className="logo-text large">شــفاء</span>
-                            <p className="footer-desc-chic">
-                                الرعاية الصحية الأفضل، بين يديك في أي وقت وأي
-                                مكان.
-                            </p>
-                        </Link>
-                    </div>
+function Footer({ onAboutClick, onContactClick, onGoAllServices }) {
+  const { t } = useTranslation();
 
-                    <div className="footer-links-col">
-                        <h4>روابط سريعة</h4>
-                        <Link to="/services">الخدمات</Link>
-                        <Link to="/doctors">الأطباء</Link>
-                        <Link to="/about">من نحن</Link>
-                        <Link to="/contact">تواصل معنا</Link>
+  return (
+      <footer className="footer-midnight-section reveal-on-scroll delay-1">
+        <div className="container-inner">
+          <div className="footer-blue-grid">
+            <div className="footer-brand-info">
+             <div className="navbar-brand">
+                      <div className="logo-icon-neon">S</div>
+                      <span className="logo-text">{t("footer.brand")}</span>
                     </div>
-                    <div className="footer-links-col">
-                        <h4>بيانات التواصل</h4>
-                        <span>info@shifaa.com</span>
-                        <span>+20 123 456 7890</span>
-                        <span>القاهرة، مصر</span>
-                    </div>
-                    <div className="footer-newsletter-col">
-                        <h4>النشرة البريدية</h4>
-                        <p className="newsletter-desc">
-                            اشترك ليصلك أحدث المقالات الطبية.
-                        </p>
-                        <div className="elegant-input-group">
-                            <input
-                                type="email"
-                                placeholder="بريدك الإلكتروني"
-                            />
-                            <button className="btn-glow small">اشتراك</button>
-                        </div>
-                        <div className="social-chic-links-pro">
-                            <a href="#fb">
-                                <Facebook size={22} />
-                            </a>
-                            <a href="#ig">
-                                <Instagram size={22} />
-                            </a>
-                            <a href="#in">
-                                <Linkedin size={22} />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div className="footer-bottom-chic">
-                    <p>© 2026 شفاء - جميع الحقوق محفوظة</p>
-                    <div className="legal-links">
-                        <a href="#privacy">سياسة الخصوصية</a>
-                        <a href="#terms">شروط الاستخدام</a>
-                    </div>
-                </div>
-            </footer>
+              <p className="footer-blue-desc">{t("footer.desc")}</p>
+            </div>
+
+            <div className="footer-links-list">
+              <h4>{t("footer.quickLinks")}</h4>
+              <button onClick={onAboutClick}>{t("footer.about")}</button>
+              <button onClick={onContactClick}>{t("footer.contact")}</button>
+              <button onClick={onGoAllServices}>{t("footer.services")}</button>
+            </div>
+
+            <div className="footer-links-list">
+              <h4>{t("footer.contactTitle")}</h4>
+              <span>{t("footer.email", "info@shifaa.com")}</span>
+              <span>{t("footer.phone", "+20 123 456 7890")}</span>
+              <span>{t("footer.location")}</span>
+            </div>
+
+            <div className="footer-newsletter-box">
+              <h4>{t("footer.newsletterTitle")}</h4>
+
+              <div className="newsletter-blue-input">
+                <input
+                  type="email"
+                  placeholder={t("footer.emailPlaceholder")}
+                />
+                <button>{t("footer.subscribe")}</button>
+              </div>
+
+              <div className="social-blue-icons">
+                <a href="#fb">
+                  <Facebook size={20} />
+                </a>
+                <a href="#ig">
+                  <Instagram size={20} />
+                </a>
+                <a href="#in">
+                  <Linkedin size={20} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-blue-bottom">
+            <div className="copyright-full-text">
+              {t("footer.copyright", {
+                year: new Date().getFullYear(),
+                defaultValue: `© ${new Date().getFullYear()} شفاء`,
+              })}
+            </div>
+
+            <div className="footer-legal-links">
+              <a href="#privacy">{t("footer.privacy")}</a>
+              <a href="#terms">{t("footer.terms")}</a>
+            </div>
+          </div>
         </div>
-    );
+      </footer>
+  );
 }
+
+export default Footer;

@@ -1,68 +1,118 @@
 
 {
-  "navbar": {
-    "home": "首页",
-    "about": "关于",
-    "contact": "联系",
-    "login": "登录",
-    "signup": "注册"
-  },
   "pages": {
     "home": "首页",
     "login": "登录",
     "signup": "注册",
     "contact": "联系我们",
-    "about": "关于应用",
-    "forgot": "找回密码",
-
-    "patient_dashboard": "患者首页",
+    "about": "关于我们",
+    "forgot": "忘记密码",
+    "patient_dashboard": "患者仪表板",
     "appointments": "预约",
     "prescriptions": "处方",
-
-    "doctor_dashboard": "医生面板",
+    "doctor_dashboard": "医生仪表板",
     "patient_records": "患者记录",
-    "silent_diagnosis": "静默诊断",
+    "silent_diagnosis": "智能诊断",
     "smart_prescription": "智能处方",
+    "admin_dashboard": "管理员仪表板",
+    "settings": "设置",
+        "allServicesTitle": "医疗服务",
+            "doctorsTitle": "医生",
+                "bookingTitle": "完成预约",
+                    "doctorDetailsTitle": "医生详情"
 
-    "admin_dashboard": "管理员面板",
-    "settings": "设置"
+
+
+
+  },
+  
+  "header": {
+    "brandName": "Shifaa",
+    "home": "首页",
+    "services": "服务",
+    "doctors": "医生",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "login": "登录",
+    "signup": "注册"
   }
 ,
-
-
-  "home": {
-    "badge": "👋 欢迎来到未来医疗",
-    "title_line1": "你的健康，",
-    "title_line2": "只需轻轻一点。",
-    "subtitle": "体验新一代医疗服务。在线咨询顶级医生、预约就诊、获取处方，一切都可以在家中轻松完成。",
-    "cta_get_started": "开始使用",
-    "cta_learn_more": "了解更多",
-    "badge_support": "全天候支持",
-    "badge_doctors": "认证医生",
-    "badge_secure": "安全与隐私",
-    "card_consultation_title": "在线问诊",
-    "card_consultation_text": "随时随地，通过视频通话快速连接专科医生。",
-    "card_booking_title": "轻松预约",
-    "card_booking_text": "几秒内完成预约，无需排队，无需麻烦。",
-    "card_prescriptions_title": "智能处方",
-    "card_prescriptions_text": "电子处方直接发送到你的手机或附近药房。",
-    "scroll": "下滑",
-    "footer_desc": "智能数字医疗平台，随时随地连接值得信赖的医生。",
-    "footer_quick_links": "快捷链接",
-    "footer_services": "服务",
-    "footer_contact_title": "联系",
-    "footer_contact_email": "邮箱：support@shifaa.com",
-    "footer_contact_phone": "电话：+20 100 000 0000",
-    "footer_contact_location": "埃及·开罗",
-    "footer_stay_updated": "保持关注",
-    "footer_newsletter_text": "获取健康贴士和产品更新，直接发送到你的邮箱。",
-    "footer_newsletter_placeholder": "输入你的邮箱",
-    "footer_newsletter_button": "订阅",
-    "footer_follow_us": "关注我们",
-    "footer_copy": "© 2026 Shifaa. 保留所有权利。",
-    "footer_privacy": "隐私",
-    "footer_terms": "条款"
+  "hero": {
+    "title": "您的医疗护理 <br/> 从这里开始",
+    "desc": "Shifaa平台轻松安全地连接您与最好的医生。",
+    "startBtn": "立即开始",
+    "browseBtn": "浏览服务"
   },
+  "features": {
+    "f1_badge": "医疗咨询",
+    "f1_title": "即时医疗咨询",
+    "f1_desc": "随时随地快速安全地获得在线医疗咨询。",
+    "f2_badge": "医疗记录",
+    "f2_title": "轻松管理医疗记录",
+    "f2_desc": "将您的医疗历史保存在一个地方，完全保护数据。"
+  },
+  "services": {
+    "title": "医疗服务",
+    "subtitle": "选择最佳可用服务",
+    "viewAll": "查看所有服务",
+    "list": [
+      { "name": "普通咨询", "doctor": "艾哈迈德·阿里医生", "price": "¥150" },
+      { "name": "儿科", "doctor": "萨拉·穆罕默德医生", "price": "¥180" },
+      { "name": "内科", "doctor": "穆罕默德·哈桑医生", "price": "¥210" },
+      { "name": "皮肤科", "doctor": "莫娜·哈立德医生", "price": "¥240" },
+      { "name": "骨科", "doctor": "哈立德·穆斯塔法医生", "price": "¥270" },
+      { "name": "牙科", "doctor": "阿里·胡萨姆医生", "price": "¥300" }
+    ]
+  },
+  "doctors": {
+    "title": "顶级医生",
+    "subtitle": "精英专科医生团队",
+    "viewAll": "查看所有医生",
+    "list": [
+      { "name": "艾哈迈德·阿里医生", "specialty": "全科医生" },
+      { "name": "萨拉·穆罕默德医生", "specialty": "儿科" },
+      { "name": "穆罕默德·哈桑医生", "specialty": "内科" },
+      { "name": "莫娜·哈立德医生", "specialty": "皮肤科" }
+    ]
+  },
+  "testimonials": {
+    "title": "患者评价",
+    "subtitle": "用户真实体验",
+    "list": [
+      {
+        "name": "马哈茂德·艾哈迈德",
+        "review": "体验优秀，医生非常专业且回复迅速。",
+        "role": "患者"
+      },
+      {
+        "name": "萨拉·阿里",
+        "review": "平台非常简单，为我节省了很多时间。",
+        "role": "患者"
+      },
+      {
+        "name": "艾哈迈德·优素福",
+        "review": "优秀服务，推荐所有人使用。",
+        "role": "患者"
+      }
+    ]
+  },
+  "footer": {
+    "brand": "Shifaa",
+    "desc": "智能医疗平台轻松安全连接患者与医生。",
+    "quickLinks": "快速链接",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "services": "服务",
+    "contactTitle": "联系方式",
+    "location": "开罗 - 埃及",
+    "newsletterTitle": "订阅新闻通讯",
+    "emailPlaceholder": "输入您的邮箱",
+    "subscribe": "订阅",
+    "copyright": "© {{year}} Shifaa",
+    "privacy": "隐私政策",
+    "terms": "条款"
+  }
+,
 
   "contact": {
     "title": "联系",
@@ -189,21 +239,34 @@
   "agree_required": "必须同意服务条款和隐私政策。"
 }
 ,
-  "forgot": {
-    "role_patient": "我们会安静而安全地帮你找回访问权限。",
-    "role_doctor": "我们会保护你的访问，让你尽快回到照护工作中。",
-    "role_center": "我们会为你的机构重新保障访问。",
-    "role_default": "让我们来保护你的访问。",
-    "not_now": "暂不",
-    "title_typing": "帮你找回访问。",
-    "sub_typing": "我们该把访问链接发送到哪里？",
-    "mini_hint": "只需输入你的邮箱，然后稍等片刻，其余交给我们。",
-    "title_sending": "请稍等…",
-    "sub_sending": "正在保护你的访问。",
-    "title_done": "你已安全。",
-    "sub_done": "请检查你的邮箱。",
-    "esc_hint": "按 Esc 立即返回。我们会在 0.5 分钟后自动带你返回。"
-  },
+  "forgot":
+{
+  "title_email": "忘记密码？",
+  "subtitle_email": "请输入您的电子邮件地址",
+  "send_code": "发送验证码",
+  "sending": "发送中...",
+  "invalid_email": "电子邮件地址无效",
+  "code_sent": "验证码已发送至您的邮箱",
+  
+  "title_code": "验证验证码",
+  "code_label": "验证码",
+  "invalid_code": "需要6位数字",
+  "verifying": "验证中...",
+  "continue": "继续",
+  
+  "title_reset": "新密码",
+  "new_password": "新密码",
+  "confirm_password": "确认密码",
+  "reset_password": "重置密码",
+  "saving": "保存中...",
+  "password_short": "密码至少6个字符",
+  "passwords_not_match": "两次输入密码不一致",
+  
+  "success_title": "成功！",
+  "success_sub": "密码重置完成"
+}
+
+,
 
   "patient": {
   "nav_home": "首页",
@@ -1128,6 +1191,171 @@
   "admin_simulation_btn": "模拟急诊负载",
   "admin_simulation_after": "模拟结束后，一份简短报告会总结系统性能和瓶颈。"
 },
+
+  "allservices": {
+    "all": "全部",
+    "errorFetching": "抱歉，获取数据时发生错误。请稍后再试。",
+    "backToHome": "返回首页",
+    "badgeGlow": "您的康复之旅从这里开始",
+    "mainTitle": "医疗",
+    "gradientTitle": "服务",
+    "subTitle": "我们基于最高全球质量标准为您推荐最佳服务和护理。",
+    "searchPlaceholder": "搜索服务或医生...",
+    "retry": "重试",
+    "loading": "正在加载医疗服务...",
+    "bookNow": "立即预订",
+    "notFoundTitle": "我们找不到您要找的内容...",
+    "notFoundDesc": "请尝试使用其他词语或浏览其他类别。",
+    "currency": "埃及镑",
+    "mins": "分钟",
+    
+    "cat_heart": "心脏科",
+    "cat_dental": "牙科",
+    "cat_eyes": "眼科",
+    "cat_labs": "化验室",
+    "cat_derma": "皮肤科",
+    
+    "srv_heart_check": "全面心脏检查",
+    "srv_teeth_whitening": "牙齿美白与抛光",
+    "srv_eye_check": "电脑验光",
+    "srv_full_labs": "全面化验套餐",
+    "srv_skin_care": "皮肤焕彩护理",
+    "srv_ecg": "运动心电图",
+    
+    "dr_ahmed": "Ahmed Mohamed 医生",
+    "dr_mohamed": "Mohamed Salem 医生",
+    "dr_sara": "Sara Hassan 医生",
+    "dr_fatima": "Fatima Ali 医生",
+    "dr_nada": "Nada Kamal 医生"
+  }
+
+,
+
+  "all": "全部",
+  "errorFetching": "加载医生数据时发生错误。",
+  "backToHome": "返回首页",
+  "modernElite": "现代医疗精英",
+  "ourDoctors": "我们的",
+  "outstanding": "杰出医生",
+  "subtitle": "放心选择您的医生。我们为您提供最熟练的顾问和专家。",
+  "searchPlaceholder": "按医生姓名或专业搜索...",
+  "retry": "重试",
+  "loading": "正在加载医生列表...",
+  "quote": "\"您的健康是我的首要任务\"",
+  "viewProfile": "查看个人资料",
+  "bookAppointment": "预约",
+  "notFoundTitle": "未找到医生...",
+  "notFoundDesc": "请确保姓名拼写正确或尝试其他科室。",
+  
+  "dr_ahmed": "Ahmed Mohamed 医生",
+  "dr_fatima": "Fatima Ali 医生",
+  "dr_mohamed": "Mohamed Salem 医生",
+  "dr_sara": "Sara Hassan 医生",
+  "dr_nada": "Nada Kamal 医生",
+  "dr_khaled": "Khaled Abdullah 医生",
+  
+  "spec_heart": "心脏病学顾问",
+  "spec_internal": "内科顾问",
+  "spec_dental": "牙科专家",
+  "spec_eyes": "眼科顾问",
+  "spec_derma": "皮肤科专家",
+  "spec_pediatric": "儿科顾问",
+  
+  "cat_heart": "心脏科",
+  "cat_internal": "内科",
+  "cat_dental": "牙科",
+  "cat_eyes": "眼科",
+  "cat_derma": "皮肤科",
+  "cat_pediatric": "儿科",
+  
+  "exp_15": "15年",
+  "exp_12": "12年",
+  "exp_8": "8年",
+  "exp_20": "20年",
+  "exp_10": "10年",
+  "exp_14": "14年",
+  
+  "avail_tmrw_10": "可用: 明天上午 10:00",
+  "avail_today_5": "可用: 今天下午 05:00",
+  "avail_mon_12": "可用: 周一中午 12:00",
+  "avail_tmrw_2": "可用: 明天下午 02:00",
+  "avail_today_7": "可用: 今天晚上 07:00",
+  "avail_tmrw_11": "可用: 明天上午 11:00"
+
+,
+
+  "booking": {
+    "today": "今天",
+    "defaultTime": "上午 10:00",
+    "dr_ahmed_booking": "Ahmed Mohamed 医生",
+    "spec_heart_remote": "心脏病学顾问（远程）",
+    "err_card_number": "必须是16位数字",
+    "err_card_name": "请输入有效的姓名",
+    "err_card_expiry": "日期不完整",
+    "err_card_cvv": "需要3位数字",
+    "err_wallet_number": "无效的钱包号码",
+    "editAppointment": "编辑预约",
+    "confirmOnlineBooking": "确认在线预订",
+    "encryptionNotice": "您的所有数据都经过加密。付款完成后将发送会话链接。",
+    "creditCard": "信用卡",
+    "eWallet": "电子钱包",
+    "fullNamePlaceholder": "全名",
+    "cardholder": "持卡人",
+    "expiryDate": "到期日期",
+    "securedBy": "由 Shifaa 256位加密技术保护。",
+    "cardNumber": "卡号",
+    "nameOnCard": "卡上姓名",
+    "cvvCode": "CVV 代码",
+    "walletNotice": "请输入您的钱包号码。您将收到一条短信以确认扣款。",
+    "walletPhoneLinked": "绑定的钱包电话号码",
+    "sessionSummary": "会话摘要",
+    "remoteVideoConsultation": "远程视频咨询",
+    "dateLabel": "日期",
+    "timeLabel": "时间",
+    "consultationFees": "咨询费",
+    "currency": "埃及镑",
+    "networkFees": "网络及安全费用",
+    "total": "总计",
+    "protection256": "256位保护",
+    "secureGateway": "安全支付网关",
+    "confirmPayment": "确认付款并预订",
+    "sessionConfirmed": "您的会话已确认！"
+  }
+,
+
+  "doctorDetails": {
+    "backToDoctors": "返回医生列表",
+    "verifiedDoctor": "已认证医生",
+    "rating": "评分",
+    "experienceLabel": "经验",
+    "patientsLabel": "患者",
+    "aboutTitle": "关于医生",
+    "servicesTitle": "提供的服务",
+    "bookNow": "立即预约",
+    "currency": "埃镑",
+    "selectPrompt": "请选择合适的时间以完成预约。",
+    "yourAppointment": "您的预约：",
+    "at": "时间",
+    "confirmAndPay": "确认预约并付款",
+    "chooseTime": "选择时间",
+    "doctorName": "Ahmed Mohamed 医生",
+    "doctorSpecialty": "心血管外科顾问",
+    "quote": "您的护理始于准确的诊断和认真倾听。",
+    "bio": "伦敦皇家外科医学院院士。擅长心脏直视手术、治疗性导管介入以及高血压的高级管理。",
+    "experience": "+15年",
+    "services": [
+      "运动心电图",
+      "心导管检查",
+      "4D超声心动图",
+      "高血压治疗"
+    ],
+    "days": {
+      "today": "今天",
+      "tomorrow": "明天",
+      "thursday": "星期四"
+    }
+  }
+,
   "role_patient": "患者",
   "role_doctor": "医生",
   "role_admin": "管理员",

@@ -1,0 +1,18 @@
+﻿{
+  "examples": [
+    {"user": "حجز موعد، حجوز موعد، عايز أحجز، موعد دكتور، حجز دكتور، booking، book appointment، حجوزات، حدد موعد", "actionUrl": "/booking"},
+    {"user": "مواعيدي، مواعيد المريض، حجوزاتي، appointments، list appointments، مواعيد الحجز", "actionUrl": "/appointments"},
+    {"user": "صفحتي، ملفي الشخصي، patient profile، بياناتي، patient، حسابي الشخصي، معلوماتي", "actionUrl": "/patient"},
+    {"user": "نسيت الباسورد، forgot password، استعادة كلمة المرور، reset password، نسيت الباسوورد، forgot، كلمة المرور", "actionUrl": "/forgot"},
+    {"user": "وصفاتي، وصفة طبية، prescriptions، patient prescriptions، الوصفات الطبية، دوائي", "actionUrl": "/patient-prescriptions"},
+    {"user": "الدكاترة، doctors، الأطباء، قائمة الأطباء، doctor list، دكاترة، طبيب", "actionUrl": "/doctors"},
+    {"user": "الرئيسية، home، الصفحة الرئيسية، main page، homepage، البيت، الاولى", "actionUrl": "/"},
+    {"user": "تسجيل الدخول، login، دخول، sign in، تسجيل دخول، log in", "actionUrl": "/login"},
+    {"user": "إنشاء حساب، signup، تسجيل جديد، register، إنشاء حساب جديد، اشترك", "actionUrl": "/signup"},
+    {"user": "سجلاتي، doctor records، سجل طبي، doctor-records، medical records، محاضر طبية", "actionUrl": "/doctor-records"},
+    {"user": "الإعدادات، settings، إعداداتي، الحساب settings، تعديل بيانات، settings page", "actionUrl": "/settings"},
+    {"user": "الخدمات، services، خدماتنا، الخدمات الطبية، medical services", "actionUrl": "/services"},
+    {"user": "من نحن، about، نبذة عنا، about us، معلومات عن الشركة", "actionUrl": "/about"},
+    {"user": "التواصل، contact، اتصل بنا، تواصل معانا، contact us، رقم الهاتف", "actionUrl": "/contact"}
+  ]
+}

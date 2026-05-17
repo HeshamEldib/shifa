@@ -1,0 +1,84 @@
+﻿{
+    "examples":  [
+                     {
+                         "user":  "الرئيسية",
+                         "page":  "/",
+                         "intent":  "home"
+                     },
+                     {
+                         "user":  "خدمات",
+                         "page":  "/services",
+                         "intent":  "services"
+                     },
+                     {
+                         "user":  "أطباء",
+                         "page":  "/doctors",
+                         "intent":  "doctors"
+                     },
+                     {
+                         "user":  "صفحتي",
+                         "page":  "/patient",
+                         "intent":  "profile"
+                     },
+                     {
+                         "user":  "نسيت الباسورد",
+                         "page":  "/forgot",
+                         "intent":  "forgot"
+                     },
+                     {
+                         "user":  "حجز",
+                         "page":  "/booking/3",
+                         "intent":  "booking"
+                     },
+                     {
+                         "user":  "مواعيدي",
+                         "page":  "/appointments",
+                         "intent":  "appointments"
+                     },
+                     {
+                         "user":  "وصفاتي",
+                         "page":  "/patient-prescriptions",
+                         "intent":  "prescriptions"
+                     },
+                     {
+                         "user":  "تسجيل الدخول",
+                         "page":  "/login",
+                         "intent":  "login"
+                     },
+                     {
+                         "user":  "إنشاء حساب",
+                         "page":  "/signup",
+                         "intent":  "signup"
+                     },
+                     {
+                         "user":  "سجلاتي",
+                         "page":  "/doctor-records",
+                         "intent":  "records"
+                     },
+                     {
+                         "user":  "الإعدادات",
+                         "page":  "/settings",
+                         "intent":  "settings"
+                     },
+                     {
+                         "user":  "من نحن",
+                         "page":  "/about",
+                         "intent":  "about"
+                     },
+                     {
+                         "user":  "التواصل",
+                         "page":  "/contact",
+                         "intent":  "contact"
+                     },
+                     {
+                         "user":  "عندي صداع",
+                         "page":  null,
+                         "intent":  "medical"
+                     },
+                     {
+                         "user":  "عاملة إيه",
+                         "page":  null,
+                         "intent":  "casual"
+                     }
+                 ]
+}
