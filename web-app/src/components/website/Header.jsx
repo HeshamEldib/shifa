@@ -5,8 +5,10 @@ import { useState } from "react";
 import UserMenu from "../UserMenu";
 import { useSelector } from "react-redux";
 import NotificationBell from "../NotificationBell";
+import { useTranslation } from "react-i18next"; // استيراد مكتبة الترجمة
 
 export default function Header() {
+    const { t } = useTranslation(); // تفعيل الترجمة
     const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
     const { token } = useSelector((state) => state.auth);
 
@@ -16,32 +18,32 @@ export default function Header() {
                 <div className="navbar-brand">
                     <Link to="/" className="navbar-brand">
                         <div className="logo-icon-neon">S</div>
-                        <span className="logo-text">شــفاء</span>
+                        <span className="logo-text">{t('header.brandName')}</span>
                     </Link>
                 </div>
                 <div className="nav-links desktop-only">
                     <Link to="/" className="nav-item active">
-                        الرئيسية
+                        {t('header.home')}
                     </Link>
 
                     <Link to="/services" className="nav-item">
-                        الخدمات
+                        {t('header.services')}
                     </Link>
 
                     <Link to="/doctors" className="nav-item">
-                        الأطباء
+                        {t('header.doctors')}
                     </Link>
 
                     <Link to="/about" className="nav-item">
-                        من نحن
+                        {t('header.about')}
                     </Link>
 
                     <Link to="/contact" className="nav-item">
-                        تواصل معنا
+                        {t('header.contact')}
                     </Link>
                 </div>
 
-<div className="header-actions">
+                <div className="header-actions">
                 {token ? (
                     <div className="ms-3 authenticated-actions">
                         <NotificationBell />
@@ -50,16 +52,15 @@ export default function Header() {
                 ) : (
                     <div className="nav-actions desktop-only">
                         <Link to="/login" className="btn-text">
-                            تسجيل دخول
+                            {t('header.login')}
                         </Link>
 
                         <Link to="/signup" className="btn-glow">
-                            حساب جديد
+                            {t('header.signup')}
                         </Link>
                     </div>
                 )}
                 </div>
-
                 <button
                     className="mobile-menu-toggle mobile-only"
                     onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}

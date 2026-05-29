@@ -1,0 +1,1 @@
+# Shifaa Backend\n\n1. cd backend\n2. npm install\n3. npm start

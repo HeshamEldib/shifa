@@ -25,11 +25,13 @@ import AboutSection from "./components/website/AboutSection.jsx";
 import SignUpSection from "./components/website/SignUpSection.jsx";
 import ForgotPassword from "./components/website/ForgotPassword.jsx";
 
+
 // الصفحات الجديدة
 import AllServices from "./components/website/AllServices.jsx";
 import AllDoctors from "./components/website/AllDoctors.jsx";
 import DoctorDetails from "./components/website/DoctorDetails.jsx";
 import BookingPage from "./components/website/BookingPage.jsx";
+
 
 // dashboard
 import PatientHome from "./components/dashboard/PatientHome.jsx";
@@ -65,6 +67,7 @@ import AdminSpecialties from "./components/dashboard/AdminSpecialties.jsx";
 import AdminSettings from "./components/dashboard/AdminSettings.jsx";
 import AdminNotifications from "./components/dashboard/AdminNotifications.jsx";
 import AdminProfile from "./components/dashboard/AdminProfile.jsx";
+import AIChat from "./components/dashboard/AIChat";
 
 // ---------- favicon SVG ----------
 const shifaaFaviconSvg = `
@@ -197,6 +200,7 @@ function MainApp() {
 
     return (
         <>
+             <AIChat />
             <FloatingLanguageSwitcher />
 
             <Routes>

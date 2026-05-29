@@ -83,12 +83,7 @@ const navigate = useNavigate();
         <div className="glow-orb orb-2"></div>
       </div>
 
-      {/* navbar بسيط: لوجو بس */}
-      <nav className={`navbar ${isLoaded ? "fade-in-down" : ""}`}>
-        <div className="logo-container">
-          <span className="logo-text-main">Shifaa</span>
-        </div>
-      </nav>
+     
 
       {/* محتوى صفحة اللوجين */}
       <main className="login-wrapper">

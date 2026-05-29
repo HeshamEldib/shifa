@@ -2,7 +2,7 @@
 
 .about-page {
   min-height: 100vh;
-  padding: 40px 16px 60px;
+  padding: 80px 16px 60px; /* غيّرنا من 40px لـ 80px عشان ينزل تحت الهيدر */
   background: #020617;
   color: #e5e7eb;
   display: flex;

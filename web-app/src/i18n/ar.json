@@ -1,68 +1,154 @@
-{
-  "navbar": {
-    "home": "الرئيسية",
-    "about": "عن شفاء",
-    "contact": "تواصل معنا",
-    "login": "تسجيل الدخول",
-    "signup": "إنشاء حساب"
-  }
-,
-
+ {
   "pages": {
     "home": "الرئيسية",
     "login": "تسجيل الدخول",
     "signup": "إنشاء حساب",
-    "contact": "اتصل بنا",
-    "about": "عن التطبيق",
-    "forgot": "استرجاع كلمة المرور",
-
-    "patient_dashboard": "الصفحة الرئيسية للمريض",
+    "contact": "تواصل معنا",
+    "about": "من نحن",
+    "forgot": "نسيت كلمة المرور",
+    "patient_dashboard": "لوحة المريض",
     "appointments": "المواعيد",
-    "prescriptions": "الوصفات",
-
+    "prescriptions": "الوصفات الطبية",
     "doctor_dashboard": "لوحة الطبيب",
     "patient_records": "سجلات المرضى",
-    "silent_diagnosis": "التشخيص الصامت",
+    "silent_diagnosis": "التشخيص الذكي",
     "smart_prescription": "الوصفة الذكية",
+    "admin_dashboard": "لوحة التحكم",
+    "settings": "الإعدادات",
+  "allServicesTitle": "الخدمات الطبية",
+      "doctorsTitle": "الأطباء",
+          "bookingTitle": "إتمام الحجز",
+              "doctorDetailsTitle": "تفاصيل الطبيب"
 
-    "admin_dashboard": "لوحة الأدمن",
-    "settings": "الإعدادات"
+
+
+  
+  },
+  
+  
+  "header": {
+    "brandName": "شــفاء",
+    "home": "الرئيسية",
+    "services": "الخدمات",
+    "doctors": "الأطباء",
+    "about": "من نحن",
+    "contact": "تواصل معنا",
+    "login": "تسجيل دخول",
+    "signup": "حساب جديد"
   }
+
 ,
-
-
-  "home": {
-    "badge": "👋 أهلاً بك في رعاية صحية مستقبلية",
-    "title_line1": "صحتك،",
-    "title_line2": "تبعد نقرة واحدة.",
-    "subtitle": "جرّب الجيل الجديد من الرعاية الطبية. استشر أفضل الأطباء، احجز المواعيد، واحصل على الوصفات من بيتك.",
-    "cta_get_started": "ابدأ الآن",
-    "cta_learn_more": "اعرف المزيد",
-    "badge_support": "دعم 24/7",
-    "badge_doctors": "أطباء معتمدون",
-    "badge_secure": "آمن وسري",
-    "card_consultation_title": "استشارة أونلاين",
-    "card_consultation_text": "اتصل بأخصائيين عبر مكالمات فيديو في أي وقت ومن أي مكان.",
-    "card_booking_title": "حجز سهل",
-    "card_booking_text": "احجز مواعيدك خلال ثوانٍ بدون طوابير أو تعقيد.",
-    "card_prescriptions_title": "وصفات ذكية",
-    "card_prescriptions_text": "وصفات طبية رقمية تُرسل مباشرة لهاتفك أو لأقرب صيدلية.",
-    "scroll": "اسحب لأسفل",
-    "footer_desc": "منصة رعاية صحية رقمية ذكية تربطك بأطباء موثوقين في أي وقت ومن أي مكان.",
-    "footer_quick_links": "روابط سريعة",
-    "footer_services": "الخدمات",
-    "footer_contact_title": "التواصل",
-    "footer_contact_email": "البريد: support@shifaa.com",
-    "footer_contact_phone": "الهاتف: ‎+20 100 000 0000",
-    "footer_contact_location": "القاهرة، مصر",
-    "footer_stay_updated": "ابقَ على اطلاع",
-    "footer_newsletter_text": "احصل على نصائح صحية وتحديثات عن المنتجات في بريدك.",
-    "footer_newsletter_placeholder": "أدخل بريدك الإلكتروني",
-    "footer_newsletter_button": "اشترك",
-    "footer_follow_us": "تابعنا",
-    "footer_copy": "© 2026 شفاء. جميع الحقوق محفوظة.",
-    "footer_privacy": "الخصوصية",
-    "footer_terms": "الشروط"
+  "hero": {
+    "title": "رعايتك الصحية <br/> تبدأ من هنا",
+    "desc": "منصة شفاء تربطك بأفضل الأطباء بسهولة وأمان في أي وقت.",
+    "startBtn": "ابدأ الآن",
+    "browseBtn": "تصفح الخدمات"
+  },
+  "features": {
+    "f1_badge": "استشارة طبية",
+    "f1_title": "استشارات طبية فورية مع أفضل الأطباء",
+    "f1_desc": "احصل على استشارة طبية أونلاين بسرعة وأمان من أي مكان.",
+    "f2_badge": "ملفات طبية",
+    "f2_title": "إدارة ملفاتك الطبية بسهولة وأمان",
+    "f2_desc": "احتفظ بسجلك الطبي في مكان واحد مع حماية كاملة لبياناتك."
+  },
+  "services": {
+    "title": "الخدمات الطبية",
+    "subtitle": "اختر من بين أفضل الخدمات المتاحة",
+    "viewAll": "عرض جميع الخدمات",
+    "list": [
+      {
+        "name": "استشارة عامة",
+        "doctor": "د. أحمد علي",
+        "price": "200 جنيه"
+      },
+      {
+        "name": "طب أطفال",
+        "doctor": "د. سارة محمد",
+        "price": "250 جنيه"
+      },
+      {
+        "name": "أمراض باطنة",
+        "doctor": "د. محمد حسن",
+        "price": "300 جنيه"
+      },
+      {
+        "name": "جلدية وتجميل",
+        "doctor": "د. منى خالد",
+        "price": "350 جنيه"
+      },
+      {
+        "name": "عظام",
+        "doctor": "د. خالد مصطفى",
+        "price": "400 جنيه"
+      },
+      {
+        "name": "أسنان",
+        "doctor": "د. علي حسام",
+        "price": "450 جنيه"
+      }
+    ]
+  },
+  "doctors": {
+    "title": "أفضل الأطباء",
+    "subtitle": "نخبة من الأطباء المتخصصين",
+    "viewAll": "عرض كل الأطباء",
+    "list": [
+      {
+        "name": "د. أحمد علي",
+        "specialty": "طبيب عام"
+      },
+      {
+        "name": "د. سارة محمد",
+        "specialty": "أطفال"
+      },
+      {
+        "name": "د. محمد حسن",
+        "specialty": "باطنة"
+      },
+      {
+        "name": "د. منى خالد",
+        "specialty": "جلدية"
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "آراء المرضى",
+    "subtitle": "تجارب حقيقية من مستخدمينا",
+    "list": [
+      {
+        "name": "محمود أحمد",
+        "review": "التجربة كانت ممتازة والدكتور كان محترف جدًا وسريع في الرد.",
+        "role": "مريض"
+      },
+      {
+        "name": "سارة علي",
+        "review": "منصة سهلة جدًا ووفرت عليا وقت كبير.",
+        "role": "مريضة"
+      },
+      {
+        "name": "أحمد يوسف",
+        "review": "خدمة ممتازة وأنصح أي حد يستخدمها.",
+        "role": "مريض"
+      }
+    ]
+  },
+  "footer": {
+    "brand": "شفاء",
+    "desc": "منصة طبية ذكية تربط المرضى بالأطباء بسهولة وأمان.",
+    "quickLinks": "روابط سريعة",
+    "about": "من نحن",
+    "contact": "تواصل معنا",
+    "services": "الخدمات",
+    "phone": "+20 123 456 7890",
+    "contactTitle": "تواصل",
+    "location": "القاهرة - مصر",
+    "newsletterTitle": "اشترك في النشرة البريدية",
+    "emailPlaceholder": "ادخل بريدك الإلكتروني",
+    "subscribe": "اشتراك",
+    "copyright": "© {{year}} شفاء",
+    "privacy": "الخصوصية",
+    "terms": "الشروط"
   },
   "contact": {
     "title": "تواصل",
@@ -81,9 +167,7 @@
     "error_fill_all": "من فضلك املأ جميع الحقول.",
     "success_message": "تم إرسال الرسالة بنجاح! سنعاود الاتصال بك قريبًا.",
     "footer_copy": "© 2026 شفاء. جميع الحقوق محفوظة."
-  }
-,
-
+  },
   "login": {
     "back_home": "العودة للرئيسية",
     "welcome": "مرحبًا بعودتك",
@@ -99,264 +183,103 @@
     "error_email_password": "من فضلك أدخل البريد الإلكتروني وكلمة المرور.",
     "error_password_length": "يجب أن تكون كلمة المرور 6 أحرف على الأقل."
   },
-"signup": {
-  "left_title": "إنشاء حسابك في شفاء",
-  "left_sub": "مكان واحد آمن لإدارة مواعيدك وملفاتك الطبية والتواصل مع الأطباء.",
-  "point_1": "احجز وأدِر مواعيدك بخطوات بسيطة.",
-  "point_2": "احتفظ بسجلك الطبي في مكان واحد آمن.",
-  "point_3": "تواصل مع أطباء ومراكز طبية موثوقة.",
-
-  "manual_title": "أو سجّل باستخدام البريد الإلكتروني",
-  "choose_type": "اختر نوع الحساب",
-  "role_patient": "مريض",
-  "role_doctor": "طبيب",
-  "role_center": "مركز طبي / إدارة",
-
-  "step_of": "الخطوة {{step}} من {{total}}",
-  "step1_hint": "ابدأ ببيانات الدخول الأساسية.",
-  "step2_hint": "أضف بياناتك الشخصية.",
-  "step3_hint": "أكمل بياناتك المهنية والموافقة.",
-
-  "full_name_label": "الاسم بالكامل",
-  "full_name_placeholder": "اكتب اسمك بالكامل",
-  "email_label": "البريد الإلكتروني",
-  "email_placeholder": "name@example.com",
-  "password_label": "كلمة المرور",
-  "password_placeholder": "أنشئ كلمة مرور قوية",
-
-  "phone_label": "رقم الجوال",
-  "phone_placeholder": "اكتب رقم جوالك",
-  "gender_label": "النوع",
-  "gender_select": "اختر النوع",
-  "gender_female": "أنثى",
-  "gender_male": "ذكر",
-
-  "age_label": "العمر",
-  "age_placeholder": "اكتب عمرك",
-  "country_label": "الدولة",
-
-  "specialization_label": "التخصص",
-  "specialization_placeholder": "مثال: طبيب قلب",
-  "medical_id_label": "رقم المزاولة",
-  "medical_id_placeholder": "رقم رخصة أو بطاقة الطبيب",
-
-  "center_name_label": "اسم المركز",
-  "center_name_placeholder": "اسم المركز الطبي",
-  "license_label": "رقم الترخيص",
-  "license_placeholder": "رقم ترخيص المركز",
-
-  "agree_prefix": "أوافق على",
-  "terms": "الشروط والأحكام",
-  "privacy": "سياسة الخصوصية",
-  "lock_note": "يتم تشفير بياناتك وتخزينها بشكل آمن.",
-
-  "next": "التالي",
-  "back": "رجوع",
-  "previous": "السابق",
-  "create_account": "إنشاء حساب",
-  "creating": "جاري إنشاء الحساب...",
-
-  "have_account": "لديك حساب بالفعل؟",
-  "login": "تسجيل الدخول",
-
-  "patient_note": "كمريض يمكنك متابعة مواعيدك وروشتاتك والرسائل الآمنة مع الأطباء.",
-
-  "success_title": "تم إنشاء الحساب بنجاح",
-  "success_sub": "يمكنك الآن المتابعة إلى لوحة التحكم واستكمال ملفك.",
-  "success_button": "متابعة",
-
-  "social_google": "المتابعة باستخدام Google",
-  "social_google_loading": "جاري الاتصال بـ Google...",
-  "social_apple": "المتابعة باستخدام Apple",
-  "social_apple_loading": "جاري الاتصال بـ Apple...",
-
-  "show_password": "إظهار كلمة المرور",
-  "hide_password": "إخفاء كلمة المرور",
-
-  "full_name_required": "الاسم بالكامل مطلوب.",
-  "email_required": "البريد الإلكتروني مطلوب.",
-  "email_invalid": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا.",
-  "password_required": "كلمة المرور مطلوبة.",
-  "password_min": "كلمة المرور يجب ألا تقل عن 8 أحرف.",
-  "phone_required": "رقم الجوال مطلوب.",
-  "gender_required": "النوع مطلوب.",
-  "age_required": "العمر مطلوب.",
-  "age_invalid": "من فضلك أدخل عمرًا صحيحًا.",
-  "country_required": "الدولة مطلوبة.",
-  "specialization_required": "التخصص مطلوب.",
-  "medical_id_required": "رقم المزاولة مطلوب.",
-  "center_name_required": "اسم المركز مطلوب.",
-  "license_required": "رقم الترخيص مطلوب.",
-  "agree_required": "يجب الموافقة على الشروط وسياسة الخصوصية."
-}
-,
+  "signup": {
+    "left_title": "إنشاء حسابك في شفاء",
+    "left_sub": "مكان واحد آمن لإدارة مواعيدك وملفاتك الطبية والتواصل مع الأطباء.",
+    "point_1": "احجز وأدِر مواعيدك بخطوات بسيطة.",
+    "point_2": "احتفظ بسجلك الطبي في مكان واحد آمن.",
+    "point_3": "تواصل مع أطباء ومراكز طبية موثوقة.",
+    "manual_title": "أو سجّل باستخدام البريد الإلكتروني",
+    "choose_type": "اختر نوع الحساب",
+    "role_patient": "مريض",
+    "role_doctor": "طبيب",
+    "role_center": "مركز طبي / إدارة",
+    "step_of": "الخطوة {{step}} من {{total}}",
+    "step1_hint": "ابدأ ببيانات الدخول الأساسية.",
+    "step2_hint": "أضف بياناتك الشخصية.",
+    "step3_hint": "أكمل بياناتك المهنية والموافقة.",
+    "full_name_label": "الاسم بالكامل",
+    "full_name_placeholder": "اكتب اسمك بالكامل",
+    "email_label": "البريد الإلكتروني",
+    "email_placeholder": "name@example.com",
+    "password_label": "كلمة المرور",
+    "password_placeholder": "أنشئ كلمة مرور قوية",
+    "phone_label": "رقم الجوال",
+    "phone_placeholder": "اكتب رقم جوالك",
+    "gender_label": "النوع",
+    "gender_select": "اختر النوع",
+    "gender_female": "أنثى",
+    "gender_male": "ذكر",
+    "age_label": "العمر",
+    "age_placeholder": "اكتب عمرك",
+    "country_label": "الدولة",
+    "specialization_label": "التخصص",
+    "specialization_placeholder": "مثال: طبيب قلب",
+    "medical_id_label": "رقم المزاولة",
+    "medical_id_placeholder": "رقم رخصة أو بطاقة الطبيب",
+    "center_name_label": "اسم المركز",
+    "center_name_placeholder": "اسم المركز الطبي",
+    "license_label": "رقم الترخيص",
+    "license_placeholder": "رقم ترخيص المركز",
+    "agree_prefix": "أوافق على",
+    "terms": "الشروط والأحكام",
+    "privacy": "سياسة الخصوصية",
+    "lock_note": "يتم تشفير بياناتك وتخزينها بشكل آمن.",
+    "next": "التالي",
+    "back": "رجوع",
+    "previous": "السابق",
+    "create_account": "إنشاء حساب",
+    "creating": "جاري إنشاء الحساب...",
+    "have_account": "لديك حساب بالفعل؟",
+    "login": "تسجيل الدخول",
+    "patient_note": "كمريض يمكنك متابعة مواعيدك وروشتاتك والرسائل الآمنة مع الأطباء.",
+    "success_title": "تم إنشاء الحساب بنجاح",
+    "success_sub": "يمكنك الآن المتابعة إلى لوحة التحكم واستكمال ملفك.",
+    "success_button": "متابعة",
+    "social_google": "المتابعة باستخدام Google",
+    "social_google_loading": "جاري الاتصال بـ Google...",
+    "social_apple": "المتابعة باستخدام Apple",
+    "social_apple_loading": "جاري الاتصال بـ Apple...",
+    "show_password": "إظهار كلمة المرور",
+    "hide_password": "إخفاء كلمة المرور",
+    "full_name_required": "الاسم بالكامل مطلوب.",
+    "email_required": "البريد الإلكتروني مطلوب.",
+    "email_invalid": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا.",
+    "password_required": "كلمة المرور مطلوبة.",
+    "password_min": "كلمة المرور يجب ألا تقل عن 8 أحرف.",
+    "phone_required": "رقم الجوال مطلوب.",
+    "gender_required": "النوع مطلوب.",
+    "age_required": "العمر مطلوب.",
+    "age_invalid": "من فضلك أدخل عمرًا صحيحًا.",
+    "country_required": "الدولة مطلوبة.",
+    "specialization_required": "التخصص مطلوب.",
+    "medical_id_required": "رقم المزاولة مطلوب.",
+    "center_name_required": "اسم المركز مطلوب.",
+    "license_required": "رقم الترخيص مطلوب.",
+    "agree_required": "يجب الموافقة على الشروط وسياسة الخصوصية."
+  },
   "forgot": {
-    "role_patient": "هنرجعك بأمان وهدوء.",
-    "role_doctor": "سنعيد تأمين دخولك لتكمل رعاية مرضاك.",
-    "role_center": "سنعيد تأمين دخول منظمتك.",
-    "role_default": "هيا نؤمّن وصولك مرة أخرى.",
-
-    "not_now": "ليس الآن",
-
-    "title_typing": "هيا نرجع حسابك.",
-    "sub_typing": "إلى أي بريد نرسل رابط الوصول؟",
-    "mini_hint": "فقط اكتب بريدك الإلكتروني وانتظر لحظات، وسنتولى الباقي.",
-
-    "title_sending": "لحظة واحدة…",
-    "sub_sending": "نقوم بتأمين وصولك.",
-
-    "title_done": "أنت بأمان.",
-    "sub_done": "تفقد بريدك الإلكتروني.",
-    "sub3_done": "إذا كان هناك حساب لهذا البريد فسوف يصلك رابط استعادة.",
-
-    "esc_hint": "اضغط Esc للعودة الآن. سنعيدك تلقائيًا بعد نصف دقيقة."
-   },
-
-
-  "topNav": {
-    "home": "الرئيسية",
-    "appointments": "مواعيدي",
-    "prescriptions": "الوصفات الطبية",
-    "screenCall": "المكالمة المرئية",
-    "settings": "الإعدادات",
-    "logout": "تسجيل الخروج"
-  },
-  "hero": {
-    "welcome": "مرحبًا بعودتك، {{name}}",
-    "status": "اليوم: {{status}} · {{alert}}",
-    "encouragement": "أنت على المسار الصحيح. استمر!",
-    "openAssistant": "افتح المساعد الذكي",
-    "continueJourney": "واصل رحلتك",
-    "appointments": "المواعيد",
-    "prescriptionsIcon": "الوصفات الطبية"
-  },
-  "timeline": {
-    "title": "جدول اليوم"
-  },
-  "journey": {
-    "title": "رحلتك",
-    "viewDetails": "عرض",
-    "done": "تم",
-    "askAssistant": "اسأل المساعد"
-  },
-  "messages": {
-    "title": "الرسائل",
-    "clinicAssistant": "مساعد العيادة",
-    "body": "نتائجك الأخيرة جيدة. استمر في اتباع الخطة.",
-    "meta": "منذ يومين"
-  },
-  "footer": {
-    "copyright": "© {{year}} شفاء",
-    "lastUpdate": "آخر تحديث: {{lastUpdate}}"
-  },
-  "about": {
-    "back": "← رجوع",
-    "headerTitle": "عن شفاء",
-    "ourStory": "قصتنا",
-    "mainTitle": "بناء تجربة صحية أكثر هدوءًا وذكاءً.",
-    "text": "شفاء هو طبقة رقمية تربط المرضى والأطباء والعيادات في مكان منظم واحد. نركز على تدفقات بسيطة، تواصل واضح، وأدوات طبيعية في الرعاية اليومية.",
-    "whyShifaa": "لماذا شفاء؟",
-    "clearCommunication": "تواصل واضح",
-    "clearCommunicationText": "قناة واحدة للتحديثات والأسئلة والمتابعات بين المرضى والأطباء.",
-    "organizedJourneys": "رحلات منظمة",
-    "organizedJourneysText": "المواعيد والملفات والملاحظات تبقى متزامنة حتى لا يفقد أحد السياق.",
-    "roomForAI": "مساحة للذكاء الاصطناعي",
-    "roomForAIText": "مساحة لمساعدة آمنة بالذكاء الاصطناعي لدعم القرارات، وليس استبدال البشر.",
-    "timeline": "جدول الرحلة",
-    "mission": "المهمة",
-    "missionText": "جعل كل تفاعل طبي أوضح، أكثر هدوءًا، وأكثر ترابطًا لكل من المرضى والمحترفين.",
-    "vision": "الرؤية",
-    "visionText": "نظام صحي حيث تدعم الأدوات الرقمية والذكاء الاصطناعي الرعاية في الخلفية بهدوء، ليتمكن الناس من التركيز على الإنسانية مع بعضهم البعض.",
-    "quote": "“تخيل زيارة يكون فيها تاريخك وأسئلتك والخطوات التالية متزامنة عند دخولك.”",
-    "dayWithShifaa": "يوم مع شفاء",
-    "patientMoment": "لحظة المريض",
-    "doctorMoment": "لحظة الطبيب",
-    "play": "تشغيل",
-    "pause": "إيقاف",
-    "motionOff": "إيقاف الحركة",
-    "team": "الفريق وراء شفاء"
-  },"patient": {
-  "nav_home": "الرئيسية",
-  "nav_appointments": "مواعيدي",
-  "nav_more": "المزيد",
-  "nav_prescriptions": "الوصفات",
-  "nav_screen_call": "مكالمة شاشة",
-  "nav_settings": "الإعدادات",
-  "nav_logout": "تسجيل الخروج",
-
-  "status_stable": "مستقر",
-  "alert_none": "لا توجد تنبيهات عاجلة",
-  "encouragement": "أداؤك ممتاز، استمر.",
-
-  "hero_welcome": "مرحبًا بعودتك، {{name}}",
-  "hero_today": "اليوم: {{status}} · {{alert}}",
-
-  "event_appointment_type": "موعد",
-  "event_appointment_title": "موعد متابعة عن بُعد مع طبيبك",
-  "event_appointment_tip": "جلسة أونلاين عبر عيادة شفاء",
-
-  "event_medication_type": "دواء",
-  "event_medication_title": "ميتفورمين 500 مجم",
-  "event_medication_tip": "مع الأكل",
-
-  "event_message_type": "رسالة",
-  "event_message_time": "منذ يومين",
-  "event_message_title": "مساعد العيادة",
-  "event_message_tip": "النتائج تبدو جيدة.",
-
-  "today_timeline": "خط اليوم الزمني",
-
-  "btn_open_assistant": "فتح المساعد الذكي",
-  "btn_continue_journey": "استكمال رحلتك",
-
-  "tab_today": "اليوم",
-  "tab_journey": "الرحلة",
-  "tab_messages": "الرسائل",
-
-  "journey_title": "رحلتك",
-  "journey_view": "عرض",
-
-  "journey_stage_past": "الماضي",
-  "journey_past_title": "فحص معملي مكتمل",
-  "journey_past_meta": "منذ شهر",
-  "journey_past_details": "تمت التحاليل بنجاح. استمر في متابعة الأعراض واتباع خطة العلاج.",
-
-  "journey_stage_current": "الحالي",
-  "journey_current_title": "تركيز هذا الأسبوع",
-  "journey_current_meta": "ترطيب · مشي 20 دقيقة · التزام بالأدوية",
-  "journey_current_details": "ركز على العادات اليومية. لو نسيت جرعة، راجع خطتك أو اسأل المساعد.",
-
-  "journey_stage_next": "القادم",
-  "journey_next_title": "موعد قادم",
-  "journey_next_meta": "السبت · 8:30 مساءً",
-  "journey_next_details": "حضّر أسئلتك قبل الزيارة، وحاول الوصول قبل الموعد بـ 10 دقائق.",
-
-  "messages_title": "الرسائل",
-  "messages_clinic_assistant": "مساعد العيادة",
-  "messages_body": "نتائجك الأخيرة تبدو جيدة.",
-  "messages_body_sub": "استمر في اتباع الخطة.",
-  "messages_meta": "منذ يومين",
-
-  "footer_last_update": "آخر تحديث: {{value}}",
-
-  "assistant_title": "المساعد الذكي",
-  "assistant_suggested": "إجراءات مقترحة",
-  "assistant_schedule_followup": "جدولة زيارة متابعة",
-  "assistant_set_reminder": "ضبط تذكير بالدواء",
-  "assistant_ask_results": "اسأل عن نتائجي",
-  "assistant_quick_message": "رسالة سريعة",
-  "assistant_quick_placeholder": "اكتب سؤالك...",
-  "assistant_send": "إرسال",
-
-  "modal_title": "{{stage}}: {{title}}",
-  "modal_fallback": "التفاصيل",
-  "modal_done": "تم",
-  "modal_ask_assistant": "اسأل المساعد",
-  "logout_confirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
-  "logout_confirm_yes": "نعم، تسجيل الخروج",
-  "logout_confirm_no": "إلغاء",
-  "logout_message": "تم تسجيل خروجك بنجاح"
-}
+    "title_email": "نسيت كلمة المرور؟",
+    "subtitle_email": "أدخل بريدك الإلكتروني",
+    "send_code": "إرسال الكود",
+    "sending": "جاري الإرسال...",
+    "invalid_email": "بريد إلكتروني غير صحيح",
+    "code_sent": "تم إرسال الكود إلى بريدك الإلكتروني",
+    "title_code": "تأكيد الكود",
+    "code_label": "كود التحقق",
+    "invalid_code": "يجب إدخال 6 أرقام",
+    "verifying": "جاري التحقق...",
+    "continue": "متابعة",
+    "title_reset": "كلمة مرور جديدة",
+    "new_password": "كلمة المرور الجديدة",
+    "confirm_password": "تأكيد كلمة المرور",
+    "reset_password": "إعادة تعيين كلمة المرور",
+    "saving": "جاري الحفظ...",
+    "password_short": "يجب أن تكون 6 أحرف على الأقل",
+    "passwords_not_match": "كلمات المرور غير متطابقة",
+    "success_title": "تم بنجاح!",
+    "success_sub": "تمت إعادة تعيين كلمة المرور بنجاح"
+  }
 
 
   
@@ -588,7 +511,91 @@
   "form_phone": "رقم الهاتف",
   "form_phone_ph": "مثال: 0100 000 0000",
   "form_email_ph": "البريد الإلكتروني"
-},"doctor": {
+},
+  "patient": {
+    "nav_home": "الرئيسية",
+    "nav_appointments": "مواعيدي",
+    "nav_more": "المزيد",
+    "nav_prescriptions": "الوصفات الطبية",
+    "nav_screen_call": "مكالمة فيديو",
+    "nav_settings": "الإعدادات",
+    "nav_logout": "تسجيل الخروج",
+
+    "status_stable": "مستقر",
+    "alert_none": "لا توجد تنبيهات عاجلة",
+    "encouragement": "أنتِ ماشية كويس. كمّلي كده.",
+
+    "hero_welcome": "مرحبًا بعودتك، {{name}}",
+    "hero_today": "اليوم: {{status}} · {{alert}}",
+
+    "event_appointment_type": "موعد",
+    "event_appointment_title": "متابعة عن بُعد مع طبيبك",
+    "event_appointment_tip": "جلسة أونلاين عبر شفاء كلينك",
+
+    "event_medication_type": "دواء",
+    "event_medication_title": "ميتفورمين 500 مجم",
+    "event_medication_tip": "مع الأكل",
+
+    "event_message_type": "رسالة",
+    "event_message_time": "منذ يومين",
+    "event_message_title": "مساعد العيادة",
+    "event_message_tip": "النتائج تبدو جيدة.",
+
+    "today_timeline": "الخط الزمني لليوم",
+
+    "btn_open_assistant": "افتحي المساعد الذكي",
+    "btn_continue_journey": "واصلي رحلتك",
+
+    "tab_today": "اليوم",
+    "tab_journey": "الرحلة",
+    "tab_messages": "الرسائل",
+
+    "journey_title": "رحلتك",
+    "journey_view": "عرض",
+
+    "journey_stage_past": "السابق",
+    "journey_past_title": "اكتمل فحص المعمل",
+    "journey_past_meta": "منذ شهر",
+    "journey_past_details": "تمت التحاليل بنجاح. استمري في متابعة الأعراض واتباع خطة الرعاية.",
+
+    "journey_stage_current": "الحالي",
+    "journey_current_title": "تركيز هذا الأسبوع",
+    "journey_current_meta": "شرب الماء · مشي 20 دقيقة · الالتزام",
+    "journey_current_details": "ركزي على العادات اليومية. إذا نسيتِ جرعة، راجعي الخطة أو اسألي المساعد.",
+
+    "journey_stage_next": "القادم",
+    "journey_next_title": "الموعد القادم",
+    "journey_next_meta": "السبت · 8:30 مساءً",
+    "journey_next_details": "حضّري أحدث أسئلتك. حاولي الوصول قبلها بـ 10 دقائق.",
+
+    "messages_title": "الرسائل",
+    "messages_clinic_assistant": "مساعد العيادة",
+    "messages_body": "آخر النتائج تبدو جيدة.",
+    "messages_body_sub": "استمري في اتباع الخطة.",
+    "messages_meta": "منذ يومين",
+
+    "footer_last_update": "آخر تحديث: {{value}}",
+
+    "assistant_title": "المساعد الذكي",
+    "assistant_suggested": "اقتراحات سريعة",
+    "assistant_schedule_followup": "حجز متابعة",
+    "assistant_set_reminder": "تعيين تذكير للدواء",
+    "assistant_ask_results": "اسألي عن النتائج",
+    "assistant_quick_message": "رسالة سريعة",
+    "assistant_quick_placeholder": "اكتبي سؤالك...",
+    "assistant_send": "إرسال",
+
+    "modal_title": "{{stage}}: {{title}}",
+    "modal_fallback": "التفاصيل",
+    "modal_done": "تم",
+    "modal_ask_assistant": "اسألي المساعد",
+    "logout_confirm": "هل أنتِ متأكدة أنكِ تريدين تسجيل الخروج؟",
+    "logout_confirm_yes": "نعم، تسجيل الخروج",
+    "logout_confirm_no": "إلغاء",
+    "logout_message": "تم تسجيل الخروج بنجاح"
+  }
+,
+"doctor": {
   "hello": "مساء الخير يا {{name}}",
   "subtitle_waiting": "مرضاك في انتظارك. ",
   "status_on_duty": "متواجد الآن",
@@ -1193,7 +1200,173 @@
   "admin_simulation_btn": "محاكاة حمل طارئ",
   "admin_simulation_after": "بعد المحاكاة سيتم إنشاء تقرير مختصر لأداء النظام ونقاط الضعف."
 },
+
+  "allservices": {
+    "all": "الكل",
+    "errorFetching": "عذراً، حدث خطأ أثناء جلب البيانات. يرجى المحاولة لاحقاً.",
+    "backToHome": "العودة للرئيسية",
+    "badgeGlow": "رحلة شفائك تبدأ هنا",
+    "mainTitle": "الخدمات",
+    "gradientTitle": "الطبية",
+    "subTitle": "نرشح لك أفضل الخدمات والرعاية بناءً على أعلى معايير الجودة العالمية.",
+    "searchPlaceholder": "ابحث عن خدمة أو طبيب...",
+    "retry": "إعادة المحاولة",
+    "loading": "جاري تحميل الخدمات الطبية...",
+    "bookNow": "احجز الآن",
+    "notFoundTitle": "لم نجد ما تبحث عنه...",
+    "notFoundDesc": "حاول استخدام كلمات أخرى أو تصفح الأقسام المختلفة.",
+    "currency": "ج",
+    "mins": "دقيقة",
+    
+    "cat_heart": "قلب",
+    "cat_dental": "أسنان",
+    "cat_eyes": "عيون",
+    "cat_labs": "تحاليل",
+    "cat_derma": "جلدية",
+    
+    "srv_heart_check": "فحص القلب الشامل",
+    "srv_teeth_whitening": "تبييض وتلميع الأسنان",
+    "srv_eye_check": "فحص نظر بالكمبيوتر",
+    "srv_full_labs": "باقة التحاليل الشاملة",
+    "srv_skin_care": "جلسة نضارة للبشرة",
+    "srv_ecg": "رسم قلب بالمجهود",
+    
+    "dr_ahmed": "د. أحمد محمد",
+    "dr_mohamed": "د. محمد سالم",
+    "dr_sara": "د. سارة حسن",
+    "dr_fatima": "د. فاطمة علي",
+    "dr_nada": "د. ندى كمال"
+  }
+
+,
+
+
+  "all": "الكل",
+  "errorFetching": "حدث خطأ أثناء تحميل بيانات الأطباء.",
+  "backToHome": "العودة للرئيسية",
+  "modernElite": "نخبة الطب الحديث",
+  "ourDoctors": "أطباؤنا",
+  "outstanding": "المتميزون",
+  "subtitle": "اختر طبيبك بثقة. نقدم لك أمهر الاستشاريين والأخصائيين لرعايتك.",
+  "searchPlaceholder": "ابحث باسم الطبيب أو التخصص...",
+  "retry": "إعادة المحاولة",
+  "loading": "جاري تحميل قائمة الأطباء...",
+  "quote": "\"صحتك هي أولويتي القصوى\"",
+  "viewProfile": "عرض الملف",
+  "bookAppointment": "احجز موعد",
+  "notFoundTitle": "لم نجد الطبيب المطلوب...",
+  "notFoundDesc": "تأكد من كتابة الاسم صحيحاً أو جرب قسماً آخر.",
   
+  "dr_ahmed": "د. أحمد محمد",
+  "dr_fatima": "د. فاطمة علي",
+  "dr_mohamed": "د. محمد سالم",
+  "dr_sara": "د. سارة حسن",
+  "dr_nada": "د. ندى كمال",
+  "dr_khaled": "د. خالد عبدالله",
+  
+  "spec_heart": "استشاري جراحة القلب",
+  "spec_internal": "استشاري الأمراض الباطنية",
+  "spec_dental": "أخصائي طب وجراحة الأسنان",
+  "spec_eyes": "استشاري طب العيون",
+  "spec_derma": "أخصائي الأمراض الجلدية",
+  "spec_pediatric": "استشاري طب الأطفال",
+  
+  "cat_heart": "قلب",
+  "cat_internal": "باطنة",
+  "cat_dental": "أسنان",
+  "cat_eyes": "عيون",
+  "cat_derma": "جلدية",
+  "cat_pediatric": "أطفال",
+  
+  "exp_15": "15 سنة",
+  "exp_12": "12 سنة",
+  "exp_8": "8 سنوات",
+  "exp_20": "20 سنة",
+  "exp_10": "10 سنوات",
+  "exp_14": "14 سنة",
+  
+  "avail_tmrw_10": "متاح: غداً 10:00 ص",
+  "avail_today_5": "متاح: اليوم 05:00 م",
+  "avail_mon_12": "متاح: الإثنين 12:00 م",
+  "avail_tmrw_2": "متاح: غداً 02:00 م",
+  "avail_today_7": "متاح: اليوم 07:00 م",
+  "avail_tmrw_11": "متاح: غداً 11:00 ص"
+,
+  
+  
+  "booking": {
+    "today": "اليوم",
+    "defaultTime": "10:00 ص",
+    "dr_ahmed_booking": "د. أحمد محمد",
+    "spec_heart_remote": "استشاري جراحة القلب (عن بُعد)",
+    "err_card_number": "يجب إدخال 16 رقماً",
+    "err_card_name": "يرجى كتابة الاسم بشكل صحيح",
+    "err_card_expiry": "تاريخ غير مكتمل",
+    "err_card_cvv": "مطلوب 3 أرقام",
+    "err_wallet_number": "رقم المحفظة غير صحيح",
+    "editAppointment": "تعديل الموعد",
+    "confirmOnlineBooking": "تأكيد الحجز الإلكتروني",
+    "encryptionNotice": "جميع بياناتك مشفرة. سيتم إرسال رابط الجلسة بعد إتمام الدفع.",
+    "creditCard": "بطاقة ائتمان",
+    "eWallet": "محفظة إلكترونية",
+    "fullNamePlaceholder": "الاسم بالكامل",
+    "cardholder": "حامل البطاقة",
+    "expiryDate": "تاريخ الانتهاء",
+    "securedBy": "مؤمن بواسطة تشفير 256-bit من شفاء.",
+    "cardNumber": "رقم البطاقة",
+    "nameOnCard": "الاسم على البطاقة",
+    "cvvCode": "رمز CVV",
+    "walletNotice": "يرجى إدخال رقم المحفظة. ستصلك رسالة على هاتفك لتأكيد خصم المبلغ.",
+    "walletPhoneLinked": "رقم الهاتف المرتبط بالمحفظة",
+    "sessionSummary": "ملخص الجلسة",
+    "remoteVideoConsultation": "استشارة فيديو عن بُعد",
+    "dateLabel": "الموعد",
+    "timeLabel": "الساعة",
+    "consultationFees": "رسوم الاستشارة",
+    "currency": "ج.م",
+    "networkFees": "رسوم الشبكة والأمان",
+    "total": "الإجمالي",
+    "protection256": "حماية 256-bit",
+    "secureGateway": "بوابة دفع آمنة",
+    "confirmPayment": "تأكيد الدفع وإتمام الحجز",
+    "sessionConfirmed": "تم تأكيد جلستك!"
+  }
+
+,
+
+  "doctorDetails": {
+    "backToDoctors": "العودة للأطباء",
+    "verifiedDoctor": "طبيب موثق",
+    "rating": "التقييم",
+    "experienceLabel": "خبرة",
+    "patientsLabel": "مريض",
+    "aboutTitle": "نبذة عن الطبيب",
+    "servicesTitle": "الخدمات التي يقدمها",
+    "bookNow": "احجز موعدك الآن",
+    "currency": "ج.م",
+    "selectPrompt": "الرجاء اختيار الموعد المناسب لإتمام الحجز.",
+    "yourAppointment": "موعدك:",
+    "at": "الساعة",
+    "confirmAndPay": "تأكيد الموعد والدفع",
+    "chooseTime": "اختر موعداً",
+    "doctorName": "د. أحمد محمد",
+    "doctorSpecialty": "استشاري جراحة القلب والأوعية الدموية",
+    "quote": "رعايتك تبدأ من التشخيص الدقيق والاستماع الجيد.",
+    "bio": "حاصل على زمالة الكلية الملكية للجراحين بلندن. متخصص في جراحات القلب المفتوح، القسطرة العلاجية، ومتابعة حالات ضغط الدم المتقدمة.",
+    "experience": "+15 سنة",
+    "services": [
+      "رسم قلب بالمجهود",
+      "قسطرة قلبية",
+      "إيكو 4D",
+      "علاج ارتفاع ضغط الدم"
+    ],
+    "days": {
+      "today": "اليوم",
+      "tomorrow": "غداً",
+      "thursday": "الخميس"
+    }
+  }
+,
   "role_patient": "المريض",
   "role_doctor": "الطبيب",
   "role_admin": "الأدمن",
@@ -1202,7 +1375,6 @@
   "page_title": "إعدادات النظام",
   "back": "رجوع"
 }
-
 
 
 

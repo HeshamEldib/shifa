@@ -1,69 +1,118 @@
 
 {
-  "navbar": {
-    "home": "Accueil",
-    "about": "À propos",
-    "contact": "Contact",
-    "login": "Connexion",
-    "signup": "Créer un compte"
-  },
-  
   "pages": {
     "home": "Accueil",
     "login": "Connexion",
     "signup": "Créer un compte",
-    "contact": "Contact",
+    "contact": "Contactez-nous",
     "about": "À propos",
     "forgot": "Mot de passe oublié",
-
-    "patient_dashboard": "Accueil patient",
+    "patient_dashboard": "Tableau de bord patient",
     "appointments": "Rendez-vous",
     "prescriptions": "Ordonnances",
-
     "doctor_dashboard": "Tableau de bord médecin",
     "patient_records": "Dossiers patients",
-    "silent_diagnosis": "Diagnostic silencieux",
+    "silent_diagnosis": "Diagnostic intelligent",
     "smart_prescription": "Ordonnance intelligente",
-
     "admin_dashboard": "Tableau de bord admin",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+        "allServicesTitle": "Services médicaux",
+            "doctorsTitle": "Médecins",
+                "bookingTitle": "Finaliser la réservation",
+                    "doctorDetailsTitle": "Détails du médecin"
+
+
+
+
+  },
+  
+  "header": {
+    "brandName": "Shifaa",
+    "home": "Accueil",
+    "services": "Services",
+    "doctors": "Médecins",
+    "about": "À propos",
+    "contact": "Contactez-nous",
+    "login": "Connexion",
+    "signup": "S'inscrire"
   }
 ,
-
-
-  "home": {
-    "badge": "👋 Bienvenue dans la santé du futur",
-    "title_line1": "Votre santé,",
-    "title_line2": "à un clic.",
-    "subtitle": "Découvrez la nouvelle génération de soins médicaux. Consultez les meilleurs médecins, réservez vos rendez‑vous et recevez vos ordonnances – sans quitter votre domicile.",
-    "cta_get_started": "Commencer",
-    "cta_learn_more": "En savoir plus",
-    "badge_support": "Support 24h/24 et 7j/7",
-    "badge_doctors": "Médecins certifiés",
-    "badge_secure": "Sécurisé et confidentiel",
-    "card_consultation_title": "Consultation en ligne",
-    "card_consultation_text": "Connectez‑vous instantanément avec des spécialistes en visioconférence, à tout moment et où que vous soyez.",
-    "card_booking_title": "Prise de rendez‑vous facile",
-    "card_booking_text": "Planifiez vos rendez‑vous en quelques secondes. Plus de files d’attente ni de complications.",
-    "card_prescriptions_title": "Ordonnances intelligentes",
-    "card_prescriptions_text": "Ordonnances numériques envoyées directement sur votre téléphone ou à la pharmacie la plus proche.",
-    "scroll": "Faire défiler",
-    "footer_desc": "Plateforme de santé numérique intelligente qui vous connecte à des médecins de confiance, à tout moment et partout.",
-    "footer_quick_links": "Liens rapides",
-    "footer_services": "Services",
-    "footer_contact_title": "Contact",
-    "footer_contact_email": "E‑mail : support@shifaa.com",
-    "footer_contact_phone": "Téléphone : +20 100 000 0000",
-    "footer_contact_location": "Le Caire, Égypte",
-    "footer_stay_updated": "Restez informé",
-    "footer_newsletter_text": "Recevez des conseils santé et des mises à jour produit directement dans votre boîte mail.",
-    "footer_newsletter_placeholder": "Saisissez votre e‑mail",
-    "footer_newsletter_button": "S’abonner",
-    "footer_follow_us": "Suivez‑nous",
-    "footer_copy": "© 2026 Shifaa. Tous droits réservés.",
-    "footer_privacy": "Confidentialité",
-    "footer_terms": "Conditions"
+  "hero": {
+    "title": "Vos soins de santé <br/> commencent ici",
+    "desc": "La plateforme Shifaa vous connecte aux meilleurs médecins facilement et en toute sécurité.",
+    "startBtn": "Commencer",
+    "browseBtn": "Parcourir les services"
   },
+  "features": {
+    "f1_badge": "Consultation médicale",
+    "f1_title": "Consultations médicales instantanées",
+    "f1_desc": "Obtenez une consultation médicale en ligne rapidement et en toute sécurité.",
+    "f2_badge": "Dossiers médicaux",
+    "f2_title": "Gérez vos dossiers médicaux facilement",
+    "f2_desc": "Conservez votre historique médical en un seul endroit avec protection totale."
+  },
+  "services": {
+    "title": "Services médicaux",
+    "subtitle": "Choisissez parmi les meilleurs services",
+    "viewAll": "Voir tous les services",
+    "list": [
+      { "name": "Consultation générale", "doctor": "Dr. Ahmed Ali", "price": "25€" },
+      { "name": "Pédiatrie", "doctor": "Dr. Sarah Mohamed", "price": "30€" },
+      { "name": "Médecine interne", "doctor": "Dr. Mohamed Hassan", "price": "35€" },
+      { "name": "Dermatologie", "doctor": "Dr. Mona Khaled", "price": "40€" },
+      { "name": "Orthopédie", "doctor": "Dr. Khaled Mustafa", "price": "45€" },
+      { "name": "Dentisterie", "doctor": "Dr. Ali Hussam", "price": "50€" }
+    ]
+  },
+  "doctors": {
+    "title": "Meilleurs médecins",
+    "subtitle": "Équipe d'élite de médecins spécialistes",
+    "viewAll": "Voir tous les médecins",
+    "list": [
+      { "name": "Dr. Ahmed Ali", "specialty": "Médecin généraliste" },
+      { "name": "Dr. Sarah Mohamed", "specialty": "Pédiatrie" },
+      { "name": "Dr. Mohamed Hassan", "specialty": "Médecine interne" },
+      { "name": "Dr. Mona Khaled", "specialty": "Dermatologie" }
+    ]
+  },
+  "testimonials": {
+    "title": "Avis des patients",
+    "subtitle": "Expériences réelles de nos utilisateurs",
+    "list": [
+      {
+        "name": "Mahmoud Ahmed",
+        "review": "Excellente expérience, le docteur était très professionnel.",
+        "role": "Patient"
+      },
+      {
+        "name": "Sarah Ali",
+        "review": "Plateforme très facile qui m'a fait gagner beaucoup de temps.",
+        "role": "Patiente"
+      },
+      {
+        "name": "Ahmed Youssef",
+        "review": "Excellent service, je le recommande à tous.",
+        "role": "Patient"
+      }
+    ]
+  },
+  "footer": {
+    "brand": "Shifaa",
+    "desc": "Plateforme médicale intelligente connectant patients et médecins facilement.",
+    "quickLinks": "Liens rapides",
+    "about": "À propos",
+    "contact": "Contact",
+    "services": "Services",
+    "contactTitle": "Contact",
+    "location": "Le Caire - Égypte",
+    "newsletterTitle": "S'abonner à la newsletter",
+    "emailPlaceholder": "Entrez votre email",
+    "subscribe": "S'abonner",
+    "copyright": "© {{year}} Shifaa",
+    "privacy": "Confidentialité",
+    "terms": "Conditions"
+  
+},
 
   "contact": {
     "title": "Contact",
@@ -192,21 +241,34 @@
 }
 ,
 
-  "forgot": {
-    "role_patient": "On va vous reconnecter — calmement et en toute sécurité.",
-    "role_doctor": "Nous sécurisons votre accès pour que vous puissiez reprendre vos soins.",
-    "role_center": "Nous allons sécuriser l’accès de votre organisation.",
-    "role_default": "Sécurisons votre accès.",
-    "not_now": "Plus tard",
-    "title_typing": "On va vous récupérer.",
-    "sub_typing": "Où devons‑nous envoyer l’accès ?",
-    "mini_hint": "Tapez simplement votre e‑mail puis faites une pause. Nous nous occupons du reste.",
-    "title_sending": "Un instant…",
-    "sub_sending": "Sécurisation de votre accès.",
-    "title_done": "C’est bon.",
-    "sub_done": "Vérifiez votre boîte mail.",
-    "esc_hint": "Appuyez sur Échap pour revenir maintenant. Nous vous ramènerons automatiquement dans 0,5 minute."
-  },
+  "forgot":
+{
+  "title_email": "Mot de passe oublié ?",
+  "subtitle_email": "Entrez votre adresse e-mail",
+  "send_code": "Envoyer le code",
+  "sending": "Envoi en cours...",
+  "invalid_email": "Adresse e-mail invalide",
+  "code_sent": "Code envoyé à votre email",
+  
+  "title_code": "Vérifier le code",
+  "code_label": "Code de vérification",
+  "invalid_code": "6 chiffres requis",
+  "verifying": "Vérification...",
+  "continue": "Continuer",
+  
+  "title_reset": "Nouveau mot de passe",
+  "new_password": "Nouveau mot de passe",
+  "confirm_password": "Confirmer le mot de passe",
+  "reset_password": "Réinitialiser le mot de passe",
+  "saving": "Enregistrement...",
+  "password_short": "6 caractères minimum",
+  "passwords_not_match": "Les mots de passe ne correspondent pas",
+  
+  "success_title": "Succès !",
+  "success_sub": "Mot de passe réinitialisé avec succès"
+}
+
+,
 "patient": {
   "nav_home": "Accueil",
   "nav_appointments": "Mes rendez‑vous",
@@ -1207,6 +1269,173 @@
   "admin_simulation_btn": "Simuler une charge d’urgence",
   "admin_simulation_after": "Après la simulation, un court rapport résumera les performances et goulots d’étranglement du système."
 },
+ 
+
+  "allservices": {
+    "all": "Tous",
+    "errorFetching": "Désolé, une erreur s'est produite lors de la récupération des données. Veuillez réessayer plus tard.",
+    "backToHome": "Retour à l'Accueil",
+    "badgeGlow": "Votre parcours de guérison commence ici",
+    "mainTitle": "Services",
+    "gradientTitle": "Médicaux",
+    "subTitle": "Nous recommandons les meilleurs services et soins basés sur les normes de qualité mondiales les plus élevées.",
+    "searchPlaceholder": "Rechercher un service ou un médecin...",
+    "retry": "Réessayer",
+    "loading": "Chargement des services médicaux...",
+    "bookNow": "Réserver",
+    "notFoundTitle": "Nous n'avons pas trouvé ce que vous cherchez...",
+    "notFoundDesc": "Essayez d'utiliser des mots différents ou parcourez d'autres catégories.",
+    "currency": "EGP",
+    "mins": "min",
+    
+    "cat_heart": "Cardiologie",
+    "cat_dental": "Dentaire",
+    "cat_eyes": "Yeux",
+    "cat_labs": "Laboratoires",
+    "cat_derma": "Dermatologie",
+    
+    "srv_heart_check": "Bilan Cardiaque Complet",
+    "srv_teeth_whitening": "Blanchiment et Polissage Dentaire",
+    "srv_eye_check": "Examen de la Vue Informatisé",
+    "srv_full_labs": "Forfait Laboratoire Complet",
+    "srv_skin_care": "Séance d'Éclat de la Peau",
+    "srv_ecg": "ECG d'Effort",
+    
+    "dr_ahmed": "Dr Ahmed Mohamed",
+    "dr_mohamed": "Dr Mohamed Salem",
+    "dr_sara": "Dr Sara Hassan",
+    "dr_fatima": "Dr Fatima Ali",
+    "dr_nada": "Dr Nada Kamal"
+  }
+
+,
+  "all": "Tous",
+  "errorFetching": "Une erreur s'est produite lors du chargement des données des médecins.",
+  "backToHome": "Retour à l'Accueil",
+  "modernElite": "Élite de la Médecine Moderne",
+  "ourDoctors": "Nos",
+  "outstanding": "Médecins Exceptionnels",
+  "subtitle": "Choisissez votre médecin en toute confiance. Nous vous fournissons les consultants et spécialistes les plus qualifiés pour vos soins.",
+  "searchPlaceholder": "Recherche par nom de médecin ou spécialité...",
+  "retry": "Réessayer",
+  "loading": "Chargement de la liste des médecins...",
+  "quote": "\"Votre santé est ma priorité absolue\"",
+  "viewProfile": "Voir le Profil",
+  "bookAppointment": "Prendre Rendez-vous",
+  "notFoundTitle": "Médecin introuvable...",
+  "notFoundDesc": "Vérifiez l'orthographe du nom ou essayez un autre département.",
+  
+  "dr_ahmed": "Dr Ahmed Mohamed",
+  "dr_fatima": "Dr Fatima Ali",
+  "dr_mohamed": "Dr Mohamed Salem",
+  "dr_sara": "Dr Sara Hassan",
+  "dr_nada": "Dr Nada Kamal",
+  "dr_khaled": "Dr Khaled Abdullah",
+  
+  "spec_heart": "Consultant en Cardiologie",
+  "spec_internal": "Consultant en Médecine Interne",
+  "spec_dental": "Spécialiste Dentaire",
+  "spec_eyes": "Consultant en Ophtalmologie",
+  "spec_derma": "Spécialiste en Dermatologie",
+  "spec_pediatric": "Consultant en Pédiatrie",
+  
+  "cat_heart": "Cardiologie",
+  "cat_internal": "Médecine Interne",
+  "cat_dental": "Dentaire",
+  "cat_eyes": "Ophtalmologie",
+  "cat_derma": "Dermatologie",
+  "cat_pediatric": "Pédiatrie",
+  
+  "exp_15": "15 Ans",
+  "exp_12": "12 Ans",
+  "exp_8": "8 Ans",
+  "exp_20": "20 Ans",
+  "exp_10": "10 Ans",
+  "exp_14": "14 Ans",
+  
+  "avail_tmrw_10": "Dispo: Demain 10h00",
+  "avail_today_5": "Dispo: Auj. 17h00",
+  "avail_mon_12": "Dispo: Lun. 12h00",
+  "avail_tmrw_2": "Dispo: Demain 14h00",
+  "avail_today_7": "Dispo: Auj. 19h00",
+  "avail_tmrw_11": "Dispo: Demain 11h00"
+
+,
+
+
+  "booking": {
+    "today": "Aujourd'hui",
+    "defaultTime": "10h00",
+    "dr_ahmed_booking": "Dr Ahmed Mohamed",
+    "spec_heart_remote": "Consultant en Cardiologie (À distance)",
+    "err_card_number": "Doit comporter 16 chiffres",
+    "err_card_name": "Veuillez entrer un nom valide",
+    "err_card_expiry": "Date incomplète",
+    "err_card_cvv": "3 chiffres requis",
+    "err_wallet_number": "Numéro de portefeuille invalide",
+    "editAppointment": "Modifier le Rendez-vous",
+    "confirmOnlineBooking": "Confirmer la Réservation en Ligne",
+    "encryptionNotice": "Toutes vos données sont cryptées. Le lien de la session sera envoyé après le paiement.",
+    "creditCard": "Carte de Crédit",
+    "eWallet": "Portefeuille Électronique",
+    "fullNamePlaceholder": "Nom Complet",
+    "cardholder": "Titulaire de la Carte",
+    "expiryDate": "Date d'Expiration",
+    "securedBy": "Sécurisé par cryptage 256 bits de Shifaa.",
+    "cardNumber": "Numéro de Carte",
+    "nameOnCard": "Nom sur la Carte",
+    "cvvCode": "Code CVV",
+    "walletNotice": "Veuillez entrer le numéro de votre portefeuille. Vous recevrez un SMS pour confirmer.",
+    "walletPhoneLinked": "Numéro de Téléphone du Portefeuille",
+    "sessionSummary": "Résumé de la Session",
+    "remoteVideoConsultation": "Consultation Vidéo à Distance",
+    "dateLabel": "Date",
+    "timeLabel": "Heure",
+    "consultationFees": "Frais de Consultation",
+    "currency": "EGP",
+    "networkFees": "Frais de Réseau et de Sécurité",
+    "total": "Total",
+    "protection256": "Protection 256 bits",
+    "secureGateway": "Passerelle de Paiement Sécurisée",
+    "confirmPayment": "Confirmer le Paiement et Réserver",
+    "sessionConfirmed": "Votre session est confirmée !"
+  }
+
+,
+
+  "doctorDetails": {
+    "backToDoctors": "Retour aux médecins",
+    "verifiedDoctor": "Médecin vérifié",
+    "rating": "Évaluation",
+    "experienceLabel": "Expérience",
+    "patientsLabel": "Patients",
+    "aboutTitle": "À propos du médecin",
+    "servicesTitle": "Services proposés",
+    "bookNow": "Réservez votre rendez-vous",
+    "currency": "EGP",
+    "selectPrompt": "Veuillez choisir un créneau pour terminer la réservation.",
+    "yourAppointment": "Votre rendez-vous :",
+    "at": "à",
+    "confirmAndPay": "Confirmer le rendez-vous et payer",
+    "chooseTime": "Choisir une heure",
+    "doctorName": "Dr Ahmed Mohamed",
+    "doctorSpecialty": "Chirurgien cardiaque et vasculaire consultant",
+    "quote": "Vos soins commencent par un diagnostic précis et une écoute attentive.",
+    "bio": "Titulaire d’une bourse du Royal College of Surgeons de Londres. Spécialisé en chirurgie à cœur ouvert, en cathétérisme thérapeutique et en prise en charge avancée de l’hypertension.",
+    "experience": "+15 ans",
+    "services": [
+      "ECG d’effort",
+      "Cathétérisme cardiaque",
+      "Écho 4D",
+      "Traitement de l’hypertension"
+    ],
+    "days": {
+      "today": "Aujourd’hui",
+      "tomorrow": "Demain",
+      "thursday": "Jeudi"
+    }
+  }
+,
   "role_patient": "patient",
   "role_doctor": "médecin",
   "role_admin": "administrateur",

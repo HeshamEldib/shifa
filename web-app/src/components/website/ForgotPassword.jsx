@@ -15,7 +15,6 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
   const isArabic = i18n.resolvedLanguage === "ar";
   const eyeSide = isArabic ? "ne-eye-left" : "ne-eye-right";
 
-  // States
   const [phase, setPhase] = useState("email");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -26,10 +25,8 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
   const [loading, setLoading] = useState(false);
   const [particles, setParticles] = useState([]);
   const [magicTransition, setMagicTransition] = useState(false);
-  // const [message, setMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
-  // const [step, setStep] = useState(1);
 
   const inputRef = useRef(null);
 
@@ -37,77 +34,74 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
     switch (phase) {
       case "email": return isValidEmail(email);
       case "otp": return otp.length === 6;
-      case "reset": 
-        return password.length >= 6 && 
-              confirmPassword.length >= 6 && 
+      case "reset":
+        return password.length >= 6 &&
+              confirmPassword.length >= 6 &&
               password === confirmPassword;
       default: return false;
     }
   }, [phase, email, otp, password, confirmPassword]);
 
-  const getEmailError = useCallback(() => 
-    phase === "email" && !isValidEmail(email) ? 
-      t("forgot.invalid_email") || "Invalid email" : "", 
+  const getEmailError = useCallback(() =>
+    phase === "email" && !isValidEmail(email) ?
+      t("forgot.invalid_email") || "Invalid email" : "",
     [phase, email, t]
   );
 
-  const getOtpError = useCallback(() => 
-    phase === "otp" && otp.length !== 6 ? 
-      t("forgot.invalid_otp") || "6 digits required" : "", 
+  const getOtpError = useCallback(() =>
+    phase === "otp" && otp.length !== 6 ?
+      t("forgot.invalid_otp") || "6 digits required" : "",
     [phase, otp, t]
   );
 
   const getPasswordError = useCallback(() => {
     if (phase !== "reset") return "";
     if (!password || !confirmPassword) return "";
-    if (password.length < 6) 
+    if (password.length < 6)
       return t("forgot.password_short") || "6+ characters";
-    if (password !== confirmPassword) 
+    if (password !== confirmPassword)
       return t("forgot.passwords_not_match") || "Passwords don't match";
     return "";
   }, [phase, password, confirmPassword, t]);
 
-  // دالة إرسال الإيميل
-    const handleSendEmail = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
-        
-        try {
-            const res = await forgotPassword(email);
-            setSuccessMessage(res.message); // "تم إرسال كود التحقق..."
-            // setStep(2); // الانتقال للخطوة الثانية
-            setPhase("otp");
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const handleSendEmail = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    // دالة إعادة تعيين كلمة المرور
-    const handleResetPassword = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
-        
-        try {
-            const res = await resetPassword(email, otp, password);
-            setSuccessMessage(res.message); // "تم تغيير كلمة المرور بنجاح"
-            
-            // تحويل المستخدم لصفحة تسجيل الدخول بعد ثانيتين
-            setTimeout(() => {
-                navigate('/login');
-            }, 2000);
-            
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+    try {
+      const res = await forgotPassword(email);
+      setSuccessMessage(res.message);
+      setPhase("otp");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await resetPassword(email, otp, password);
+      setSuccessMessage(res.message);
+
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => { inputRef.current?.focus(); }, [phase]);
+
   useEffect(() => {
     if (phase === "success") {
       setParticles(Array.from({ length: 25 }, (_, i) => ({
@@ -120,21 +114,9 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
     }
   }, [phase]);
 
-  // useEffect(() => {
-  //   if (magicTransition) {
-  //     const timer = setTimeout(() => {
-  //       navigate(`/login?email=${enotpURIComponent(email)}`);
-  //     }, 1400);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [magicTransition, email, navigate]);
-
   return (
     <main className={`ne-page ${isLoaded ? "fade-in-up" : ""} ${isArabic ? 'rtl' : 'ltr'}`}>
       <div className="ne-bg" />
-      <button className="ne-escape" onClick={() => navigate(-1)}>
-        {isArabic ? "← رجوع" : "← Back"}
-      </button>
 
       <section className="ne-center">
         {phase === "email" && (
@@ -144,14 +126,14 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
             {error && <div className="ne-message">{error}</div>}
             <form className="ne-form" onSubmit={handleSendEmail}>
               <div className={`ne-field ${getEmailError() ? "has-error" : ""}`}>
-                <input 
-                  ref={inputRef} 
-                  className="ne-input" 
-                  type="email" 
+                <input
+                  ref={inputRef}
+                  className="ne-input"
+                  type="email"
                   value={email}
-                  onChange={e => setEmail(e.target.value)} 
+                  onChange={e => setEmail(e.target.value)}
                   placeholder="your@gmail.com"
-                  autoComplete="email" 
+                  autoComplete="email"
                 />
                 {getEmailError() && <small className="ne-error">{getEmailError()}</small>}
               </div>
@@ -170,19 +152,22 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
             <div className="ne-form">
               <div className={`ne-field ${getOtpError() ? "has-error" : ""}`}>
                 <label>{t("forgot.otp_label") || "Verification OTP"}</label>
-                <input 
-                  ref={inputRef} 
-                  className="ne-input ne-otp" 
-                  type="text" 
+                <input
+                  ref={inputRef}
+                  className="ne-input ne-otp"
+                  type="text"
                   value={otp}
-                  onChange={e => setOtp(e.target.value.replace(/\D/g, ''))} 
+                  onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
                   maxLength={6}
-                  placeholder="000000" 
+                  placeholder="000000"
                 />
                 {getOtpError() && <small className="ne-error">{getOtpError()}</small>}
               </div>
-              <button className={`ne-btn ${canSubmit() && !loading ? "ready" : ""}`} disabled={!canSubmit() || loading}
-              onClick={() => setPhase("reset")}>
+              <button
+                className={`ne-btn ${canSubmit() && !loading ? "ready" : ""}`}
+                disabled={!canSubmit() || loading}
+                onClick={() => setPhase("reset")}
+              >
                 {loading ? t("forgot.verifying") || "Verifying..." : t("forgot.continue") || "Continue"}
               </button>
             </div>
@@ -195,21 +180,20 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
             <div className="ne-title">{t("forgot.title_reset") || "New Password"}</div>
             {successMessage && <div className="ne-message">{successMessage}</div>}
             <form className="ne-form" onSubmit={handleResetPassword}>
-              
-              {/* ✅ Password Field */}
+
               <div className={`ne-field ${getPasswordError() ? "has-error" : ""}`}>
                 <label>{t("forgot.new_password") || "New Password"}</label>
                 <div className="ne-password-wrap">
-                  <input 
+                  <input
                     ref={inputRef}
-                    className="ne-input" 
+                    className="ne-input"
                     type={showPassword ? "text" : "password"}
-                    value={password} 
+                    value={password}
                     onChange={e => setPassword(e.target.value)}
-                    placeholder="6+ characters" 
+                    placeholder="6+ characters"
                   />
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className={`ne-eye ${eyeSide}`}
                     onClick={() => setShowPassword(!showPassword)}
                   >
@@ -219,19 +203,18 @@ function ForgotPassword({ isLoaded, role = "patient" }) {
                 {getPasswordError() && <small className="ne-error">{getPasswordError()}</small>}
               </div>
 
-              {/* ✅ Confirm Password Field */}
               <div className="ne-field">
                 <label>{t("forgot.confirm_password") || "Confirm Password"}</label>
                 <div className="ne-password-wrap">
-                  <input 
-                    className="ne-input" 
+                  <input
+                    className="ne-input"
                     type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPassword} 
+                    value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm password" 
+                    placeholder="Confirm password"
                   />
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className={`ne-eye ${eyeSide}`}
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
