@@ -29,6 +29,8 @@ namespace Shifa.Core.Entities
 
         public string? VitalSignsJson { get; set; } // JSON
 
+        public string? AttachmentsJson { get; set; }
+
         public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
     }
 }

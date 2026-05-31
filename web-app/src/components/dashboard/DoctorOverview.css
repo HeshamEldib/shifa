@@ -47,7 +47,7 @@
 .border-warning { border-bottom-color: #f59e0b; }
 .border-purple { border-bottom-color: #a855f7; }
 
-.stat-icon {
+.doctor-overview-container .stat-icon {
   width: 55px;
   height: 55px;
   border-radius: 12px;

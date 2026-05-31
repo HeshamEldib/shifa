@@ -23,7 +23,7 @@ function DoctorAppointments() {
     const [filterStatus, setFilterStatus] = useState("All"); // All, Pending, Confirmed, Completed
     const [dateFilter, setDateFilter] = useState(""); // تصفية بالتاريخ
     const [searchQuery, setSearchQuery] = useState("");
-    
+
     useEffect(() => {
         const fetchAppointments = async () => {
             setIsLoading(true);
@@ -57,14 +57,18 @@ function DoctorAppointments() {
     };
 
     // تطبيق التصفية (البحث + الحالة)
-    const filteredAppointments = appointments.filter((app) => {
-        const matchStatus =
-            filterStatus === "All" || app.status === filterStatus;
-        const matchSearch = app.patientName
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase());
-        return matchStatus && matchSearch;
-    });
+    const filteredAppointments = appointments
+        .filter((app) => {
+            const matchStatus =
+                filterStatus === "All" || app.status === filterStatus;
+            const matchSearch = app.patientName
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase());
+            return matchStatus && matchSearch;
+        })
+        .sort(
+            (a, b) => new Date(a.appointmentDate) - new Date(b.appointmentDate),
+        );
 
     if (isLoading) {
         return (
@@ -74,7 +78,7 @@ function DoctorAppointments() {
             </div>
         );
     }
-    
+
     return (
         <div className="doctor-appointments-page fade-in-up">
             <div className="page-header-flex">
@@ -244,18 +248,18 @@ function DoctorAppointments() {
 
                                         {/* زر إنهاء الكشف: لا يفعّل إلا إذا كان هناك سجل طبي مرتبط بالموعد */}
                                         <button
-                                            className={`btn-action complete ${!app.hasMedicalRecord ? 'disabled-btn' : ''}`}
+                                            className={`btn-action complete ${!app.hasMedicalRecord ? "disabled-btn" : ""}`}
                                             disabled={!app.hasMedicalRecord} // حقل جديد من الباك إند
                                             title={
                                                 !app.hasMedicalRecord
                                                     ? "يجب كتابة السجل الطبي أولاً لإتمام الكشف"
                                                     : ""
                                             }
-                                            onClick={() =>{
+                                            onClick={() => {
                                                 handleStatusChange(
                                                     app.appointmentID,
                                                     "Completed",
-                                                )
+                                                );
                                             }}
                                         >
                                             <CheckCircle size={18} /> إنهاء

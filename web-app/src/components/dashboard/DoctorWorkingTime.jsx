@@ -6,62 +6,39 @@ import {
     updatePrayerSettingsApi,
     updateWorkingHoursApi,
 } from "../../services/doctorAvailabilityService";
-// افترض وجود دالة لجلب وتحديث إعدادات الصلاة
-// import { getPrayerSettings, updatePrayerSettings } from "../../services/doctorSettingsService";
 import "./DoctorProfile.css";
 
 const defaultSchedule = [
-    {
-        dayOfWeek: 6,
-        label: "السبت",
-        isActive: false,
-        shifts: [{ startTime: "", endTime: "" }],
-    },
-    {
-        dayOfWeek: 0,
-        label: "الأحد",
-        isActive: false,
-        shifts: [{ startTime: "", endTime: "" }],
-    },
-    {
-        dayOfWeek: 1,
-        label: "الإثنين",
-        isActive: false,
-        shifts: [{ startTime: "", endTime: "" }],
-    },
-    {
-        dayOfWeek: 2,
-        label: "الثلاثاء",
-        isActive: false,
-        shifts: [{ startTime: "", endTime: "" }],
-    },
-    {
-        dayOfWeek: 3,
-        label: "الأربعاء",
-        isActive: false,
-        shifts: [{ startTime: "", endTime: "" }],
-    },
-    {
-        dayOfWeek: 4,
-        label: "الخميس",
-        isActive: false,
-        shifts: [{ startTime: "", endTime: "" }],
-    },
-    {
-        dayOfWeek: 5,
-        label: "الجمعة",
-        isActive: false,
-        shifts: [{ startTime: "", endTime: "" }],
-    },
+    { dayOfWeek: 6, label: "السبت", isActive: false, shifts: [] },
+    { dayOfWeek: 0, label: "الأحد", isActive: false, shifts: [] },
+    { dayOfWeek: 1, label: "الإثنين", isActive: false, shifts: [] },
+    { dayOfWeek: 2, label: "الثلاثاء", isActive: false, shifts: [] },
+    { dayOfWeek: 3, label: "الأربعاء", isActive: false, shifts: [] },
+    { dayOfWeek: 4, label: "الخميس", isActive: false, shifts: [] },
+    { dayOfWeek: 5, label: "الجمعة", isActive: false, shifts: [] },
 ];
 
+// دالة مساعدة لضمان استخراج الوقت بصيغة HH:mm بأمان
+const formatTimeSafe = (timeStr) => {
+    if (!timeStr) return "";
+    const parts = timeStr.split(':');
+    if (parts.length >= 2) {
+        return `${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}`;
+    }
+    return timeStr;
+};
+
+// دالة لتجهيز الوقت للسيرفر بصيغة HH:mm:ss لمنع أخطاء الـ TimeSpan في C#
+const formatForBackend = (timeStr) => {
+    if (!timeStr) return "";
+    return timeStr.length === 5 ? `${timeStr}:00` : timeStr;
+};
+
 function DoctorWorkingTime() {
-    // const id = localStorage.getItem("userId");
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [saveMessage, setSaveMessage] = useState(null);
 
-    // 1. إعدادات الصلاة
     const [prayerConfig, setPrayerConfig] = useState({
         blockPrayerTimes: true,
         defaultMinutesBefore: 15,
@@ -70,46 +47,35 @@ function DoctorWorkingTime() {
         jumuahMinutesAfter: 30,
     });
 
-    
-    // const daysData = [
-    //     { dayOfWeek: 6, label: "السبت" },
-    //     { dayOfWeek: 0, label: "الأحد" },
-    //     { dayOfWeek: 1, label: "الإثنين" },
-    //     { dayOfWeek: 2, label: "الثلاثاء" },
-    //     { dayOfWeek: 3, label: "الأربعاء" },
-    //     { dayOfWeek: 4, label: "الخميس" },
-    //     { dayOfWeek: 5, label: "الجمعة" },
-    // ];
-
     const [schedule, setSchedule] = useState(defaultSchedule);
 
     useEffect(() => {
         const fetchSettings = async () => {
-            // if (!id) return;
+            setIsLoading(true);
             try {
-                setIsLoading(true);
-                // جلب المواعيد (مصفوفة مسطحة)
+                // 1. جلب إعدادات الصلاة (في try-catch منفصل كي لا تعطل جلب المواعيد إذا فشلت)
+                try {
+                    const apiPrayer = await getPrayerSettingsApi();
+                    if (apiPrayer) setPrayerConfig(apiPrayer);
+                } catch (prayerError) {
+                    console.warn("إعدادات الصلاة غير متوفرة بعد.", prayerError);
+                }
+
+                // 2. جلب المواعيد
                 const apiAvailability = await getMyAvailability();
 
-                // جلب إعدادات الصلاة (قم بتفعيلها لاحقاً)
-                const apiPrayer = await getPrayerSettingsApi();
-                if (apiPrayer) setPrayerConfig(apiPrayer);
-
-                // تحويل المصفوفة المسطحة إلى الهيكل المجمع حسب اليوم
                 if (apiAvailability && apiAvailability.length > 0) {
                     const grouped = defaultSchedule.map((d) => {
                         const dayShifts = apiAvailability.filter(
-                            (item) => item.dayOfWeek === d.dayOfWeek,
+                            (item) => item.dayOfWeek === d.dayOfWeek
                         );
                         return {
                             ...d,
-                            isActive:
-                                dayShifts.length > 0 &&
-                                dayShifts.some((s) => s.isActive),
+                            isActive: dayShifts.length > 0 && dayShifts.some((s) => s.isActive),
                             shifts: dayShifts.map((s) => ({
                                 availabilityID: s.availabilityID,
-                                startTime: s.startTime.substring(0, 5), // تنسيق HH:mm
-                                endTime: s.endTime.substring(0, 5),
+                                startTime: formatTimeSafe(s.startTime),
+                                endTime: formatTimeSafe(s.endTime),
                                 isActive: s.isActive,
                             })),
                         };
@@ -117,7 +83,7 @@ function DoctorWorkingTime() {
                     setSchedule(grouped);
                 }
             } catch (error) {
-                console.error("خطأ في جلب الإعدادات:", error);
+                console.error("خطأ في جلب المواعيد:", error);
             } finally {
                 setIsLoading(false);
             }
@@ -130,6 +96,8 @@ function DoctorWorkingTime() {
     const toggleDayActive = (index) => {
         const updated = [...schedule];
         updated[index].isActive = !updated[index].isActive;
+        
+        // إضافة فترة افتراضية عند تفعيل اليوم لأول مرة
         if (updated[index].isActive && updated[index].shifts.length === 0) {
             updated[index].shifts.push({
                 startTime: "09:00",
@@ -159,8 +127,9 @@ function DoctorWorkingTime() {
     const removeShift = (dayIndex, shiftIndex) => {
         const updated = [...schedule];
         updated[dayIndex].shifts.splice(shiftIndex, 1);
-        if (updated[dayIndex].shifts.length === 0)
+        if (updated[dayIndex].shifts.length === 0) {
             updated[dayIndex].isActive = false;
+        }
         setSchedule(updated);
     };
 
@@ -168,47 +137,45 @@ function DoctorWorkingTime() {
     const handleScheduleSubmit = async (e) => {
         e.preventDefault();
         setIsSaving(true);
+        setSaveMessage(null);
+
         try {
-            // تحويل البيانات مرة أخرى إلى Flat Array للإرسال
             const payload = [];
+            
+            // تجهيز البيانات
             schedule.forEach((day) => {
                 if (day.isActive) {
                     day.shifts.forEach((shift) => {
                         if (shift.startTime && shift.endTime) {
-                            if (!shift.availabilityID) {
-                                payload.push({
-                                    dayOfWeek: day.dayOfWeek,
-                                    startTime: shift.startTime,
-                                    endTime: shift.endTime,
-                                    isActive: true,
-                                });
-                            } else {
-                                payload.push({
-                                    availabilityID: shift.availabilityID,
-                                    dayOfWeek: day.dayOfWeek,
-                                    startTime: shift.startTime,
-                                    endTime: shift.endTime,
-                                    isActive: shift.isActive,
-                                });
-                            }
+                            payload.push({
+                                availabilityID: shift.availabilityID || null, // تجنب undefined
+                                dayOfWeek: day.dayOfWeek,
+                                startTime: formatForBackend(shift.startTime), // ضمان وجود الثواني
+                                endTime: formatForBackend(shift.endTime),
+                                isActive: shift.isActive ?? true,
+                            });
                         }
                     });
                 }
             });
 
-            // إرسال البيانات للباك إند
+            // إرسال المواعيد
             await updateWorkingHoursApi(payload);
-            await updatePrayerSettingsApi(prayerConfig);
 
-            setSaveMessage({
-                type: "success",
-                text: "تم تحديث مواعيد العمل بنجاح!",
-            });
+            // إرسال إعدادات الصلاة (محمية لتجنب إيقاف رسالة النجاح إذا فشلت)
+            try {
+                await updatePrayerSettingsApi(prayerConfig);
+            } catch (err) {
+                console.warn("تعذر حفظ إعدادات الصلاة", err);
+            }
+
+            setSaveMessage({ type: "success", text: "تم تحديث مواعيد العمل بنجاح!" });
             setTimeout(() => setSaveMessage(null), 3000);
+            
         } catch (error) {
             setSaveMessage({
                 type: "error",
-                text: error.message || "حدث خطأ أثناء الحفظ",
+                text: error.message || "حدث خطأ أثناء حفظ المواعيد. يرجى التأكد من عدم تداخل الأوقات.",
             });
         } finally {
             setIsSaving(false);
@@ -218,50 +185,29 @@ function DoctorWorkingTime() {
     if (isLoading) return <div className="custom-spinner mx-auto mt-5"></div>;
 
     return (
-        <form
-            onSubmit={handleScheduleSubmit}
-            className="schedule-form-container fade-in"
-        >
+        <form onSubmit={handleScheduleSubmit} className="schedule-form-container fade-in">
             {saveMessage && (
-                <div
-                    className={`custom-alert ${saveMessage.type === "success" ? "alert-success" : "alert-error"} mb-4`}
-                >
+                <div className={`custom-alert ${saveMessage.type === "success" ? "alert-success" : "alert-error"} mb-4`}>
                     {saveMessage.text}
                 </div>
             )}
 
-            {/* ========================================= */}
-            {/* قسم إعدادات الصلاة (Prayer Times Exclusions) */}
-            {/* ========================================= */}
-            <div
-                className="glass-receipt p-4 mb-4"
-                style={{
-                    borderColor: prayerConfig.blockPrayerTimes
-                        ? "#06b6d4"
-                        : "rgba(255,255,255,0.05)",
-                }}
-            >
+            {/* قسم إعدادات الصلاة */}
+            <div className="glass-receipt p-4 mb-4" style={{ borderColor: prayerConfig.blockPrayerTimes ? "#06b6d4" : "rgba(255,255,255,0.05)" }}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div>
                         <h4 className="text-white m-0 d-flex align-items-center gap-2">
-                            <Moon className="text-cyan" size={20} /> استثناء
-                            أوقات الصلاة
+                            <Moon className="text-cyan" size={20} /> استثناء أوقات الصلاة
                         </h4>
                         <p className="text-muted mt-1 mb-0 small">
-                            إيقاف الحجوزات تلقائياً وقت الأذان (حسب التوقيت
-                            المحلي).
+                            إيقاف الحجوزات تلقائياً وقت الأذان (حسب التوقيت المحلي).
                         </p>
                     </div>
                     <label className="switch-toggle">
                         <input
                             type="checkbox"
                             checked={prayerConfig.blockPrayerTimes}
-                            onChange={(e) =>
-                                setPrayerConfig({
-                                    ...prayerConfig,
-                                    blockPrayerTimes: e.target.checked,
-                                })
-                            }
+                            onChange={(e) => setPrayerConfig({ ...prayerConfig, blockPrayerTimes: e.target.checked })}
                         />
                         <span className="slider round"></span>
                     </label>
@@ -271,141 +217,62 @@ function DoctorWorkingTime() {
                     <div className="prayer-settings-grid fade-in mt-4">
                         <div className="form-group">
                             <label>إيقاف قبل الصلاة (دقائق)</label>
-                            <input
-                                type="number"
-                                min="0"
-                                className="custom-input"
-                                value={prayerConfig.defaultMinutesBefore}
-                                onChange={(e) =>
-                                    setPrayerConfig({
-                                        ...prayerConfig,
-                                        defaultMinutesBefore: Number(
-                                            e.target.value,
-                                        ),
-                                    })
-                                }
-                            />
+                            <input type="number" min="0" className="custom-input" value={prayerConfig.defaultMinutesBefore} onChange={(e) => setPrayerConfig({ ...prayerConfig, defaultMinutesBefore: Number(e.target.value) })} />
                         </div>
                         <div className="form-group">
                             <label>إيقاف بعد الصلاة (دقائق)</label>
-                            <input
-                                type="number"
-                                min="0"
-                                className="custom-input"
-                                value={prayerConfig.defaultMinutesAfter}
-                                onChange={(e) =>
-                                    setPrayerConfig({
-                                        ...prayerConfig,
-                                        defaultMinutesAfter: Number(
-                                            e.target.value,
-                                        ),
-                                    })
-                                }
-                            />
+                            <input type="number" min="0" className="custom-input" value={prayerConfig.defaultMinutesAfter} onChange={(e) => setPrayerConfig({ ...prayerConfig, defaultMinutesAfter: Number(e.target.value) })} />
                         </div>
                         <div className="form-group">
-                            <label className="text-warning">
-                                قبل صلاة الجمعة (دقائق)
-                            </label>
-                            <input
-                                type="number"
-                                min="0"
-                                className="custom-input"
-                                value={prayerConfig.jumuahMinutesBefore}
-                                onChange={(e) =>
-                                    setPrayerConfig({
-                                        ...prayerConfig,
-                                        jumuahMinutesBefore: Number(
-                                            e.target.value,
-                                        ),
-                                    })
-                                }
-                            />
+                            <label className="text-warning">قبل الجمعة (دقائق)</label>
+                            <input type="number" min="0" className="custom-input" value={prayerConfig.jumuahMinutesBefore} onChange={(e) => setPrayerConfig({ ...prayerConfig, jumuahMinutesBefore: Number(e.target.value) })} />
                         </div>
                         <div className="form-group">
-                            <label className="text-warning">
-                                بعد صلاة الجمعة (دقائق)
-                            </label>
-                            <input
-                                type="number"
-                                min="0"
-                                className="custom-input"
-                                value={prayerConfig.jumuahMinutesAfter}
-                                onChange={(e) =>
-                                    setPrayerConfig({
-                                        ...prayerConfig,
-                                        jumuahMinutesAfter: Number(
-                                            e.target.value,
-                                        ),
-                                    })
-                                }
-                            />
+                            <label className="text-warning">بعد الجمعة (دقائق)</label>
+                            <input type="number" min="0" className="custom-input" value={prayerConfig.jumuahMinutesAfter} onChange={(e) => setPrayerConfig({ ...prayerConfig, jumuahMinutesAfter: Number(e.target.value) })} />
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* ========================================= */}
-            {/* قسم مواعيد العمل (Working Hours) */}
-            {/* ========================================= */}
+            {/* قسم مواعيد العمل */}
             <div className="glass-receipt p-4">
                 <div className="section-header mb-4">
                     <h3 className="text-white m-0 d-flex align-items-center gap-2">
                         <Clock className="text-cyan" /> جدول المواعيد الأسبوعي
                     </h3>
                     <p className="text-muted mt-2 mb-0">
-                        قم بتفعيل أيام العمل وأضف فترات الدوام (يمكنك إضافة أكثر
-                        من فترة في اليوم الواحد).
+                        قم بتفعيل أيام العمل وأضف فترات الدوام (يمكنك إضافة أكثر من فترة في اليوم الواحد).
                     </p>
                 </div>
 
                 <div className="working-hours-list">
                     {schedule.map((day, dayIndex) => (
-                        <div
-                            key={day.dayOfWeek}
-                            className={`working-day-card ${!day.isActive ? "is-day-off" : ""}`}
-                        >
-                            {/* ترويسة اليوم وزر التفعيل */}
+                        <div key={day.dayOfWeek} className={`working-day-card ${!day.isActive ? "is-day-off" : ""}`}>
                             <div className="day-header-row">
                                 <div className="d-flex align-items-center gap-3">
                                     <button
                                         type="button"
                                         className={`btn-toggle-day ${day.isActive ? "on" : "off"}`}
-                                        onClick={() =>
-                                            toggleDayActive(dayIndex)
-                                        }
-                                        title={
-                                            day.isActive
-                                                ? "تعيين كإجازة"
-                                                : "تفعيل اليوم"
-                                        }
+                                        onClick={() => toggleDayActive(dayIndex)}
+                                        title={day.isActive ? "تعيين كإجازة" : "تفعيل اليوم"}
                                     >
                                         <Power size={20} />
-                                    <span className="day-label">
-                                        {day.label}
-                                    </span>
+                                        <span className="day-label">{day.label}</span>
                                     </button>
                                 </div>
 
                                 {day.isActive && (
-                                    <button
-                                        type="button"
-                                        className="btn-add-shift"
-                                        onClick={() => addShift(dayIndex)}
-                                    >
+                                    <button type="button" className="btn-add-shift" onClick={() => addShift(dayIndex)}>
                                         <Plus size={14} /> إضافة فترة
                                     </button>
                                 )}
                             </div>
 
-                            {/* قائمة الفترات (Shifts) */}
                             {day.isActive ? (
                                 <div className="shifts-container mt-3">
                                     {day.shifts.map((shift, shiftIndex) => (
-                                        <div
-                                            key={shiftIndex}
-                                            className="shift-row fade-in"
-                                        >
+                                        <div key={shiftIndex} className="shift-row fade-in">
                                             <div className="time-input-group">
                                                 <label>من</label>
                                                 <input
@@ -413,14 +280,7 @@ function DoctorWorkingTime() {
                                                     required
                                                     className="custom-input time-picker cursor-text"
                                                     value={shift.startTime}
-                                                    onChange={(e) =>
-                                                        handleShiftChange(
-                                                            dayIndex,
-                                                            shiftIndex,
-                                                            "startTime",
-                                                            e.target.value,
-                                                        )
-                                                    }
+                                                    onChange={(e) => handleShiftChange(dayIndex, shiftIndex, "startTime", e.target.value)}
                                                 />
                                             </div>
                                             <div className="time-input-group">
@@ -430,26 +290,13 @@ function DoctorWorkingTime() {
                                                     required
                                                     className="custom-input time-picker"
                                                     value={shift.endTime}
-                                                    onChange={(e) =>
-                                                        handleShiftChange(
-                                                            dayIndex,
-                                                            shiftIndex,
-                                                            "endTime",
-                                                            e.target.value,
-                                                        )
-                                                    }
+                                                    onChange={(e) => handleShiftChange(dayIndex, shiftIndex, "endTime", e.target.value)}
                                                 />
                                             </div>
-
                                             <button
                                                 type="button"
                                                 className="btn-remove-shift"
-                                                onClick={() =>
-                                                    removeShift(
-                                                        dayIndex,
-                                                        shiftIndex,
-                                                    )
-                                                }
+                                                onClick={() => removeShift(dayIndex, shiftIndex)}
                                                 title="حذف الفترة"
                                             >
                                                 <Trash2 size={18} />
@@ -468,16 +315,8 @@ function DoctorWorkingTime() {
             </div>
 
             <div className="profile-actions glass-receipt mt-4 text-left">
-                <button
-                    type="submit"
-                    className="btn-primary-action"
-                    disabled={isSaving}
-                >
-                    {isSaving ? (
-                        <span className="custom-spinner-sm"></span>
-                    ) : (
-                        <Save size={20} />
-                    )}
+                <button type="submit" className="btn-primary-action" disabled={isSaving}>
+                    {isSaving ? <span className="custom-spinner-sm"></span> : <Save size={20} />}
                     حفظ التعديلات
                 </button>
             </div>

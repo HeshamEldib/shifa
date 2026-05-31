@@ -108,7 +108,7 @@ namespace Shifa.API.Controllers
 
             return Ok(schedule);
         }
-        
+
         // 2. تحديث مواعيد العمل بالكامل (إضافة، تعديل، حذف)
         [HttpPut("availability")]
         [Authorize(Roles = AppRoles.Doctor)]
@@ -224,6 +224,7 @@ namespace Shifa.API.Controllers
                 .Select(a => new TodayScheduleDto
                 {
                     AppointmentID = a.AppointmentID,
+                    PatientID = a.PatientID,
                     PatientName = a.Patient.User.FullName, // جلب الاسم من جدول User المرتبط
                     Time = a.AppointmentDate.ToString("hh:mm tt"), // تنسيق الوقت
                     Type = a.Type == "Telemedicine" ? "أونلاين" : "في العيادة",
@@ -275,48 +276,48 @@ namespace Shifa.API.Controllers
             return Ok(patients);
         }
 
-[HttpGet("prayer-settings")]
-[Authorize(Roles = AppRoles.Doctor)]
-public async Task<ActionResult<PrayerSettingsDto>> GetMyPrayerSettings()
-{
-    var doctorIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    if (!Guid.TryParse(doctorIdClaim, out Guid doctorId)) return Unauthorized();
+        [HttpGet("prayer-settings")]
+        [Authorize(Roles = AppRoles.Doctor)]
+        public async Task<ActionResult<PrayerSettingsDto>> GetMyPrayerSettings()
+        {
+            var doctorIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(doctorIdClaim, out Guid doctorId)) return Unauthorized();
 
-    var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorID == doctorId);
-    if (doctor == null) return NotFound("الطبيب غير موجود");
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorID == doctorId);
+            if (doctor == null) return NotFound("الطبيب غير موجود");
 
-    var dto = new PrayerSettingsDto
-    {
-        BlockPrayerTimes = doctor.BlockPrayerTimes,
-        DefaultMinutesBefore = doctor.DefaultMinutesBefore,
-        DefaultMinutesAfter = doctor.DefaultMinutesAfter,
-        JumuahMinutesBefore = doctor.JumuahMinutesBefore,
-        JumuahMinutesAfter = doctor.JumuahMinutesAfter
-    };
+            var dto = new PrayerSettingsDto
+            {
+                BlockPrayerTimes = doctor.BlockPrayerTimes,
+                DefaultMinutesBefore = doctor.DefaultMinutesBefore,
+                DefaultMinutesAfter = doctor.DefaultMinutesAfter,
+                JumuahMinutesBefore = doctor.JumuahMinutesBefore,
+                JumuahMinutesAfter = doctor.JumuahMinutesAfter
+            };
 
-    return Ok(dto);
-}
+            return Ok(dto);
+        }
 
-// 2. تحديث إعدادات الصلاة الخاصة بالطبيب
-[HttpPut("prayer-settings")]
-[Authorize(Roles = AppRoles.Doctor)]
-public async Task<IActionResult> UpdateMyPrayerSettings([FromBody] PrayerSettingsDto dto)
-{
-    var doctorIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    if (!Guid.TryParse(doctorIdClaim, out Guid doctorId)) return Unauthorized();
+        // 2. تحديث إعدادات الصلاة الخاصة بالطبيب
+        [HttpPut("prayer-settings")]
+        [Authorize(Roles = AppRoles.Doctor)]
+        public async Task<IActionResult> UpdateMyPrayerSettings([FromBody] PrayerSettingsDto dto)
+        {
+            var doctorIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(doctorIdClaim, out Guid doctorId)) return Unauthorized();
 
-    var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorID == doctorId);
-    if (doctor == null) return NotFound("الطبيب غير موجود");
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorID == doctorId);
+            if (doctor == null) return NotFound("الطبيب غير موجود");
 
-    doctor.BlockPrayerTimes = dto.BlockPrayerTimes;
-    doctor.DefaultMinutesBefore = dto.DefaultMinutesBefore;
-    doctor.DefaultMinutesAfter = dto.DefaultMinutesAfter;
-    doctor.JumuahMinutesBefore = dto.JumuahMinutesBefore;
-    doctor.JumuahMinutesAfter = dto.JumuahMinutesAfter;
+            doctor.BlockPrayerTimes = dto.BlockPrayerTimes;
+            doctor.DefaultMinutesBefore = dto.DefaultMinutesBefore;
+            doctor.DefaultMinutesAfter = dto.DefaultMinutesAfter;
+            doctor.JumuahMinutesBefore = dto.JumuahMinutesBefore;
+            doctor.JumuahMinutesAfter = dto.JumuahMinutesAfter;
 
-    await _context.SaveChangesAsync();
-    return Ok(new { message = "تم تحديث إعدادات الصلاة بنجاح" });
-}
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "تم تحديث إعدادات الصلاة بنجاح" });
+        }
 
     }
 }

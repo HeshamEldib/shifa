@@ -9,7 +9,7 @@ namespace Shifa.API.Dtos.MedicalRecords
         [Required]
         public Guid PatientID { get; set; }
         public Guid DoctorID { get; set; }
-        public Guid AppointmentID { get; set; } 
+        public Guid? AppointmentID { get; set; } 
         
         public DateTime VisitDate { get; set; } = DateTime.UtcNow;
         
@@ -21,6 +21,7 @@ namespace Shifa.API.Dtos.MedicalRecords
         
         public string TreatmentPlan { get; set; }
         public string VitalSignsJson { get; set; }
+        public List<string> Attachments { get; set; } = new List<string>();
 
         // قائمة الأدوية (الروشتة) التي سيتم إضافتها مع السجل في نفس اللحظة
         public List<PrescriptionItemDto> Prescriptions { get; set; } = new List<PrescriptionItemDto>();

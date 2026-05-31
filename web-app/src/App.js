@@ -200,7 +200,7 @@ function MainApp() {
 
     return (
         <>
-             <AIChat />
+            <AIChat />
             <FloatingLanguageSwitcher />
 
             <Routes>

@@ -293,3 +293,66 @@
     font-size: 0.8rem;
     font-style: italic;
 }
+
+.attachments-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+.attachments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    gap: 8px;
+}
+.attachments-header h5 {
+    margin: 0;
+}
+.add-attachments-btn {
+    background: transparent;
+    border: 1px solid #0ea5e9;
+    color: #0ea5e9;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+.chosen-attachments {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.chosen-attachments .img-preview {
+    position: relative;
+}
+.chosen-attachments .close-btn {
+    background: rgba(239, 68, 68, 0.8);
+    color: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.history-attachments {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+    margin-top: 15px;
+}
+.history-attachments-label {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    display: block;
+}
+.history-attachments-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}

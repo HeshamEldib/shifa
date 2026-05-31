@@ -3,13 +3,15 @@
    بس هنضيف هنا التأثيرات الـ VIP الخاصة بالدكاترة */
 
 .premium-doctors-page {
-  margin-top: 40px;
+  /* margin-top: 40px; */
   min-height: 100vh;
   background-color: #07031a;
   position: relative;
   overflow: hidden;
   color: #fff;
   font-family: 'Cairo', sans-serif;
+  margin-top: 120px;
+  padding: 0 40px;
 }
 
 /* 1. Cinematic Noise Texture */

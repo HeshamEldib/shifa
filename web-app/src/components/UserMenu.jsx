@@ -44,8 +44,8 @@ function UserMenu() {
                         !user
                             ? "/user.png"
                             : !user.image
-                              ? "/user.png"
-                              : user.image
+                                ? "/user.png"
+                                : user.image
                     }
                     alt={user ? user.fullName : "User"}
                     className="user-avatar-img"

@@ -55,7 +55,6 @@ function ContactSection({
         <div className="glow-orb orb-2"></div>
       </div>
 
-     
       {/* الكونتاكت */}
       <main className="contact-wrapper">
         <div className={`contact-card ${isLoaded ? "fade-in-up" : ""}`}>

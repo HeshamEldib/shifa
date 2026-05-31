@@ -50,6 +50,8 @@ function DoctorOverview() {
         day: "numeric",
     });
 
+    console.log("p =>", todaySchedule);
+    
     return (
         <div className="doctor-overview-container fade-in-up">
             {/* رأس الصفحة */}

@@ -27,8 +27,25 @@ export const addMedicalRecordApi = async (recordData) => {
     return await response.json();
 };
 
-// export const getMedicationsApi = async () => {
-//     const response = await fetch(`${API_URL}/api/Medications`);
-//     if (!response.ok) throw new Error("فشل جلب قائمة الأدوية");
-//     return await response.json();
-// };
+// دالة رفع المرفقات (أشعة وتحاليل)
+export const uploadRecordAttachmentsApi = async (filesArray) => {
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    
+    // إضافة كل الملفات للـ FormData
+    filesArray.forEach(file => {
+        formData.append("files", file);
+    });
+
+    const response = await fetch(`${API_URL}/api/MedicalRecords/upload-attachments`, {
+        method: 'POST',
+        headers: { 
+            'Authorization': `Bearer ${token}`
+            // لا تضع Content-Type هنا، المتصفح سيضعه تلقائياً مع الـ Boundary للـ FormData
+        },
+        body: formData
+    });
+
+    if (!response.ok) throw new Error("فشل رفع المرفقات");
+    return await response.json(); // سيرجع { urls: [...] }
+};

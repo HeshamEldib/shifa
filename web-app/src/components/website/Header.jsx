@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "./Header.css";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserMenu from "../UserMenu";
 import { useSelector } from "react-redux";
 import NotificationBell from "../NotificationBell";

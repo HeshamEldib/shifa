@@ -9,10 +9,13 @@ import {
     Pill,
     ChevronLeft,
     HeartPulse,
+    Image as ImageIcon,
+    X,
 } from "lucide-react";
 import {
     getPatientRecordsApi,
     addMedicalRecordApi,
+    uploadRecordAttachmentsApi,
 } from "../../services/medicalRecordService";
 import { getMedicinesApi } from "../../services/medicineService";
 import "./DoctorPatientRecords.css";
@@ -26,6 +29,7 @@ function DoctorPatientRecords() {
     const [history, setHistory] = useState([]);
     const [availableMeds, setAvailableMeds] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedFiles, setSelectedFiles] = useState([]);
 
     const [newRecord, setNewRecord] = useState({
         patientID: patientId,
@@ -34,6 +38,7 @@ function DoctorPatientRecords() {
         diagnosisDetails: "",
         treatmentPlan: "",
         vitalSignsJson: "",
+        attachments: [],
         prescriptions: [
             {
                 medicationID: "",
@@ -44,9 +49,9 @@ function DoctorPatientRecords() {
             },
         ],
     });
-    if (appointmentId) {
-        setNewRecord((prev) => ({ ...prev, AppointmentID: appointmentId }));
-    }
+    // if (appointmentId) {
+    //     setNewRecord((prev) => ({ ...prev, AppointmentID: appointmentId }));
+    // }
 
     // حالة محلية للعلامات الحيوية قبل تحويلها لـ JSON
     const [vitals, setVitals] = useState({ bp: "", temp: "", hr: "" });
@@ -59,6 +64,7 @@ function DoctorPatientRecords() {
                     getMedicinesApi(),
                 ]);
                 setHistory(historyData);
+                
                 setAvailableMeds(medsData);
             } catch (err) {
                 console.error(err);
@@ -91,20 +97,55 @@ function DoctorPatientRecords() {
         setNewRecord({ ...newRecord, prescriptions: updated });
     };
 
+    const handleFileSelect = (e) => {
+        const files = Array.from(e.target.files);
+        setSelectedFiles((prev) => [...prev, ...files]);
+    };
+
+    const removeSelectedFile = (index) => {
+        setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // تحويل العلامات الحيوية لـ JSON String قبل الإرسال
+            let uploadedUrls = [];
+            
+            // 1. إذا كان هناك صور (أشعة وتحاليل)، قم برفعها أولاً
+            // استخدمنا typeof لتجنب أي خطأ إذا لم تكن قد أضفت ميزة الصور بعد
+            if (typeof selectedFiles !== 'undefined' && selectedFiles.length > 0) {
+                const uploadRes = await uploadRecordAttachmentsApi(selectedFiles);
+                uploadedUrls = uploadRes.urls;
+            }
+
+            // 2. تصفية الأدوية الفارغة
+            const validPrescriptions = newRecord.prescriptions.filter(
+                (p) => p.medicationID !== "" && p.medicationID !== null
+            );
+
+            // 3. تجهيز البيانات للإرسال (هنا يكمن الحل!)
             const payload = {
                 ...newRecord,
+                appointmentID: appointmentId, // 👈 نحقن رقم الموعد مباشرة من الرابط!
                 vitalSignsJson: JSON.stringify(vitals),
+                prescriptions: validPrescriptions,
+                attachments: uploadedUrls 
             };
 
+            // تنظيف الحقل إذا كان المريض بدون موعد مسبق
+            if (!payload.appointmentID) {
+                delete payload.appointmentID;
+            }
+
+            // 4. إرسال السجل الطبي
             await addMedicalRecordApi(payload);
-            // alert("تم توثيق السجل الطبي بنجاح!");
+            
+            // يمكنك إعادة تفعيل هذا الـ Alert للتأكد من الحفظ
+            // alert("تم توثيق السجل الطبي بنجاح!"); 
+            
             navigate("/doctor/appointments");
         } catch (err) {
-            alert(err.message);
+            alert(err.message || "حدث خطأ أثناء الحفظ");
         }
     };
 
@@ -361,6 +402,72 @@ function DoctorPatientRecords() {
                             ))}
                         </div>
 
+                        {/* قسم المرفقات (الأشعة والتحاليل) */}
+                        <div
+                            className="attachments-section"
+                            style={{ borderColor: "rgba(255,255,255,0.1)" }}
+                        >
+                            <div className="attachments-header">
+                                <h5>
+                                    <ImageIcon
+                                        size={18}
+                                        className="text-info me-2"
+                                    />{" "}
+                                    المرفقات (أشعة / تحاليل)
+                                </h5>
+                                <label className="add-attachments-btn">
+                                    <Plus size={16} /> إضافة صور
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        hidden
+                                        onChange={handleFileSelect}
+                                    />
+                                </label>
+                            </div>
+
+                            {/* معرض الصور المصغر قبل الرفع */}
+                            {selectedFiles.length > 0 && (
+                                <div className="chosen-attachments">
+                                    {selectedFiles.map((file, index) => (
+                                        <div
+                                            key={index}
+                                            className="img-preview"
+                                            style={{
+                                                width: "80px",
+                                                height: "80px",
+                                            }}
+                                        >
+                                            <img
+                                                src={URL.createObjectURL(file)}
+                                                alt="preview"
+                                                style={{
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    objectFit: "cover",
+                                                    borderRadius: "8px",
+                                                }}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    removeSelectedFile(index)
+                                                }
+                                                className="close-btn"
+                                                style={{
+                                                    transform:
+                                                        "translate(30%, -30%)",
+                                                }}
+                                            >
+                                                <X size={12} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
                         <button type="submit" className="btn-save-record mt-4">
                             <Save size={20} /> حفظ وإرسال السجل
                         </button>
@@ -541,6 +648,58 @@ function DoctorPatientRecords() {
                                                                             </span>
                                                                         )}
                                                                     </div>
+                                                                ),
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                            {/* عرض المرفقات إن وجدت */}
+                                            {record.attachmentsJson &&
+                                                record.attachmentsJson !==
+                                                    "[]" && (
+                                                    <div
+                                                        className="history-attachments"
+                                                        style={{
+                                                            borderColor:
+                                                                "rgba(255,255,255,0.05)",
+                                                        }}
+                                                    >
+                                                        <strong className="history-attachments-label">
+                                                            <ImageIcon
+                                                                size={14}
+                                                                className="me-1"
+                                                            />{" "}
+                                                            صور الأشعة
+                                                            والتحاليل:
+                                                        </strong>
+                                                        <div className="history-attachments-grid">
+                                                            {JSON.parse(
+                                                                record.attachmentsJson,
+                                                            ).map(
+                                                                (url, idx) => (
+                                                                    <a
+                                                                        key={
+                                                                            idx
+                                                                        }
+                                                                        href={`http://localhost:5038${url}`}
+                                                                        target="_blank"
+                                                                        rel="noreferrer"
+                                                                    >
+                                                                        <img
+                                                                            src={`http://localhost:5038${url}`}
+                                                                            alt={`مرفق ${idx + 1}`}
+                                                                            style={{
+                                                                                width: "60px",
+                                                                                height: "60px",
+                                                                                objectFit:
+                                                                                    "cover",
+                                                                                borderRadius:
+                                                                                    "6px",
+                                                                                border: "1px solid #444",
+                                                                            }}
+                                                                        />
+                                                                    </a>
                                                                 ),
                                                             )}
                                                         </div>
